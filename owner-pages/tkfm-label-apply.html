@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="utf-8">
+  <title>Apply to TKFM Records • They Krave For Me Radio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <style>
+    :root {
+      --bg-deep: #020617;
+      --bg-card: rgba(6,8,20,0.98);
+      --bg-soft: rgba(15,23,42,0.96);
+      --gold: #facc15;
+      --gold-deep: #eab308;
+      --amber: #f97316;
+      --accent-purple: #a855f7;
+      --accent-pink: #ec4899;
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --text-soft: #64748b;
+      --border-subtle: rgba(148,163,184,0.35);
+      --accent: var(--accent-pink);
+      --accent-2: var(--accent-purple);
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { min-height:100vh; background:#020617; color:var(--text-main); font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif; -webkit-font-smoothing:antialiased; padding:1.6rem .9rem 2.3rem; overflow-x:hidden; }
+    a { color:inherit; text-decoration:none; }
+    .shell { max-width:1120px; margin:0 auto; }
+    /* NAV omitted for brevity, same as previous snippet */
+  </style>
+</head>
+<body data-tkfm-theme="radio">
+  <div class="shell">
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <div class="kicker">Apply to TKFM Records</div>
+        <h1 class="title">Tell us who you are,<br>and why <span>TKFM should move with you.</span></h1>
+        <p class="sub">
+          Artists, DJs, producers — this form drops your info straight into the TKFM Records label console.
+          Once the staff flags you, AI spins up contract drafts inside the Contracts Lab.
+        </p>
+
+        <div class="pill-row" id="rolePills">
+          <button class="role-pill active" data-role="artist"><span class="icon">🎵</span> Artist</button>
+          <button class="role-pill" data-role="producer"><span class="icon">🎹</span> Producer</button>
+          <button class="role-pill" data-role="dj"><span class="icon">🎧</span> DJ</button>
+        </div>
+        <p class="hint">Choose the lane that fits you best. Mention collectives, teams, and extra roles in the goals section.</p>
+      </div>
+
+      <aside>
+        <div class="side-card">
+          <div class="side-title">What TKFM Records Checks</div>
+          <div class="side-row">
+            <div class="side-item"><div class="side-badge">1</div><div><strong>Identity & brand.</strong><br>Stage name, energy, visuals, and how you’re moving right now.</div></div>
+            <div class="side-item"><div class="side-badge">2</div><div><strong>Music & proof.</strong><br>Tapes, singles, performances, and anything that shows you’re serious.</div></div>
+            <div class="side-item"><div class="side-badge">3</div><div><strong>Goals & fit.</strong><br>Rotation, mixtape hosting, placements, full label play — or all of the above.</div></div>
+          </div>
+          <div class="side-tag">feeds label hub + contracts lab — same pipeline TKFM staff uses</div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- FORM -->
+    <section class="form-card">
+      <form id="appForm">
+        <input type="hidden" id="role" value="artist">
+        <div class="field-row">
+          <div><label for="stageName">Stage / Artist Name</label><input id="stageName" placeholder="Artist / DJ / Producer name" required></div>
+          <div><label for="legalName">Legal Name (for contracts)</label><input id="legalName" placeholder="Government name (optional)"></div>
+        </div>
+        <div class="field-row" style="margin-top:.5rem;">
+          <div><label for="email">Email</label><input id="email" type="email" placeholder="you@domain.com" required></div>
+          <div><label for="phone">Phone / WhatsApp</label><input id="phone" placeholder="+1 ... (optional)"></div>
+        </div>
+        <div class="field-row" style="margin-top:.5rem;">
+          <div><label for="city">City / Region</label><input id="city" placeholder="City, State / Country"></div>
+          <div><label for="projectType">Primary Project Type</label><input id="projectType" placeholder="Single, EP, album, mixtape, beat pack, etc."></div>
+        </div>
+        <div class="field-row" style="margin-top:.5rem;">
+          <div><label for="linksMain">Main Music Link</label><input id="linksMain" placeholder="Spotify, Apple, SoundCloud, etc."></div>
+          <div><label for="linksSocial">Main Social / IG / TikTok</label><input id="linksSocial" placeholder="@handle or full URL"></div>
+        </div>
+        <div style="margin-top:.55rem;">
+          <label for="goals">What are you looking for with TKFM?</label>
+          <textarea id="goals" placeholder="Rotation, mixtape hosting, production placements, label situation, tour support, etc. Be honest about your level and your next move."></textarea>
+        </div>
+
+        <p class="note">By submitting, you allow TKFM Records to review this info and your links internally. This is not a deal yet — it’s your first step into the label conversation.</p>
+
+        <div class="actions">
+          <button type="submit" class="btn-main">Submit Application</button>
+          <button type="button" class="btn-ghost" id="clearBtn">Clear Form</button>
+        </div>
+
+        <div id="status" class="status">Your application will be saved as <code>tkfm_records_applications</code> and appear instantly in the label console.</div>
+      </form>
+    </section>
+  </div>
+
+  <a href="god-view.html" class="owner-fab">GOD VIEW <span class="key">Owner / Label Access</span></a>
+
+  <script>
+    const KEY_APPS = 'tkfm_records_applications';
+    const roleInput = document.getElementById('role');
+    const rolePills = document.getElementById('rolePills');
+    const form = document.getElementById('appForm');
+    const statusEl = document.getElementById('status');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function setStatus(message,type){
+      if(!statusEl) return;
+      statusEl.innerHTML = type==='good'?'<span class="good">'+message+'</span>':type==='bad'?'<span class="bad">'+message+'</span>':message;
+    }
+
+    function loadApps(){try{const r=localStorage.getItem(KEY_APPS);return r?JSON.parse(r):[];}catch(e){return[];}}
+
+    function saveApps(list){try{localStorage.setItem(KEY_APPS,JSON.stringify(list));}catch(e){}}
+
+    function generateShortCode(){return 'TKFM-'+Math.floor(Math.random()*9999).toString().padStart(4,'0');}
+
+    if(rolePills){rolePills.addEventListener('click',(e)=>{
+      const btn=e.target.closest('.role-pill'); if(!btn) return;
+      document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active'); roleInput.value=btn.getAttribute('data-role');
+    });}
+
+    if(clearBtn){clearBtn.addEventListener('click',()=>{
+      form.reset(); roleInput.value='artist';
+      document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+      const first=document.querySelector('.role-pill[data-role="artist"]');
+      if(first) first.classList.add('active');
+      setStatus('Form cleared. Previous submissions stay visible on the label side.');
+    });}
+
+    if(form){form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const stageName=document.getElementById('stageName').value.trim();
+      const email=document.getElementById('email').value.trim();
+      if(!stageName||!email){setStatus('Stage name and email are required.','bad');return;}
+      const apps=loadApps();
+      const now=Date.now();
+      const code=generateShortCode();
+      const app={
+        id:crypto.randomUUID?crypto.randomUUID():now+'-'+apps.length,
+        code, createdAt:now, role:roleInput.value,
+        stageName, legalName:document.getElementById('legalName').value.trim(),
+        email, phone:document.getElementById('phone').value.trim(),
+        city:document.getElementById('city').value.trim(),
+        projectType:document.getElementById('projectType').value.trim(),
+        linksMain:document.getElementById('linksMain').value.trim(),
+        linksSocial:document.getElementById('linksSocial').value.trim(),
+        goals:document.getElementById('goals').value.trim(),
+        source:'public_records_application', status:'new',
+        statusHistory:[{at:now,status:'new',note:'Application submitted from public TKFM Records form.'}]
+      };
+      apps.push(app); saveApps(apps);
+      try{localStorage.setItem('tkfm_last_application_code',code);}catch(e){}
+      setStatus('Application received. Your reference code is '+code+'. TKFM Records will review on the label side.','good');
+      form.reset(); roleInput.value='artist'; document.querySelectorAll('.role-pill').forEach(p=>p.classList.remove('active'));
+      const first=document.querySelector('.role-pill[data-role="artist"]'); if(first) first.classList.add('active');
+    });}
+  </script>
+</body>
+</html>

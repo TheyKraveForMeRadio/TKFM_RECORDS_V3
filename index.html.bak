@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>They Krave For Me Records — TKFM</title>
+<meta name="description" content="TKFM Records — Independent Artist Power Station. Mixtape Spotlight, Owner Console, DJ tools, paid promotion, and catalog engines.">
+
+<style>
+:root {
+  --bg:#020617; --p:#facc15; --pk:#eab308; --c:#f97316; --b:#3b82f6;
+  --t:rgba(226,232,240,1); --m:rgba(148,163,184,.95); --stroke:rgba(148,163,184,.18);
+  --panel:rgba(2,6,23,.80); --shadow:0 0 0 1px rgba(255,255,255,.04),0 22px 70px rgba(0,0,0,.55);
+  --r:26px;
+}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--t);background:var(--bg);overflow-x:hidden}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button{font-family:inherit}
+.bg{position:fixed;inset:0;z-index:-5;background:radial-gradient(circle at 30% 30%,rgba(250,204,21,.12),transparent 60%),radial-gradient(circle at 70% 70%,rgba(234,179,8,.08),transparent 60%);filter:blur(2px);}
+.wrap{max-width:1240px;margin:0 auto;padding:22px}
+.glass{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+.card{padding:18px;border-radius:28px}
+.k{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--m)}
+.h1{margin:10px 0 0;font-size:44px;line-height:1.05;font-weight:950}
+.p{margin:10px 0 0;color:var(--m);line-height:1.6;font-size:14px;max-width:980px}
+.grad{background-image:linear-gradient(90deg,var(--p),var(--pk),var(--c),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+header{position:sticky;top:0;z-index:90;background:rgba(0,0,0,.72);border-bottom:1px solid rgba(30,41,59,.65);backdrop-filter:blur(14px)}
+header .wrap{display:flex;align-items:center;gap:14px;padding:12px 22px}
+.brand{display:flex;align-items:center;gap:12px;min-width:260px}
+.logoWrap{position:relative;width:58px;height:58px;border-radius:18px;transform-style:preserve-3d;animation:logoFloat 3s ease-in-out infinite}
+@keyframes logoFloat{0%,100%{transform:translate3d(0,0,0) rotateX(0deg) rotateY(0deg)}50%{transform:translate3d(0,-2px,0) rotateX(7deg) rotateY(-10deg)}}
+.brand img{position:absolute;inset:0;margin:auto;height:44px;width:auto;object-fit:contain;transform:translateZ(16px)}
+.nav{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.28);background:rgba(15,23,42,.62);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(226,232,240,.95);transition:transform .16s ease,border-color .16s ease,background .16s ease;white-space:nowrap}
+.pill:hover{transform:translateY(-1px);border-color:var(--b);background:rgba(15,23,42,.90)}
+.menuBtn{display:none;margin-left:auto;width:44px;height:44px;border-radius:14px;border:1px solid rgba(148,163,184,.28);background:rgba(15,23,42,.60);color:rgba(226,232,240,.96);cursor:pointer}
+.drawer{display:none;position:fixed;left:16px;right:16px;top:74px;z-index:120;background:rgba(0,0,0,.72);border:1px solid rgba(148,163,184,.22);border-radius:20px;backdrop-filter:blur(14px);padding:10px}
+.drawer a{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 12px;border-radius:16px;border:1px solid rgba(148,163,184,.14);background:rgba(15,23,42,.55);margin:8px 0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:900}
+.drawer a:hover{border-color:var(--b);background:rgba(15,23,42,.86)}
+@media (max-width:980px){.nav{display:none}.menuBtn{display:grid;place-items:center}}
+.grid{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:1120px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.tile{padding:16px;border-radius:22px;position:relative;overflow:hidden;background:rgba(2,6,23,.55);border:1px solid rgba(148,163,184,.12)}
+.tile>*{position:relative}
+.tileK{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--m)}
+.tileH{margin-top:8px;font-size:18px;font-weight:950}
+.tileP{margin-top:8px;color:var(--m);font-size:13px;line-height:1.55}
+.tags{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:7px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.55);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--t)}
+.tag.pay{border-color:var(--p)}
+.tag.dj{border-color:var(--pk)}
+.footer{margin-top:80px;border-top:1px solid rgba(30,41,59,.7);background:rgba(0,0,0,.58);color:var(--m);font-size:12px;letter-spacing:.08em}
+.footer .wrap{padding:18px 22px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/index.html" aria-label="TKFM Records Home">
+      <div class="logoWrap">
+        <img src="/tkfm-records-logo.png" alt="TKFM Records" />
+      </div>
+      <div>
+        <div class="k">They Krave For Me Records</div>
+        <div class="title">Independent Artist Power Station</div>
+      </div>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="pill" href="/index.html">Home</a>
+      <a class="pill" href="/tkfm-mixtape-spotlight.html">Mixtape Spotlight</a>
+      <a class="pill" href="/tkfm-owner-console.html">Owner Console</a>
+      <a class="pill" href="/tkfm-catalog.html">Catalog</a>
+      <a class="pill" href="/pricing.html">Monthly Tiers</a>
+      <a class="pill" href="/submit.html">Submit</a>
+    </nav>
+
+    <button class="menuBtn" id="menuBtn" aria-label="Menu">≡</button>
+  </div>
+
+  <div class="drawer" id="drawer" aria-label="Mobile Menu">
+    <a href="/index.html"><span>Home</span><span>→</span></a>
+    <a href="/tkfm-mixtape-spotlight.html"><span>Mixtape Spotlight</span><span>→</span></a>
+    <a href="/tkfm-owner-console.html"><span>Owner Console</span><span>→</span></a>
+    <a href="/tkfm-catalog.html"><span>Catalog</span><span>→</span></a>
+    <a href="/pricing.html"><span>Monthly Tiers</span><span>→</span></a>
+    <a href="/submit.html"><span>Submit</span><span>→</span></a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="glass card">
+    <div class="k">TKFM Records</div>
+    <div class="h1">Mixtape Spotlight & Owner Console</div>
+    <p class="p">Manage your mixtapes, DJ uploads, and spotlight features directly from the console.</p>
+
+    <div class="grid">
+      <a class="tile" href="/tkfm-mixtape-spotlight.html">
+        <div class="tileK">Spotlight</div>
+        <div class="tileH">Mixtape Spotlight</div>
+        <div class="tileP">Showcase top mixtapes for the week and feature artists.</div>
+        <div class="tags"><span class="tag pay">FEATURED</span></div>
+      </a>
+
+      <a class="tile" href="/tkfm-owner-console.html">
+        <div class="tileK">Owner Tools</div>
+        <div class="tileH">Owner Console</div>
+        <div class="tileP">Full dashboard for uploads, analytics, and spotlight approvals.</div>
+        <div class="tags"><span class="tag dj">ADMIN</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div>© 2026 They Krave For Me Records (TKFM)</div>
+  </div>
+</footer>
+
+</body>
+</html>

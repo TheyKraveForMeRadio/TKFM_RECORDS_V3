@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TKFM Records — Distribution Submit</title>
+
+<meta name="artist-email" content="">
+<meta name="tkfm-lane" content="records-only">
+
+<script src="/js/tkfm-contract-engine.js"></script>
+<script src="/js/tkfm-lock-guard.js"></script>
+<script src="/js/tkfm-distribution-store.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Submit Release for Distribution</h2>
+
+<input id="title" placeholder="Track / Project Title"><br>
+<input id="artist" placeholder="Artist Name"><br>
+<select id="type">
+  <option>Single</option>
+  <option>EP</option>
+  <option>Album</option>
+</select><br>
+
+<button onclick="submit()">Submit to Label</button>
+
+<script>
+function submit() {
+  const email = document.querySelector('meta[name="artist-email"]').content;
+  if (TKFM_CONTRACT.isLocked(email)) {
+    alert("Contract issue. Submission blocked.");
+    return;
+  }
+
+  TKFM_DISTRIBUTION.submit({
+    artistEmail: email,
+    title: title.value,
+    artistName: artist.value,
+    releaseType: type.value
+  });
+
+  alert("Release submitted to TKFM Records.");
+}
+</script>
+
+</body>
+</html>

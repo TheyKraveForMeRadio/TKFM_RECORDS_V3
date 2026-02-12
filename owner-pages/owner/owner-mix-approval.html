@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TKFM Owner — Mix Approval</title>
+<script src="/js/tkfm-mix-workflow.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Mix Review Queue</h2>
+<div id="queue"></div>
+
+<script>
+const list = TKFM_MIXES.all();
+list.forEach(m => {
+  const d = document.createElement("div");
+  d.innerHTML = `
+    <b>${m.title}</b><br>
+    Artist: ${m.artistEmail}<br>
+    Status: ${m.status}<br>
+    <textarea id="n_${m.id}" placeholder="Notes">${m.notes || ""}</textarea><br>
+    <button onclick="approve('${m.id}')">Approve</button>
+    <button onclick="revise('${m.id}')">Needs Revision</button>
+    <button onclick="reject('${m.id}')">Reject</button>
+    <hr>
+  `;
+  queue.appendChild(d);
+});
+
+function approve(id){
+  TKFM_MIXES.update(id,{ status:"approved" });
+  location.reload();
+}
+function revise(id){
+  const notes = document.getElementById("n_"+id).value;
+  TKFM_MIXES.update(id,{ status:"revision", notes });
+  location.reload();
+}
+function reject(id){
+  TKFM_MIXES.update(id,{ status:"rejected" });
+  location.reload();
+}
+</script>
+
+</body>
+</html>

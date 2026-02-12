@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>TKFM Records — Label Revenue Console</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- OWNER + ACCESS -->
+  <meta name="tkfm-access" content="owner" />
+  <script src="/js/tkfm-owner-guard.js"></script>
+  <script src="/js/tkfm-owner-gate-no-redirect.js"></script>
+  <script src="/js/access-gates.js" defer></script>
+
+  <!-- THEME -->
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <!-- FX / CHECKOUT -->
+  <script src="/js/tkfm-fx.js"></script>
+  <script src="/js/tkfm-checkout.js"></script>
+  <script src="/js/tkfm-quick-checkout.js"></script>
+
+  <!-- UI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/js/logo-check.js" defer></script>
+
+  <style>
+    body{
+      background:#020617;
+      background-image:
+        radial-gradient(circle at 10% 0,rgba(250,204,21,0.18),transparent 55%),
+        radial-gradient(circle at 90% 0,rgba(236,72,153,0.18),transparent 55%),
+        radial-gradient(circle at 50% 100%,rgba(168,85,247,0.22),transparent 55%);
+    }
+    ::-webkit-scrollbar{height:6px;width:6px}
+    ::-webkit-scrollbar-thumb{background:#334155;border-radius:999px}
+  </style>
+</head>
+
+<body class="text-slate-50 min-h-screen flex flex-col" data-tkfm-theme="label">
+<div id="tkfmOwnerLock"></div>
+<script>window.TKFM_FX&&TKFM_FX.mount({theme:'label'})</script>
+
+<header class="w-full border-b border-yellow-500/40 bg-black/60 backdrop-blur-xl sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+    <a href="label-home.html" class="flex items-center gap-3">
+      <img src="/tkfm-records-logo.png" class="h-9 w-auto" />
+      <div>
+        <div class="text-[0.6rem] uppercase tracking-[0.35em] text-yellow-400/80">
+          TKFM Records • Owner View
+        </div>
+        <div class="text-sm font-semibold">
+          Label <span class="text-yellow-300">Revenue Console</span>
+        </div>
+      </div>
+    </a>
+    <nav class="ml-auto flex flex-wrap gap-2 text-[0.7rem] uppercase tracking-[0.22em]">
+      <a href="dj-mixtape-hosting.html" class="pill purple">🔥 Mixtape Hosting</a>
+      <a href="dj-mixtape-orders.html" class="pill cyan">📂 Orders</a>
+      <a href="label-sponsor-engine.html" class="pill gold">🏷 Sponsor Engine</a>
+      <a href="sponsor-rotator.html" class="pill emerald">↻ Rotator</a>
+      <a href="god-view.html" class="pill cyan">👁 GOD VIEW</a>
+      <a href="tkfm-dev-console.html" class="pill slate">🛠 Dev</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-1 max-w-6xl mx-auto px-4 pt-8 pb-10">
+  <h1 class="text-3xl font-extrabold mb-4">
+    The money side of <span class="text-yellow-300">TKFM Records</span>
+  </h1>
+
+  <div id="lr-console"></div>
+</main>
+
+<footer class="border-t border-yellow-500/40 bg-black/50">
+  <div class="max-w-6xl mx-auto px-4 py-4 text-[0.7rem] text-slate-300">
+    © 2025 TKFM Records — Revenue Console
+  </div>
+</footer>
+
+<script>
+const PRICE_TABLE={Starter:500,Pro:1000,Elite:2500}
+
+function getOrders(){
+  try{return JSON.parse(localStorage.getItem('mixtapeOrders')||'[]')}catch{return[]}
+}
+function saveOrders(o){localStorage.setItem('mixtapeOrders',JSON.stringify(o))}
+function money(n){return '$'+(Number(n)||0).toLocaleString()}
+
+function render(){
+  const orders=getOrders()
+  document.getElementById('lr-console').innerHTML=
+    '<pre>'+JSON.stringify(orders,null,2)+'</pre>'
+}
+
+document.addEventListener('DOMContentLoaded',render)
+
+/* 🔥 STRIPE AUTO-REFRESH HOOK */
+window.addEventListener('storage',e=>{
+  if(e.key==='mixtapeOrders') render()
+})
+</script>
+
+<script src="/js/owner-lock.js" data-owner-page="owner"></script>
+<script src="/js/tkfm-owner-override.js"></script>
+<script type="module" src="/js/tkfm-logo-resolver.js"></script>
+</body>
+</html>

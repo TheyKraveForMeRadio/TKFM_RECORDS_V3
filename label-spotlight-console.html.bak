@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TKFM Records — Label Spotlight Console</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- OWNER LOCK -->
+<script src="/js/tkfm-owner-guard.js"></script>
+<script src="/js/owner-lock.js"></script>
+
+<style>
+:root{
+ --bg:#020617;--gold:#facc15;--gold2:#eab308;--txt:#f8fafc;
+ --panel:rgba(2,6,23,.9);--stroke:rgba(255,255,255,.08)
+}
+*{box-sizing:border-box}
+body{
+ margin:0;padding:24px;font-family:system-ui;
+ background:var(--bg);color:var(--txt)
+}
+h1{color:var(--gold)}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+ gap:20px;margin-top:20px
+}
+.card{
+ background:var(--panel);border:1px solid var(--stroke);
+ border-radius:18px;padding:18px
+}
+.title{font-size:1.1rem;font-weight:700}
+.artist{color:#94a3b8}
+.badges span{
+ display:inline-block;margin:6px 6px 0 0;padding:4px 8px;
+ border-radius:10px;font-size:.75rem
+}
+.radio{background:#22d3ee;color:#020617}
+.home{background:#3b82f6}
+.contract{background:#facc15;color:#020617}
+.controls{margin-top:12px;display:grid;gap:8px}
+button{
+ padding:8px;border-radius:10px;border:none;
+ font-weight:700;cursor:pointer
+}
+.b-radio{background:#22d3ee;color:#020617}
+.b-home{background:#3b82f6;color:white}
+.b-contract{background:#facc15;color:#020617}
+.b-remove{background:#7f1d1d;color:white}
+</style>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+
+<body>
+<h1>🎛️ TKFM Label Mixtape Spotlight Console</h1>
+<p>Owner-only control of Radio, Homepage, and Contract spotlight.</p>
+
+<div id="grid" class="grid"></div>
+
+<script>
+if(!ownerLock('label-spotlight-console')) throw 'LOCKED';
+
+const grid=document.getElementById('grid');
+
+function load(){
+ grid.innerHTML='';
+ const list=JSON.parse(localStorage.getItem('labelQueue')||'[]');
+ list.forEach(x=>{
+  const card=document.createElement('div');
+  card.className='card';
+
+  card.innerHTML=`
+   <div class="title">${x.title||'Untitled'}</div>
+   <div class="artist">${x.artist||'Unknown Artist'}</div>
+   <div class="badges">
+     ${x.radio?'<span class="radio">Radio</span>':''}
+     ${x.home?'<span class="home">Homepage</span>':''}
+     ${x.contract?'<span class="contract">Contract</span>':''}
+   </div>
+   <div class="controls">
+     <button class="b-radio">Toggle Radio</button>
+     <button class="b-home">Toggle Homepage</button>
+     <button class="b-contract">Toggle Contract</button>
+     <button class="b-remove">Remove</button>
+   </div>
+  `;
+
+  const btns=card.querySelectorAll('button');
+
+  btns[0].onclick=()=>toggle(x.id,'radio');
+  btns[1].onclick=()=>toggle(x.id,'home');
+  btns[2].onclick=()=>toggle(x.id,'contract');
+  btns[3].onclick=()=>remove(x.id);
+
+  grid.appendChild(card);
+ });
+}
+
+function toggle(id,key){
+ const list=JSON.parse(localStorage.getItem('labelQueue')||'[]');
+ const i=list.findIndex(x=>x.id===id);
+ list[i][key]=!list[i][key];
+ localStorage.setItem('labelQueue',JSON.stringify(list));
+ load();
+}
+
+function remove(id){
+ if(!confirm('Remove this entry?')) return;
+ const list=JSON.parse(localStorage.getItem('labelQueue')||'[]')
+   .filter(x=>x.id!==id);
+ localStorage.setItem('labelQueue',JSON.stringify(list));
+ load();
+}
+
+load();
+</script>
+</body>
+</html>

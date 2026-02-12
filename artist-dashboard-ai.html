@@ -1,0 +1,35 @@
+<!-- TKFM Records V3 — AI Engines Usage -->
+<h2>AI Tools & Monetization</h2>
+
+<!-- Master Track -->
+<button onclick="TKFM_AI_ENGINES.masterTrack('/tracks/mytrack.mp3').then(url => alert('Mastered Track: '+url))">
+  AI Master Track
+</button>
+
+<!-- Generate Artist Catalog -->
+<button onclick="TKFM_AI_ENGINES.generateCatalog()">
+  Generate Artist Catalog
+</button>
+<div id="artistCatalog"></div>
+
+<hr>
+
+<!-- AI Drops -->
+<h3>AI Drops Engine</h3>
+<button onclick="TKFM_AI_ENGINES.buyDrops('ai_drops_25').then(res => alert('Purchased: '+res.dropKey))">
+  Buy AI Drops (25)
+</button>
+<button onclick="TKFM_AI_ENGINES.createDrop('artist@example.com','ai_drops_25').then(res => alert('Drop Created: '+res.url))">
+  Create AI Drop
+</button>
+
+<hr>
+
+<!-- Sponsor Reads -->
+<h3>Sponsor Read Engine</h3>
+<button onclick="TKFM_AI_ENGINES.buySponsorPack('sponsor_read_20pack').then(res => alert('Purchased: '+res.packKey))">
+  Buy Sponsor Reads (20)
+</button>
+<button onclick="TKFM_AI_ENGINES.submitSponsorRead('artist@example.com','sponsor_read_20pack','My custom script here').then(res => alert('Sponsor Read Created: '+res.scriptUrl))">
+  Submit Sponsor Read
+</button>

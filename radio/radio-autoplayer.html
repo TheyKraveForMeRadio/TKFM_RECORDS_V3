@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TKFM Auto Radio</title>
+
+<script src="/js/tkfm-radio-rotation-engine.js"></script>
+<script src="/js/tkfm-radio-tiers.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Live Rotation</h2>
+<div id="now"></div>
+
+<script>
+const tracks = TKFM_RADIO.all();
+let i = 0;
+
+function playNext(){
+  if (!tracks.length) return;
+
+  const t = tracks[i % tracks.length];
+  const rules = TKFM_RADIO_TIERS[t.tier] || TKFM_RADIO_TIERS.basic;
+
+  now.innerHTML = `
+    Now Playing:<br>
+    <b>${t.title}</b><br>
+    Artist: ${t.artistEmail}<br>
+    Tier: ${t.tier}
+  `;
+
+  TKFM_RADIO.spin(t.id);
+  i++;
+
+  setTimeout(playNext, 60000 / rules.spinsPerDay);
+}
+
+playNext();
+</script>
+
+</body>
+</html>

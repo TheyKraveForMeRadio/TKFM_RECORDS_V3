@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="utf-8">
+  <title>TKFM Records — GOD VIEW</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <style>
+    :root{
+      --bg:#020617;
+      --panel:rgba(6,8,20,.98);
+      --soft:rgba(15,23,42,.96);
+      --gold:#facc15;
+      --pink:#ec4899;
+      --purple:#a855f7;
+      --cyan:#22d3ee;
+      --text:#f9fafb;
+      --muted:#94a3b8;
+      --border:rgba(148,163,184,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      background:linear-gradient(to bottom,#020617,#000);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+      padding:1.4rem;
+    }
+    .shell{max-width:1120px;margin:auto}
+    h2{margin:.8rem 0 .4rem;font-size:1.1rem}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:1rem;
+      padding:.7rem;
+      font-size:.75rem;
+    }
+    .row{display:flex;justify-content:space-between;align-items:center}
+    .btn{
+      margin:.25rem .25rem 0 0;
+      padding:.3rem .6rem;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:var(--soft);
+      color:var(--text);
+      cursor:pointer;
+      font-size:.65rem;
+    }
+    .btn.main{
+      background:linear-gradient(135deg,var(--pink),var(--purple));
+      color:#020617;
+      font-weight:700;
+    }
+
+    /* MODAL */
+    .modal-backdrop{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+    }
+    .modal{
+      background:var(--panel);
+      border-radius:1rem;
+      width:90%;
+      max-width:620px;
+      padding:1rem;
+      max-height:80vh;
+      overflow:auto;
+    }
+    .modal h3{margin-bottom:.4rem}
+    .close{cursor:pointer;color:var(--pink);font-weight:700}
+    pre{white-space:pre-wrap;font-size:.7rem}
+  </style>
+</head>
+
+<body>
+<div id="tkfmOwnerLock"></div>
+<div class="shell">
+
+<h2>Applications</h2>
+<div id="apps" class="grid"></div>
+
+<h2>Sponsors</h2>
+<div id="sponsors" class="grid"></div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-backdrop">
+  <div class="modal">
+    <div class="row">
+      <h3 id="modalTitle"></h3>
+      <span class="close" onclick="closeModal()">✕</span>
+    </div>
+    <pre id="modalBody"></pre>
+    <button class="btn main" onclick="copyModal()">COPY</button>
+  </div>
+</div>
+
+<script src="/js/tkfm-owner-guard.js"></script>
+<script src="/js/tkfm-owner-gate-no-redirect.js"></script>
+<script src="/js/owner-lock.js"></script>
+
+<script>
+const APPS_KEY='tkfm_records_applications'
+const SPONSOR_KEY='tkfm_sponsors'
+const modal=document.getElementById('modal')
+const modalBody=document.getElementById('modalBody')
+const modalTitle=document.getElementById('modalTitle')
+
+function openModal(title,body){
+  modalTitle.textContent=title
+  modalBody.textContent=body
+  modal.style.display='flex'
+}
+function closeModal(){modal.style.display='none'}
+function copyModal(){navigator.clipboard.writeText(modalBody.textContent)}
+
+function load(key){
+  try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return[]}
+}
+function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+
+function renderApps(){
+  const wrap=document.getElementById('apps')
+  wrap.innerHTML=''
+  load(APPS_KEY).forEach(a=>{
+    const c=document.createElement('div')
+    c.className='card'
+    c.innerHTML=`
+      <div class="row"><strong>${a.stageName||'Artist'}</strong><span>${a.status||'new'}</span></div>
+      <div>${a.role||'creator'} • ${a.projectType||'project'}</div>
+      <button class="btn" onclick="contract('${a.stageName||''}')">Contract Draft</button>
+    `
+    wrap.appendChild(c)
+  })
+}
+
+function contract(name){
+  openModal(
+    'Contract Draft',
+    'ARTIST CONTRACT DRAFT\\n\\nArtist: '+name+'\\nTKFM Records\\nTerms Pending Finalization'
+  )
+}
+
+async function renderSponsors(){
+  const wrap=document.getElementById('sponsors')
+  wrap.innerHTML=''
+  let credits=0
+  try{
+    const r=await fetch('/.netlify/functions/sponsor-credits-get')
+    const d=await r.json()
+    credits=d.credits||0
+  }catch{}
+
+  load(SPONSOR_KEY).forEach(s=>{
+    const c=document.createElement('div')
+    c.className='card'
+    c.innerHTML=`
+      <div class="row"><strong>${s.brand||'Sponsor'}</strong></div>
+      <div>Status: ${credits>0?'Unlocked':'Locked'}</div>
+      <div>Credits: ${credits}</div>
+      <button class="btn main" onclick="sponsorDetails('${s.brand||''}',${credits})">Sponsor Details</button>
+    `
+    wrap.appendChild(c)
+  })
+}
+
+function sponsorDetails(name,credits){
+  openModal(
+    'Sponsor Overview',
+    'Brand: '+name+
+    '\\nCredits: '+credits+
+    '\\nUnlocked: '+(credits>0?'YES':'NO')+
+    '\\n\\nStripe purchases update live.'
+  )
+}
+
+renderApps()
+renderSponsors()
+setInterval(renderSponsors,5000)
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM ∞ — GOD MODE</title>
+</head>
+<body>
+<h1>TKFM GLOBAL LABEL OS</h1>
+
+<button onclick="fetch('/.netlify/functions/global-domination-cron')">
+INITIATE GLOBAL CONTROL
+</button>
+
+<button onclick="fetch('/.netlify/functions/ai-dj-engine')">
+DEPLOY AI DJs
+</button>
+
+<button onclick="fetch('/.netlify/functions/create-franchise', {
+method:'POST',
+body:JSON.stringify({ city:'NEW YORK', owner_email:'you@tkfm.com'})
+})">
+SPAWN FRANCHISE
+</button>
+
+<button onclick="fetch('/.netlify/functions/mint-token', {
+method:'POST',
+body:JSON.stringify({ email:'artist@example.com', amount:100 })
+})">
+MINT TOKENS
+</button>
+
+</body>
+</html>

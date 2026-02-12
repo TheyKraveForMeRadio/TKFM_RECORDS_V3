@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records V3 — Artist Dashboard</title>
+<link rel="stylesheet" href="/css/tkfm-records.css">
+
+<!-- JS Engines & Label -->
+<script src="/js/tkfm-ai-engines.js" defer></script>
+<script src="/js/tkfm-label-gate.js" defer></script>
+<script src="/js/label-subscribe-btn.js" defer></script>
+<script src="/js/tkfm-contract.js" defer></script>
+<script src="/js/tkfm-distribution.js" defer></script>
+<script src="/js/tkfm-radio-rotation.js" defer></script>
+<script src="/js/tkfm-royalties.js" defer></script>
+<script src="/js/tkfm-owner-mix.js" defer></script>
+<script src="/js/tkfm-owner-credit-panel.js" defer></script>
+</head>
+<body>
+<h1>TKFM Records — Artist Dashboard</h1>
+
+<button id="subscribeBtn">Subscribe to TKFM Label</button>
+
+<h2>Artist Contract</h2>
+<button id="acceptContractBtn">Accept TKFM Artist Contract</button>
+
+<h2>Submit Track</h2>
+<input type="text" id="trackName" placeholder="Track Name">
+<input type="text" id="trackUrl" placeholder="Track URL">
+<button id="submitTrackBtn">Submit Track</button>
+
+<h2>Your Tracks</h2>
+<div id="trackList"></div>
+
+<h2>Your Royalty Statements</h2>
+<div id="royaltyStatements"></div>
+
+<h2>Owner Credit Panel</h2>
+<div id="ownerCreditPanel"></div>
+
+<h2>Credit Usage Analytics</h2>
+<div id="creditAnalytics"></div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const email = params.get("email") || "artist@example.com";
+
+window.TKFM_EMAIL = email;
+
+// Label + contract enforcement
+TKFM_LABEL_GATE.enforce(email);
+document.getElementById("acceptContractBtn").addEventListener("click", async () => {
+  const confirmed = confirm("Do you accept the TKFM Records Artist Contract?");
+  if (!confirmed) return;
+  const res = await TKFM_CONTRACT.submitContract(email, true);
+  if (res.success) alert("Contract accepted!");
+  enforceContract();
+});
+async function enforceContract() {
+  const allowed = await TKFM_CONTRACT.requireContract(email);
+  if (!allowed) document.querySelectorAll("button").forEach(b => b.disabled = true);
+}
+enforceContract();
+
+// Submit track + revenue
+document.getElementById("submitTrackBtn").addEventListener("click", async () => {
+  const name = document.getElementById("trackName").value;
+  const url = document.getElementById("trackUrl").value;
+  if (!name || !url) return alert("Track name and URL required.");
+  const res = await TKFM_DISTRIBUTION.submitTrack(email, name, url);
+  if (res.success) {
+    alert("Track submitted!");
+    await TKFM_ROYALTIES.recordRevenue(email, name, 100);
+    renderTracks();
+    TKFM_ROYALTIES.renderStatements(email, "royaltyStatements");
+  }
+});
+async function renderTracks() {
+  const tracks = await TKFM_DISTRIBUTION.listTracks(email);
+  const div = document.getElementById("trackList");
+  div.innerHTML = "";
+  tracks.forEach((t, idx) => {
+    const btn = t.status==="distributed" ? 
+      `<span>Distributed ✅</span>` : 
+      `<button onclick="TKFM_DISTRIBUTION.distributeTrack('${email}', ${idx}).then(r=>{alert('Distributed!'); renderTracks();})">Distribute</button>`;
+    div.innerHTML += `<div>${t.trackName} - ${t.status} ${btn}</div>`;
+  });
+}
+renderTracks();
+TKFM_ROYALTIES.renderStatements(email, "royaltyStatements");
+
+// Owner Credit Panel & analytics
+TKFM_OWNER_CREDIT_PANEL.render(email);
+async function renderCreditAnalytics(email) {
+  const res = await fetch('/.netlify/functions/use-credit', { method:'POST', body:JSON.stringify({email}) });
+  const data = await res.json();
+  document.getElementById('creditAnalytics').innerHTML = `<pre>${JSON.stringify(data,null,2)}</pre>`;
+}
+renderCreditAnalytics(email);
+
+// AI Tools
+TKFM_AI_ENGINES.refreshUI();
+</script>
+
+<h2>AI Tools</h2>
+<button data-credit="ai_drops_25" onclick="TKFM_AI_ENGINES.useDrop('ai_drops_25').then(r=>{alert(r); TKFM_AI_ENGINES.refreshUI();})">Create AI Drop</button>
+<button data-credit="sponsor_read_20pack" onclick="TKFM_AI_ENGINES.useSponsorRead('sponsor_read_20pack').then(r=>{alert(r); TKFM_AI_ENGINES.refreshUI();})">Sponsor Read</button>
+<button onclick="TKFM_AI_ENGINES.masterTrack('/tracks/mytrack.mp3').then(a=>alert(a))">AI Master Track</button>
+<button onclick="TKFM_AI_ENGINES.generateCatalog()">Generate Artist Catalog</button>
+
+<h2>TKFM Radio — Auto Rotation</h2>
+<audio id="tkfmRadioPlayer" controls></audio>
+<button onclick="TKFM_RADIO.playNext('tkfmRadioPlayer')">Start Radio Rotation</button>
+
+<script>
+// Auto monetization
+async function playTrackWithRevenue(audioEl, trackUrl, trackName) {
+  audioEl.src = trackUrl; await audioEl.play();
+  await fetch('/.netlify/functions/radio-play',{method:'POST', body:JSON.stringify({trackName, artistEmail:window.TKFM_EMAIL})});
+}
+const originalPlayNext = TKFM_RADIO.playNext;
+TKFM_RADIO.playNext = async function(playerId){
+  const audioEl = document.getElementById(playerId);
+  const nextTrack = TKFM_RADIO.nextTrackUrl();
+  const trackName = TKFM_RADIO.nextTrackName();
+  if(!nextTrack) return;
+  await playTrackWithRevenue(audioEl, nextTrack, trackName);
+  originalPlayNext(playerId);
+};
+</script>
+
+<h2>Owner Mix Approval</h2>
+<div id="ownerTrackList"></div>
+<script>
+async function renderOwnerTracks() {
+  const db = await TKFM_OWNER_MIX.listSubmittedTracks();
+  const div = document.getElementById("ownerTrackList");
+  div.innerHTML = "";
+  for(const email in db) {
+    db[email].forEach((t, idx) => {
+      const btns = t.status==="submitted" ?
+        `<button onclick="TKFM_OWNER_MIX.approveTrack('${email}',${idx}).then(r=>{alert('Approved'); renderOwnerTracks(); renderTracks();})">Approve</button>
+         <button onclick="TKFM_OWNER_MIX.requestChanges('${email}',${idx}).then(r=>{alert('Changes Requested'); renderOwnerTracks(); renderTracks();})">Request Changes</button>` :
+        `<span>Status: ${t.status}</span>`;
+      div.innerHTML += `<div>${email} - ${t.trackName} ${btns}</div>`;
+    });
+  }
+}
+renderOwnerTracks();
+</script>
+
+</body>
+</html>

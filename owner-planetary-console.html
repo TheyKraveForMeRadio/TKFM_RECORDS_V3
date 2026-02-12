@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Planetary Command Console</title>
+
+<link rel="stylesheet" href="/css/tkfm-records.css">
+
+<!-- JS Engines & Label -->
+<script src="/js/tkfm-ai-engines.js" defer></script>
+<script src="/js/tkfm-label-gate.js" defer></script>
+<script src="/js/label-subscribe-btn.js" defer></script>
+<script src="/js/tkfm-contract.js" defer></script>
+<script src="/js/tkfm-distribution.js" defer></script>
+<script src="/js/tkfm-radio-rotation.js" defer></script>
+<script src="/js/tkfm-royalties.js" defer></script>
+<script src="/js/tkfm-owner-mix.js" defer></script>
+<script src="/js/tkfm-owner-credit-panel.js" defer></script>
+<script src="/js/tkfm-un-culture.js" defer></script>
+
+</head>
+<body>
+<h1>🌐 TKFM Planetary Command Console</h1>
+
+<hr>
+<h2>1. Artist Monetization & Subscriptions</h2>
+<div id="artistSubscriptions"></div>
+
+<hr>
+<h2>2. Artist Track & Distribution Lab</h2>
+<div id="trackManagement"></div>
+
+<hr>
+<h2>3. Owner Credit Panel</h2>
+<div id="ownerCreditPanel"></div>
+
+<h2>Credit Usage Analytics</h2>
+<div id="creditAnalytics"></div>
+
+<hr>
+<h2>4. Auto Radio Player & Monetization</h2>
+<audio id="tkfmRadioPlayer" controls></audio>
+<button onclick="TKFM_RADIO.playNext('tkfmRadioPlayer')">Start Radio Rotation</button>
+
+<hr>
+<h2>5. AI Tools & Engines</h2>
+<div id="aiTools">
+<button data-credit="ai_drops_25"
+onclick="TKFM_AI_ENGINES.useDrop('ai_drops_25').then(r=>{alert(r); TKFM_AI_ENGINES.refreshUI();})">Create AI Drop</button>
+
+<button data-credit="sponsor_read_20pack"
+onclick="TKFM_AI_ENGINES.useSponsorRead('sponsor_read_20pack').then(r=>{alert(r); TKFM_AI_ENGINES.refreshUI();})">Sponsor Read</button>
+
+<button onclick="TKFM_AI_ENGINES.masterTrack('/tracks/mytrack.mp3').then(a=>alert(a))">AI Master Track</button>
+
+<button onclick="TKFM_AI_ENGINES.generateCatalog()">Generate Artist Catalog</button>
+</div>
+
+<hr>
+<h2>6. Owner Mix Approval</h2>
+<div id="ownerTrackList"></div>
+
+<hr>
+<h2>7. Planetary UN Digital Culture Seat</h2>
+<input id="label" placeholder="Label / Nation">
+<input id="activity_type" placeholder="Activity Type">
+<input id="desc" placeholder="Description">
+<button onclick="submitCulture()">Submit Cultural Activity</button>
+
+<h2>Recent Planetary Activity</h2>
+<pre id="cultureLog"></pre>
+
+<script>
+// GLOBAL email for AI + Analytics
+window.TKFM_EMAIL = 'owner@tkfm.com';
+
+// Load Artist Subscriptions
+async function renderArtistSubscriptions() {
+  const res = await fetch('/.netlify/functions/list-artists');
+  const artists = await res.json();
+  const div = document.getElementById('artistSubscriptions');
+  div.innerHTML = artists.map(a => `
+    <div>${a.email} - Plan: ${a.label_plan} - Active: ${a.subscription_active}</div>
+  `).join('');
+}
+renderArtistSubscriptions();
+
+// Owner Mix Approval
+async function renderOwnerTracks() {
+  const db = await TKFM_OWNER_MIX.listSubmittedTracks();
+  const div = document.getElementById("ownerTrackList");
+  div.innerHTML = "";
+  for (const email in db) {
+    db[email].forEach((t, idx) => {
+      const btns = t.status === "submitted" ?
+        `<button onclick="TKFM_OWNER_MIX.approveTrack('${email}', ${idx}).then(r=>{alert('Approved'); renderOwnerTracks();})">Approve</button>
+         <button onclick="TKFM_OWNER_MIX.requestChanges('${email}', ${idx}).then(r=>{alert('Changes Requested'); renderOwnerTracks();})">Request Changes</button>` :
+        `<span>Status: ${t.status}</span>`;
+      div.innerHTML += `<div>${email} - ${t.trackName} ${btns}</div>`;
+    });
+  }
+}
+renderOwnerTracks();
+
+// Credit Usage Analytics
+async function renderCreditAnalytics(email) {
+  const res = await fetch('/.netlify/functions/use-credit', {
+    method: 'POST',
+    body: JSON.stringify({ email })
+  });
+  const data = await res.json();
+  const div = document.getElementById('creditAnalytics');
+  div.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+}
+renderCreditAnalytics(window.TKFM_EMAIL);
+
+// Auto Radio Monetization
+async function playTrackWithRevenue(audioEl, trackUrl, trackName) {
+  audioEl.src = trackUrl;
+  await audioEl.play();
+  await fetch('/.netlify/functions/radio-play', {
+    method: 'POST',
+    body: JSON.stringify({ trackName, artistEmail: window.TKFM_EMAIL })
+  });
+}
+const originalPlayNext = TKFM_RADIO.playNext;
+TKFM_RADIO.playNext = async function(playerId) {
+  const audioEl = document.getElementById(playerId);
+  const nextTrack = TKFM_RADIO.nextTrackUrl();
+  const trackName = TKFM_RADIO.nextTrackName();
+  if (!nextTrack) return;
+  await playTrackWithRevenue(audioEl, nextTrack, trackName);
+  originalPlayNext(playerId);
+};
+
+// UN Digital Culture
+async function submitCulture() {
+  const label = document.getElementById('label').value;
+  const activity_type = document.getElementById('activity_type').value;
+  const description = document.getElementById('desc').value;
+  const r = await fetch('/.netlify/functions/un-digital-culture', {
+    method: 'POST',
+    body: JSON.stringify({ label, activity_type, description })
+  });
+  const res = await r.json();
+  alert('Logged: ' + JSON.stringify(res.record, null, 2));
+  loadCulture();
+}
+async function loadCulture() {
+  const r = await fetch('/.netlify/functions/fetch-global-culture');
+  const d = await r.json();
+  document.getElementById('cultureLog').textContent = JSON.stringify(d, null, 2);
+}
+loadCulture();
+</script>
+</body>
+</html>

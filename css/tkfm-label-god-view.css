@@ -1,0 +1,87 @@
+/* Table basics */
+#appsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  color: #f9fafb;
+}
+
+#appsTable th, #appsTable td {
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid rgba(148,163,184,0.2);
+  text-align: left;
+}
+
+/* Hover & selection effects */
+#appsTable tbody tr {
+  transition: background 0.25s, border-left 0.25s, color 0.25s;
+}
+
+#appsTable tbody tr:hover {
+  background: rgba(168,85,247,0.08);
+  cursor: pointer;
+}
+
+#appsTable tbody tr.selected {
+  background: rgba(236,72,153,0.15);
+  border-left: 3px solid #ec4899;
+}
+
+#appsTable tbody tr.selected td {
+  color: #f9fafb;
+}
+
+/* Status colors */
+#appsTable td:last-child {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+#appsTable td:last-child.new {
+  color: #22c55e; /* green */
+}
+
+#appsTable td:last-child.reviewed {
+  color: #3b82f6; /* blue */
+}
+
+#appsTable td:last-child.approved {
+  color: #facc15; /* gold */
+}
+
+#appsTable td:last-child.rejected {
+  color: #fb7185; /* red */
+}
+
+/* Checkbox alignment */
+#appsTable td input[type="checkbox"] {
+  transform: scale(1.1);
+  margin: 0;
+}
+/* Status colors */
+#appsTable td.status-cell.new { color: #facc15; font-weight:600; }       /* gold */
+#appsTable td.status-cell.reviewed { color: #a855f7; font-weight:600; }  /* purple */
+#appsTable td.status-cell.approved { color: #22c55e; font-weight:600; }  /* green */
+#appsTable td.status-cell.rejected { color: #fb7185; font-weight:600; }  /* pink/red */
+
+/* Row hover */
+#appsTable tbody tr:hover {
+  background: rgba(168,85,247,0.08);
+  cursor: pointer;
+}
+
+/* Selected rows */
+#appsTable tbody tr.selected {
+  background: rgba(236,72,153,0.15);
+  border-left: 3px solid #ec4899;
+}
+#appsTable tbody tr.selected td {
+  color: #f9fafb;
+}
+
+/* Status cells bold + hover highlight */
+#appsTable td.status-cell:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Artist Payouts — TKFM Records</title>
+<script src="/js/tkfm-royalty-engine.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Payouts</h2>
+
+<button id="connect">Connect Stripe Account</button>
+<hr>
+<div id="balance"></div>
+<button id="withdraw">Request Payout</button>
+
+<script>
+const email = document.querySelector('meta[name="artist-email"]')?.content;
+if(!email) document.body.innerHTML = "Artist email missing.";
+
+balance.innerHTML = "Balance: $" + TKFM_ROYALTIES.balance(email).toFixed(2);
+
+connect.onclick = async () => {
+  const r = await fetch("/.netlify/functions/create-artist-connect", {
+    method: "POST",
+    body: JSON.stringify({ email })
+  });
+  const d = await r.json();
+  localStorage.setItem("tkfm_artist_account", d.accountId);
+  location.href = d.url;
+};
+
+withdraw.onclick = async () => {
+  const accountId = localStorage.getItem("tkfm_artist_account");
+  if(!accountId) return alert("Stripe account not connected");
+
+  const amount = Math.floor(TKFM_ROYALTIES.balance(email) * 100);
+  if(amount < 100) return alert("Minimum payout $1");
+
+  await fetch("/.netlify/functions/process-royalty-payout", {
+    method: "POST",
+    body: JSON.stringify({ accountId, amountCents: amount })
+  });
+
+  alert("Payout initiated");
+};
+</script>
+
+</body>
+</html>

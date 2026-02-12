@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TKFM Sponsor Read Engine — Paid Lane</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="js/tkfm-functions-client.js"></script>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+<body>
+  <h1>TKFM Sponsor Read Engine (V3)</h1>
+  <p>Paid lane — buy credits, submit sponsor reads, get on-air.</p>
+  <script src="js/tkfm-sponsor-read.js"></script>
+  <script src="js/tkfm-owner-override.js"></script>
+</body>
+</html>

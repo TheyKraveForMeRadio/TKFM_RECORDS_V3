@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records V3 — Owner Dashboard</title>
+<link rel="stylesheet" href="/css/tkfm-records.css">
+<script src="/js/tkfm-ai-engines.js" defer></script>
+<script src="/js/tkfm-owner-credit-panel.js" defer></script>
+<script src="/js/tkfm-distribution.js" defer></script>
+<script src="/js/tkfm-radio-rotation.js" defer></script>
+<script src="/js/tkfm-royalties.js" defer></script>
+<script src="/js/tkfm-owner-mix.js" defer></script>
+</head>
+<body>
+<h1>TKFM Records — Owner Dashboard</h1>
+
+<!-- Owner Credit Injection Panel -->
+<h2>Inject Credits to Artist</h2>
+<div id="ownerCreditPanel"></div>
+
+<!-- Global Analytics -->
+<h2>Global Analytics</h2>
+<div id="analyticsOverview"></div>
+
+<!-- Artist Management -->
+<h2>Artists</h2>
+<div id="artistList"></div>
+
+<!-- Global Node Management -->
+<h2>Global Nodes</h2>
+<div id="globalNodes"></div>
+
+<!-- Finance Streams -->
+<h2>Finance Streams</h2>
+<div id="financeStreams"></div>
+
+<script>
+window.TKFM_OWNER_EMAIL = "owner@tkfm-records.com";
+
+// Render Owner Credit Panel
+TKFM_OWNER_CREDIT_PANEL.init("#ownerCreditPanel");
+
+// Fetch and render all artists
+async function renderArtists() {
+  const res = await fetch('/.netlify/functions/get-artists');
+  const data = await res.json();
+  const div = document.getElementById('artistList');
+  div.innerHTML = data.map(a => `
+    <div>
+      ${a.email} — Plan: ${a.label_plan} — Active: ${a.subscription_active}
+      <button onclick="TKFM_OWNER_CREDIT_PANEL.addCredit('${a.email}','ai_drops_25',5)">+AI Drop 25</button>
+      <button onclick="TKFM_OWNER_CREDIT_PANEL.addCredit('${a.email}','sponsor_read_20pack',5)">+Sponsor Read 20</button>
+    </div>
+  `).join('');
+}
+
+// Global Nodes
+async function renderGlobalNodes() {
+  const res = await fetch('/.netlify/functions/get-global-nodes');
+  const nodes = await res.json();
+  document.getElementById('globalNodes').innerHTML = nodes.map(n => `
+    <div>
+      ${n.city}, ${n.country} — Email: ${n.node_email} — Active: ${n.active}
+      <button onclick="toggleNode('${n.id}',${!n.active})">${!n.active?'Activate':'Deactivate'}</button>
+    </div>
+  `).join('');
+}
+
+async function toggleNode(nodeId, state) {
+  await fetch('/.netlify/functions/toggle-node', {
+    method:'POST',
+    body: JSON.stringify({ nodeId, active: state })
+  });
+  renderGlobalNodes();
+}
+
+// Finance Streams
+async function renderFinanceStreams() {
+  const res = await fetch('/.netlify/functions/get-finance-streams');
+  const streams = await res.json();
+  document.getElementById('financeStreams').innerHTML = streams.map(s => `
+    <div>
+      Node: ${s.node_id} — Source: ${s.revenue_source} — Amount: ${s.amount} ${s.currency} — Recorded: ${s.recorded_at}
+    </div>
+  `).join('');
+}
+
+// Global Analytics Overview
+async function renderAnalytics() {
+  const res = await fetch('/.netlify/functions/global-analytics');
+  const stats = await res.json();
+  document.getElementById('analyticsOverview').innerHTML = `<pre>${JSON.stringify(stats,null,2)}</pre>`;
+}
+
+// Auto-refresh
+async function refreshDashboard() {
+  await renderArtists();
+  await renderGlobalNodes();
+  await renderFinanceStreams();
+  await renderAnalytics();
+}
+refreshDashboard();
+setInterval(refreshDashboard, 30000); // refresh every 30s
+</script>
+</body>
+</html>

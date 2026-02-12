@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mixtape Spotlight — TKFM Records</title>
+<meta name="description" content="TKFM Mixtape Spotlight — Browse and feature the top mixtapes from independent artists.">
+
+<style>
+:root {
+  --bg:#020617; --p:#facc15; --pk:#eab308; --c:#f97316; --b:#3b82f6;
+  --t:rgba(226,232,240,1); --m:rgba(148,163,184,.95); --stroke:rgba(148,163,184,.18);
+  --panel:rgba(2,6,23,.80); --shadow:0 0 0 1px rgba(255,255,255,.04),0 22px 70px rgba(0,0,0,.55);
+  --r:26px;
+}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--t);background:var(--bg);overflow-x:hidden}
+.wrap{max-width:1240px;margin:0 auto;padding:22px}
+.glass{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(18px);box-shadow:var(--shadow);padding:18px}
+.k{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--m)}
+.h1{margin:10px 0 0;font-size:44px;line-height:1.05;font-weight:950}
+.p{margin:10px 0 0;color:var(--m);line-height:1.6;font-size:14px;max-width:980px}
+.grid{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:1120px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.tile{padding:16px;border-radius:22px;position:relative;overflow:hidden;background:rgba(2,6,23,.55);border:1px solid rgba(148,163,184,.12)}
+.tile>*{position:relative}
+.tileK{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--m)}
+.tileH{margin-top:8px;font-size:18px;font-weight:950}
+.tileP{margin-top:8px;color:var(--m);font-size:13px;line-height:1.55}
+.tags{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:7px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.55);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--t)}
+.tag.feature{border-color:var(--p)}
+.tag.top{border-color:var(--c)}
+</style>
+</head>
+<body>
+  <div class="tkfm-bg-main"></div>
+  <div class="tkfm-bg-orbit"></div>
+
+<header class="glass wrap">
+  <div class="k">Mixtape Spotlight</div>
+  <div class="h1">Featured Mixtapes</div>
+  <p class="p">Browse top independent artist mixtapes selected weekly for spotlight rotation.</p>
+</header>
+
+<main class="wrap">
+  <section class="grid">
+    <div class="tile">
+      <div class="tileK">Artist</div>
+      <div class="tileH">DJ KRAVE — V3 Neon Mix</div>
+      <div class="tileP">Fresh neon vibes for the independent artist scene.</div>
+      <div class="tags"><span class="tag feature">FEATURED</span><span class="tag top">TOP</span></div>
+    </div>
+
+    <div class="tile">
+      <div class="tileK">Artist</div>
+      <div class="tileH">Indie Artist — Rising Heat</div>
+      <div class="tileP">Energetic tracks pushing independent music forward.</div>
+      <div class="tags"><span class="tag feature">FEATURED</span></div>
+    </div>
+
+    <div class="tile">
+      <div class="tileK">Artist</div>
+      <div class="tileH">Local DJ Collective — Weekend Drop</div>
+      <div class="tileP">Curated weekend mix of hottest tracks from local DJs.</div>
+      <div class="tags"><span class="tag top">TOP</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="glass wrap" style="margin-top:60px;font-size:12px;color:var(--m);">
+  © 2026 They Krave For Me Records — Mixtape Spotlight
+</footer>
+
+</body>
+</html>

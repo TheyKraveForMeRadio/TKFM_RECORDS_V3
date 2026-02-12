@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TKFM Sponsor Read Ops</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="/js/tkfm-owner-guard.js"></script>
+  <script src="/js/tkfm-owner-nav.js"></script>
+
+  <script src="/js/tkfm-functions-client.js"></script>
+  <script src="/js/tkfm-sponsor-read-ops.js" defer></script>
+
+  <style>
+    body { background:#020617;color:#e5e7eb;font-family:system-ui;padding:20px }
+    h1 { color:#facc15 }
+    table { width:100%;border-collapse:collapse;margin-top:20px }
+    th,td { border-bottom:1px solid #1e293b;padding:10px }
+    button { background:#22d3ee;border:none;padding:6px 10px;font-weight:bold;cursor:pointer }
+    input[type=file] { color:#e5e7eb }
+    .pending { color:#facc15 }
+    .delivered { color:#22c55e }
+  </style>
+</head>
+<body>
+
+<h1>🎙 Sponsor Read Ops</h1>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Client</th>
+<th>Status</th>
+<th>Upload Audio</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="rows"></tbody>
+</table>
+
+</body>
+</html>

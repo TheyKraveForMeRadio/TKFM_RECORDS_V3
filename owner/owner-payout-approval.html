@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Owner — Payout Control</title>
+<script src="/js/tkfm-royalty-engine.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Payout Approval</h2>
+<div id="list"></div>
+
+<script>
+const rows = TKFM_ROYALTIES.all().filter(r => !r.paid);
+
+rows.forEach(r => {
+  const d = document.createElement("div");
+  d.innerHTML = `
+    <b>${r.artistEmail}</b><br>
+    ${r.track}<br>
+    Owed: $${r.artistEarnings.toFixed(2)}<br>
+    <button onclick="approve('${r.id}')">Approve</button>
+    <hr>
+  `;
+  list.appendChild(d);
+});
+
+function approve(id){
+  TKFM_ROYALTIES.markPaid([id]);
+  location.reload();
+}
+</script>
+
+</body>
+</html>

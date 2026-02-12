@@ -1,0 +1,20 @@
+/* Hover & selection effects for table rows */
+#appsTable tbody tr {
+  transition: background 0.25s, border-left 0.25s, color 0.25s;
+}
+#appsTable tbody tr:hover {
+  background: rgba(168,85,247,0.08);
+  cursor: pointer;
+}
+
+/* Status colors */
+#appsTable tbody tr.status-new { background: rgba(148,163,184,0.12); color: #f9fafb; }
+#appsTable tbody tr.status-reviewed { background: rgba(250,204,21,0.15); color: #020617; }
+#appsTable tbody tr.status-approved { background: rgba(34,197,94,0.15); color: #020617; }
+#appsTable tbody tr.status-rejected { background: rgba(236,72,153,0.15); color: #f9fafb; }
+
+#appsTable tbody tr.selected {
+  background: rgba(236,72,153,0.25);
+  border-left: 3px solid #ec4899;
+}
+#appsTable tbody tr.selected td { color: #f9fafb; }

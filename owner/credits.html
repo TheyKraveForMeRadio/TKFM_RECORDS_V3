@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>TKFM Owner Credit Control</title></head>
+<body>
+<h1>Owner Credit Injection</h1>
+
+<input id="email" placeholder="Artist Email"><br>
+<input id="type" placeholder="credit type"><br>
+<input id="amount" type="number" placeholder="amount"><br>
+<button onclick="inject()">Inject Credits</button>
+
+<script>
+async function inject() {
+  await fetch('/.netlify/functions/owner-adjust-credits', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-owner-key': localStorage.getItem('TKFM_OWNER_KEY')
+    },
+    body: JSON.stringify({
+      email: email.value,
+      credit_type: type.value,
+      amount: Number(amount.value)
+    })
+  });
+  alert('Credits injected');
+}
+</script>
+</body>
+</html>

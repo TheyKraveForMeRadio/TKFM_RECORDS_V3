@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TKFM Sponsor Read — Success</title>
+  <style>
+:root{
+  --bg:#020617; --purple:#a855f7; --pink:#ec4899; --cyan:#22d3ee;
+  --blue:#3b82f6; --gold:#facc15; --gold2:#eab308; --amber:#f97316;
+  --panel: rgba(2,6,23,0.72); --panel2: rgba(2,6,23,0.50); --border: rgba(168,85,247,0.35);
+  --text: rgba(255,255,255,0.92); --muted: rgba(255,255,255,0.70);
+}
+*{box-sizing:border-box} html,body{height:100%;margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--text);background:radial-gradient(900px 450px at 10% 10%, rgba(168,85,247,0.25), transparent 55%), radial-gradient(900px 450px at 90% 20%, rgba(34,211,238,0.18), transparent 55%), radial-gradient(900px 450px at 70% 90%, rgba(236,72,153,0.16), transparent 55%), linear-gradient(180deg, #020617 0%, #020617 55%, #030a1c 100%);overflow-x:hidden;}
+.wrap{max-width:700px;margin:50px auto;padding:24px}
+.card{background: linear-gradient(180deg, var(--panel) 0%, rgba(2,6,23,0.55) 100%);border:1px solid var(--border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,0.35);}
+.pad{padding:18px}
+h1{font-size:32px;margin:0 0 12px 0}
+p{margin:8px 0;color:var(--muted)}
+.btn{cursor:pointer;border:1px solid rgba(168,85,247,0.42);background: linear-gradient(90deg, rgba(168,85,247,0.28), rgba(34,211,238,0.18));color: rgba(255,255,255,0.92);padding:10px 12px;border-radius:12px;font-weight:700;transition: transform .06s ease, filter .12s ease, border-color .12s ease;text-decoration:none;display:inline-block;margin-top:14px;}
+.btn:hover{transform: translateY(-1px); filter: brightness(1.08); border-color: rgba(34,211,238,0.48);}
+</style>
+<script src="/js/tkfm-functions-client.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card pad">
+      <h1>Purchase Successful!</h1>
+      <p id="msg">Processing your credits...</p>
+      <a class="btn" href="/tkfm-sponsor-read-engine.html">Back to Sponsor Read Engine</a>
+    </div>
+  </div>
+
+  <script>
+  async function captureCredits() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const customerId = urlParams.get('customer');
+      const pack = urlParams.get('pack'); // optional if you want to pass which pack
+      const msgEl = document.getElementById('msg');
+      if(!customerId){
+          msgEl.textContent = 'No customer id found. Please contact support.';
+          return;
+      }
+      try{
+          msgEl.textContent = 'Awarding your credits...';
+          const res = await fetch('/.netlify/functions/sponsor-credits-add', {
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({customer: customerId, pack: pack})
+          });
+          const data = await res.json();
+          if(data.success){
+              msgEl.textContent = `Credits awarded successfully! Your wallet now has ${data.credits} credits.`;
+          } else {
+              msgEl.textContent = 'Could not award credits. Please refresh or contact support.';
+          }
+      } catch(e){
+          console.error(e);
+          msgEl.textContent = 'Error awarding credits: '+e.message;
+      }
+  }
+  captureCredits();
+  </script>
+</body>
+</html>

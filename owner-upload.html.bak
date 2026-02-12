@@ -1,0 +1,35 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TKFM Owner Upload</title>
+<link rel="stylesheet" href="/css/tkfm-shell.css" />
+<link rel="stylesheet" href="/css/tkfm-records.css" />
+<script src="/js/tkfm-shell.js" defer></script>
+<script src="/js/tkfm-owner-guard.js"></script>
+<script src="/js/tkfm-owner-gate-no-redirect.js"></script>
+<script src="/js/tkfm-owner-nav.js"></script>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+<body class="tkfm-records-root" data-tkfm-theme="records">
+<div id="tkfmOwnerLock"></div>
+<div id="tkfm-header"></div>
+<main class="tkfm-main">
+<h1>Owner Upload Portal</h1>
+<section>
+<label>Upload MP3:</label>
+<input type="file" id="upload-mp3" accept="audio/mp3" />
+<label>Upload Cover Image:</label>
+<input type="file" id="upload-cover" accept="image/*" />
+<button id="upload-btn">Upload</button>
+<div id="upload-preview"></div>
+</section>
+</main>
+<div id="tkfm-footer"></div>
+<script src="/js/tkfm-upload-handler.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <link rel="stylesheet" href="/owner-pages/css/tkfm-label-god-view.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="utf-8">
+  <title>TKFM Records • God View</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+<div class="shell">
+  <h1>TKFM Records • God View</h1>
+
+  <div style="margin:1rem 0;">
+    <select id="bulkStatus">
+      <option value="">Bulk Status</option>
+      <option value="new">New</option>
+      <option value="reviewed">Reviewed</option>
+      <option value="approved">Approved</option>
+      <option value="rejected">Rejected</option>
+    </select>
+    <button id="bulkApply">Apply</button>
+    <label><input type="checkbox" id="selectAll"> Select All</label>
+  </div>
+
+  <div id="appsTableWrapper">
+    <table id="appsTable">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Code</th>
+          <th>Role</th>
+          <th>Stage Name</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Applications populate here dynamically -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function(){
+  const table = document.getElementById("appsTable").getElementsByTagName("tbody")[0];
+
+  // Example dynamic data — replace with live fetch
+  const apps = [
+    {code:"A001", role:"Artist", name:"Lil Nova", email:"lilnova@mail.com", status:"new"},
+    {code:"A002", role:"Producer", name:"BeatKing", email:"beatking@mail.com", status:"approved"},
+    {code:"A003", role:"Artist", name:"Skylar", email:"skylar@mail.com", status:"reviewed"},
+    {code:"A004", role:"Artist", name:"Echo", email:"echo@mail.com", status:"rejected"}
+  ];
+
+  apps.forEach(a=>{
+    const tr = document.createElement("tr");
+    tr.className = "status-" + a.status;
+    tr.innerHTML = `
+      <td><input type="checkbox"></td>
+      <td>${a.code}</td>
+      <td>${a.role}</td>
+      <td>${a.name}</td>
+      <td>${a.email}</td>
+      <td>${a.status.charAt(0).toUpperCase() + a.status.slice(1)}</td>
+    `;
+    table.appendChild(tr);
+  });
+
+  // Bulk actions
+  const bulkStatus = document.getElementById("bulkStatus");
+  const bulkApply = document.getElementById("bulkApply");
+  const selectAll = document.getElementById("selectAll");
+
+  selectAll.addEventListener("change", e => {
+    const checked = e.target.checked;
+    table.querySelectorAll("tr").forEach(tr=>tr.querySelector("input[type='checkbox']").checked = checked);
+  });
+
+  bulkApply.addEventListener("click", ()=>{
+    const newStatus = bulkStatus.value;
+    if(!newStatus) return;
+    table.querySelectorAll("tr").forEach(tr=>{
+      const cb = tr.querySelector("input[type='checkbox']");
+      if(cb && cb.checked){
+        tr.className = "status-" + newStatus;
+        tr.cells[5].innerText = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

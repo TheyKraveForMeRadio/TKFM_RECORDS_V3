@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Owner — Royalties</title>
+<script src="/js/tkfm-royalty-engine.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Royalty Ledger</h2>
+<div id="list"></div>
+
+<script>
+const rows = TKFM_ROYALTIES.all();
+
+rows.forEach(r => {
+  const d = document.createElement("div");
+  d.innerHTML = `
+    <b>${r.track}</b><br>
+    Artist: ${r.artistEmail}<br>
+    Source: ${r.source}<br>
+    Gross: $${r.gross}<br>
+    Artist: $${r.artistEarnings}<br>
+    Label: $${r.labelEarnings}<br>
+    Paid: ${r.paid}<br>
+    <button onclick="pay('${r.id}')">Mark Paid</button>
+    <hr>
+  `;
+  list.appendChild(d);
+});
+
+function pay(id){
+  TKFM_ROYALTIES.markPaid([id]);
+  location.reload();
+}
+</script>
+
+</body>
+</html>

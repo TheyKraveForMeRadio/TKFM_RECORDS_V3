@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+<meta charset="utf-8">
+<title>TKFM Records — Label Upload Lab</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- OWNER LOCK -->
+<script src="/js/tkfm-owner-guard.js"></script>
+<script src="/js/owner-lock.js"></script>
+
+<style>
+:root{
+ --bg:#020617;--gold:#facc15;--txt:#f8fafc;
+ --panel:rgba(2,6,23,.9);--stroke:rgba(255,255,255,.08)
+}
+*{box-sizing:border-box}
+body{
+ margin:0;padding:24px;font-family:system-ui;
+ background:var(--bg);color:var(--txt)
+}
+h1{color:var(--gold)}
+form{
+ max-width:640px;background:var(--panel);
+ border:1px solid var(--stroke);
+ border-radius:20px;padding:20px
+}
+label{display:block;margin-top:14px;font-size:.85rem;opacity:.85}
+input,select{
+ width:100%;padding:10px;margin-top:6px;
+ background:#020617;color:var(--txt);
+ border:1px solid var(--stroke);border-radius:10px
+}
+button{
+ margin-top:20px;padding:14px;width:100%;
+ background:var(--gold);border:0;border-radius:14px;
+ font-weight:900;cursor:pointer
+}
+</style>
+</head>
+
+<body>
+  <div class="tkfm-bg-main"></div>
+  <div class="tkfm-bg-orbit"></div>
+<h1>🎛️ Label Upload Lab</h1>
+<p>Owner-only intake for TKFM Records.</p>
+
+<form id="lab">
+ <label>Artist Name</label>
+ <input required id="artist">
+
+ <label>Project / Mixtape Title</label>
+ <input required id="title">
+
+ <label>Price (USD)</label>
+ <input type="number" id="price" value="0">
+
+ <label>Status</label>
+ <select id="status">
+  <option value="delivered">Delivered</option>
+  <option value="review">In Review</option>
+ </select>
+
+ <button type="submit">Add to Label Queue</button>
+</form>
+
+<script>
+if(!ownerLock('label-upload')) throw 'LOCKED';
+
+const KEY='labelQueue';
+
+lab.onsubmit=e=>{
+ e.preventDefault();
+ const q=JSON.parse(localStorage.getItem(KEY)||'[]');
+ q.push({
+  id:Date.now(),
+  artist:artist.value,
+  title:title.value,
+  price:+price.value||0,
+  status:status.value,
+  radio:false,
+  home:false,
+  contract:false
+ });
+ localStorage.setItem(KEY,JSON.stringify(q));
+ alert('Added to Label Queue');
+ lab.reset();
+};
+</script>
+</body>
+</html>

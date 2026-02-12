@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TKFM Studio • Credits Awarded</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+</head>
+<body class="tkfm-wrap">
+
+  <h1>TKFM Studio • Credits Awarded</h1>
+
+  <p>Session: <span id="sess">—</span></p>
+  <p>Plan: <span id="plan">—</span></p>
+  <p>Customer ID: <span id="cust">—</span></p>
+  <div id="status" class="notice"></div>
+
+  <div style="margin-top:1rem;">
+    <input id="restoreLink" placeholder="Restore link will appear here" style="width:70%">
+    <button id="copyLink">Copy Link</button>
+  </div>
+
+  <div style="margin-top:1rem;">
+    <input id="email" placeholder="Enter email" style="width:70%">
+    <button id="sendEmail">Send Email</button>
+    <div id="emailMsg" style="margin-top:0.5rem; display:none;"></div>
+  </div>
+
+  <!-- JS: Stripe Studio restore handler -->
+  <script src="/js/tkfm-studio-restore.js" defer></script>
+
+</body>
+</html>

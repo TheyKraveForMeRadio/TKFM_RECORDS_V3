@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TKFM Owner — Royalty Manager</title>
+  <script src="/js/tkfm-royalty-engine.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Create Royalty Split</h2>
+
+<input id="trackId" placeholder="Track ID"><br>
+<input id="artistEmail" placeholder="Artist Email"><br>
+<input id="artistPct" placeholder="Artist %" type="number"><br>
+<input id="labelPct" placeholder="Label %" type="number"><br>
+<input id="producerPct" placeholder="Producer %" type="number"><br>
+
+<button onclick="createSplit()">Save Split</button>
+
+<script>
+function createSplit() {
+  TKFM_ROYALTY.createSplit({
+    trackId: trackId.value,
+    artistEmail: artistEmail.value,
+    artistPct: Number(artistPct.value),
+    labelPct: Number(labelPct.value),
+    producerPct: Number(producerPct.value)
+  });
+  alert("Split saved (LOCKED)");
+}
+</script>
+
+</body>
+</html>

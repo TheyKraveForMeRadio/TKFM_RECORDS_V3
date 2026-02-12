@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM — UN Digital Culture Seat</title>
+</head>
+<body>
+<h1>🌎 TKFM — Planetary Culture Seat</h1>
+
+<h2>Log Global Cultural Activity</h2>
+<input id="label" placeholder="Label / Nation">
+<input id="activity_type" placeholder="Activity Type">
+<input id="desc" placeholder="Description">
+<button onclick="submitCulture()">Submit</button>
+
+<h2>Recent Planetary Activity</h2>
+<pre id="cultureLog"></pre>
+
+<script>
+async function submitCulture() {
+  const label = document.getElementById('label').value;
+  const activity_type = document.getElementById('activity_type').value;
+  const description = document.getElementById('desc').value;
+
+  const r = await fetch('/.netlify/functions/un-digital-culture', {
+    method: 'POST',
+    body: JSON.stringify({ label, activity_type, description })
+  });
+
+  const res = await r.json();
+  alert('Logged: ' + JSON.stringify(res.record, null, 2));
+  loadCulture();
+}
+
+async function loadCulture() {
+  const r = await fetch('/.netlify/functions/fetch-global-culture');
+  const d = await r.json();
+  document.getElementById('cultureLog').textContent = JSON.stringify(d, null, 2);
+}
+
+loadCulture();
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TKFM Mixtape Hosting</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+</head>
+<body class="tkfm-wrap">
+
+  <h1>TKFM Mixtape Hosting</h1>
+
+  <!-- Gate message if user has no tier -->
+  <div id="gate" style="display:none; color:#facc15; font-weight:800;">
+    🚫 You do not have access to Mixtape Hosting. Upgrade your plan to proceed.
+  </div>
+
+  <!-- Mixtape order form -->
+  <div id="formWrap" style="display:none;">
+    <p>Your Tier: <span id="tier"></span></p>
+    <form id="orderForm">
+      <input id="artistName" placeholder="Artist Name" required /><br/>
+      <input id="email" placeholder="Email" type="email" required /><br/>
+      <input id="phone" placeholder="Phone" /><br/>
+      <input id="mixtapeTitle" placeholder="Mixtape Title" required /><br/>
+      <input id="download" placeholder="Download Link / Dropbox / Cloud" /><br/>
+      <textarea id="tracklist" placeholder="Tracklist"></textarea><br/>
+      <input id="socials" placeholder="Socials / IG / TikTok / YouTube" /><br/>
+      <textarea id="notes" placeholder="Additional Notes"></textarea><br/>
+      <button type="submit">Submit Order</button>
+    </form>
+    <div id="status" style="margin-top:1rem; font-weight:800;"></div>
+  </div>
+
+  <script src="/js/tkfm-mixtape-order.js" defer></script>
+</body>
+</html>

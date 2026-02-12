@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TKFM Records V3 — Artist Dashboard</title>
+
+  <!-- Core Records CSS -->
+  <link rel="stylesheet" href="/css/tkfm-records.css">
+
+  <!-- TKFM AI Engines -->
+  <script src="/js/tkfm-ai-engines.js" defer></script>
+
+  <!-- TKFM Label Gate -->
+  <script src="/js/tkfm-label-gate.js" defer></script>
+  <script src="/js/label-subscribe-btn.js" defer></script>
+</head>
+<body>
+  <h1>TKFM Records — Artist Dashboard</h1>
+
+  <!-- Monthly Label Subscription -->
+  <button id="subscribeBtn">Subscribe to TKFM Label</button>
+
+  <!-- AI Engines Usage -->
+  <h2>AI Tools</h2>
+  <button onclick="TKFM_AI_ENGINES.masterTrack('/tracks/mytrack.mp3').then(url=>alert('Mastered Track: '+url))">
+    AI Master Track
+  </button>
+
+  <button onclick="TKFM_AI_ENGINES.generateCatalog()">
+    Generate Artist Catalog
+  </button>
+
+  <button onclick="TKFM_AI_ENGINES.useDrop('ai_drops_25').then(url=>alert('Drop created: '+url))">
+    Create AI Drop (25 Credits)
+  </button>
+
+  <button onclick="TKFM_AI_ENGINES.useSponsorRead('sponsor_read_20pack').then(msg=>alert(msg))">
+    Use Sponsor Read (20 Pack)
+  </button>
+
+  <div id="artistCatalog"></div>
+
+  <!-- Artist Library / Dashboard Widgets -->
+  <div id="artistLibrary"></div>
+
+  <!-- Optional: Add more dashboard widgets below -->
+
+</body>
+</html>

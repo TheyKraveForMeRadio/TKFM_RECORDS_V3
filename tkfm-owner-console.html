@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TKFM Owner Console — They Krave For Me Records</title>
+<meta name="description" content="TKFM Owner Console — Manage mixtapes, DJ uploads, analytics, and spotlight approvals.">
+
+<style>
+:root {
+  --bg:#020617; --p:#facc15; --pk:#eab308; --c:#f97316; --b:#3b82f6;
+  --t:rgba(226,232,240,1); --m:rgba(148,163,184,.95); --stroke:rgba(148,163,184,.18);
+  --panel:rgba(2,6,23,.80); --shadow:0 0 0 1px rgba(255,255,255,.04),0 22px 70px rgba(0,0,0,.55);
+  --r:26px;
+}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";color:var(--t);background:var(--bg);overflow-x:hidden}
+a{color:inherit;text-decoration:none}img{max-width:100%;display:block}button{font-family:inherit}
+.bg{position:fixed;inset:0;z-index:-5;background:radial-gradient(circle at 30% 30%,rgba(250,204,21,.12),transparent 60%),radial-gradient(circle at 70% 70%,rgba(234,179,8,.08),transparent 60%);filter:blur(2px);}
+.wrap{max-width:1240px;margin:0 auto;padding:22px}
+.glass{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+.k{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--m)}
+.h1{margin:10px 0 0;font-size:44px;line-height:1.05;font-weight:950}
+.p{margin:10px 0 0;color:var(--m);line-height:1.6;font-size:14px;max-width:980px}
+.grid{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:1120px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+.tile{padding:16px;border-radius:22px;position:relative;overflow:hidden;background:rgba(2,6,23,.55);border:1px solid rgba(148,163,184,.12)}
+.tile>*{position:relative}
+.tileK{font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--m)}
+.tileH{margin-top:8px;font-size:18px;font-weight:950}
+.tileP{margin-top:8px;color:var(--m);font-size:13px;line-height:1.55}
+.tags{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:7px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.55);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--t)}
+.tag.upload{border-color:var(--b)}
+.tag.analytics{border-color:var(--p)}
+.tag.spotlight{border-color:var(--pk)}
+</style>
+</head>
+<body>
+  <div class="tkfm-bg-main"></div>
+  <div class="tkfm-bg-orbit"></div>
+
+<header class="glass wrap">
+  <div class="k">Owner Console</div>
+  <div class="h1">TKFM Records Dashboard</div>
+  <p class="p">Full control over mixtapes, DJ uploads, analytics, and spotlight approvals.</p>
+</header>
+
+<main class="wrap">
+  <section class="glass card">
+    <div class="grid">
+      <a class="tile" href="/tkfm-owner-upload.html">
+        <div class="tileK">Upload</div>
+        <div class="tileH">DJ / Artist Uploads</div>
+        <div class="tileP">Add new mixtapes, tracks, and cover artwork directly to the library.</div>
+        <div class="tags"><span class="tag upload">UPLOAD</span></div>
+      </a>
+
+      <a class="tile" href="/tkfm-owner-analytics.html">
+        <div class="tileK">Analytics</div>
+        <div class="tileH">View Stats</div>
+        <div class="tileP">Track plays, engagement, and spotlight performance in real-time.</div>
+        <div class="tags"><span class="tag analytics">STATS</span></div>
+      </a>
+
+      <a class="tile" href="/tkfm-mixtape-spotlight.html">
+        <div class="tileK">Spotlight</div>
+        <div class="tileH">Feature Approvals</div>
+        <div class="tileP">Approve mixtapes for spotlight rotation and highlight top artists weekly.</div>
+        <div class="tags"><span class="tag spotlight">FEATURE</span></div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="glass wrap" style="margin-top:60px;font-size:12px;color:var(--m);">
+  © 2026 They Krave For Me Records — Owner Console
+</footer>
+
+</body>
+</html>

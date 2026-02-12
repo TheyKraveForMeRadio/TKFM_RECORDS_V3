@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TKFM Owner — Contract Control</title>
+<script src="/js/tkfm-contract-engine.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Artist Contract Control</h2>
+
+<input id="email" placeholder="Artist Email"><br>
+<select id="status">
+  <option value="active">ACTIVE</option>
+  <option value="breach">BREACH (LOCK)</option>
+  <option value="terminated">TERMINATED (TAKEDOWN)</option>
+</select><br>
+<input id="reason" placeholder="Reason"><br>
+
+<button onclick="apply()">Apply Status</button>
+
+<script>
+function apply() {
+  TKFM_CONTRACT.setStatus({
+    artistEmail: email.value,
+    status: status.value,
+    reason: reason.value
+  });
+  alert("Contract status applied.");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Label Accounts — They Krave For Me Records</title>
+
+  <!-- LABEL THEME -->
+  <link rel="stylesheet" href="/v2/label-theme.css">
+  <script src="/js/tkfm-fx.js"></script>
+  <script src="/js/tkfm-quick-checkout.js"></script>
+  <script src="/js/tkfm-paid-lane-modal.js" defer></script>
+  <script src="/js/tkfm-paid-lane-submit.js" defer></script>
+  <script src="/js/tkfm-owner-guard.js"></script>
+  <script src="/js/tkfm-owner-gate-no-redirect.js"></script>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+
+<body class="label-body" data-tkfm-theme="label">
+  <div id="tkfmOwnerLock"></div>
+  <script>window.TKFM_FX&&TKFM_FX.mount({ theme: 'label' });</script>
+
+  <main style="max-width:1180px;margin:0 auto;padding:1.4rem .9rem 2.4rem;">
+    <header class="label-header">
+      <div class="label-logo-row">
+        <img src="/v2/tkfm-records-logo.png" alt="They Krave For Me Records" class="label-logo">
+        <div class="label-title-block">
+          <div class="label-kicker">They Krave For Me · Label Division</div>
+          <div class="label-title">Label Accounts Console</div>
+          <p class="label-subtitle">
+            Manual control panel for label-side accounts — artists, DJs and sponsors tied into
+            the They Krave For Me Records ecosystem.
+          </p>
+        </div>
+      </div>
+
+      <div class="label-badges">
+        <div class="label-pill">👑 Owner / label ops only</div>
+        <div class="label-pill">🔐 Future: connected to Supabase auth</div>
+      </div>
+    </header>
+
+    <nav class="label-nav">
+      <a href="/v2/label-home.html"><span>🏛️</span>Label Home</a>
+      <a href="/v2/label-hub.html"><span>🧬</span>Label Hub</a>
+      <a href="/v2/label-artist-roster-hub.html"><span>📜</span>Artist Roster</a>
+      <a href="/v2/artist-accounts.html"><span>🎤</span>Artist Accounts</a>
+      <a href="/v2/dj-accounts.html"><span>🎧</span>DJ Accounts</a>
+      <a href="/v2/label-sponsor-engine.html"><span>🤝</span>Sponsor Engine</a>
+      <a href="/v2/app-hub.html"><span>🎛️</span>App Hub</a>
+    </nav>
+
+    <section class="label-grid label-grid-2">
+      <div class="label-card">
+        <h2>Account snapshot</h2>
+        <p class="label-help">
+          These counts are calculated locally and stored in browser storage.
+        </p>
+
+        <div style="display:grid;gap:.7rem;margin-top:.7rem;font-size:.85rem;">
+          <div style="display:flex;justify-content:space-between;">
+            <div><strong>Artists</strong></div>
+            <div id="accArtistCount" style="font-weight:800;color:var(--label-gold-soft);">0</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <div><strong>DJs</strong></div>
+            <div id="accDjCount" style="font-weight:800;color:var(--label-gold-soft);">0</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <div><strong>Sponsors</strong></div>
+            <div id="accSponsorCount" style="font-weight:800;color:var(--label-gold-soft);">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="label-card">
+        <h2>Create / track an account</h2>
+
+        <form id="accountForm">
+          <label>Name</label>
+          <input id="accName">
+
+          <label>Type</label>
+          <select id="accType">
+            <option value="artist">Artist</option>
+            <option value="dj">DJ</option>
+            <option value="sponsor">Sponsor</option>
+          </select>
+
+          <label>Email</label>
+          <input id="accEmail">
+
+          <label>Role</label>
+          <input id="accRole">
+
+          <label>Notes</label>
+          <textarea id="accNotes"></textarea>
+
+          <button type="submit" class="label-btn">Save account</button>
+          <button type="button" id="clearAccountsBtn" class="label-btn secondary">Clear all</button>
+        </form>
+      </div>
+    </section>
+
+    <section style="margin-top:1.2rem;">
+      <div class="label-card">
+        <h2>Accounts table</h2>
+        <table class="label-table">
+          <thead>
+            <tr>
+              <th>Name</th><th>Type</th><th>Email</th><th>Role</th><th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="accTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="label-toast" id="labelToast">Saved.</div>
+
+  <script src="/js/owner-lock.js" data-owner-page="owner"></script>
+  <script type="module" src="/js/tkfm-logo-resolver.js"></script>
+  <script src="/js/tkfm-checkout.js"></script>
+  <script src="/js/tkfm-paid-lane-modal.js"></script>
+  <script src="/js/tkfm-owner-override.js"></script>
+</body>
+</html>

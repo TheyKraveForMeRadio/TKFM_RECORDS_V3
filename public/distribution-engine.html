@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TKFM Distribution — Release Builder</title>
+  <meta name="description" content="Distribute Singles, EPs, Albums, and Mixtapes with TKFM Distribution Assist. Buy → Post-Checkout → Submit → Track."/>
+
+  <style>
+    :root{
+      --bg:#020617;
+      --gold:#facc15; --gold2:#eab308; --amber:#f97316;
+      --p:#a855f7; --pk:#ec4899; --c:#22d3ee; --b:#3b82f6;
+      --t:rgba(226,232,240,1);
+      --m:rgba(148,163,184,.95);
+      --stroke:rgba(148,163,184,.18);
+      --panel:rgba(2,6,23,.86);
+      --shadow:0 0 0 1px rgba(255,255,255,.04),0 22px 70px rgba(0,0,0,.55);
+      --r:26px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--t);background:var(--bg);overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    .bg{position:fixed;inset:0;z-index:-10}
+    .bg:before{content:"";position:absolute;inset:-35%;background:
+      radial-gradient(900px 560px at 12% 10%, rgba(250,204,21,.14), transparent 60%),
+      radial-gradient(900px 560px at 88% 14%, rgba(249,115,22,.10), transparent 60%),
+      radial-gradient(900px 560px at 52% 92%, rgba(168,85,247,.10), transparent 60%),
+      radial-gradient(1100px 650px at 74% 70%, rgba(34,211,238,.08), transparent 70%);
+      filter: blur(2px);animation: drift 10.5s ease-in-out infinite;opacity:.98}
+    .bg:after{content:"";position:absolute;inset:-25%;background:
+      repeating-linear-gradient(0deg, rgba(250,204,21,.07) 0px, rgba(250,204,21,.07) 1px, transparent 1px, transparent 30px),
+      repeating-linear-gradient(90deg, rgba(249,115,22,.06) 0px, rgba(249,115,22,.06) 1px, transparent 1px, transparent 36px);
+      transform: rotate(-6deg);opacity:.14;animation: grid 16s linear infinite}
+    @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(1.2%,-1.1%,0) scale(1.02)}}
+    @keyframes grid{0%{transform:translate3d(-1%,-1%,0) rotate(-6deg)}50%{transform:translate3d(1.5%,1%,0) rotate(-6deg)}100%{transform:translate3d(-1%,-1%,0) rotate(-6deg)}}
+
+    header{position:sticky;top:0;z-index:80;background:rgba(0,0,0,.72);border-bottom:1px solid rgba(30,41,59,.65);backdrop-filter:blur(14px)}
+    header .wrap{max-width:1240px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:260px}
+    .logo{width:46px;height:46px;border-radius:14px;position:relative;overflow:hidden;border:1px solid rgba(148,163,184,.18);background:rgba(2,6,23,.62);box-shadow:0 0 0 1px rgba(255,255,255,.03),0 18px 60px rgba(0,0,0,.45)}
+    .logo img{position:absolute;inset:0;margin:auto;height:32px;width:auto;object-fit:contain}
+    .k{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--m)}
+    .title{font-weight:950;letter-spacing:.06em}
+    .nav{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .pill{padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.28);background:rgba(15,23,42,.62);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(226,232,240,.95)}
+    .pill.hot{border-color:rgba(250,204,21,.55)}
+
+    main{max-width:1240px;margin:0 auto;padding:18px 22px 56px}
+    .glass{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
+    .card{padding:18px;border-radius:28px}
+    .h1{margin:10px 0 0;font-size:44px;line-height:1.05;font-weight:950}
+    .grad{background-image:linear-gradient(90deg,var(--gold),var(--amber),var(--c),var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .p{margin:10px 0 0;color:var(--m);line-height:1.6;font-size:14px}
+  </style>
+
+  <script src="/js/tkfm-fx.js"></script>
+  <script>window.__TKFM_DISABLE_OWNER_GATE = true;</script>
+  <script src="/js/tkfm-functions-client.js" defer></script>
+  <link rel="stylesheet" href="/css/tkfm-global-shell.css">
+  <script src="/js/tkfm-global-shell.js" defer></script>
+</head>
+
+<body data-tkfm-theme="records">
+  <div class="bg"></div>
+
+  <header>
+    <div class="wrap">
+      <a class="brand" href="/index.html">
+        <div class="logo"><img src="/tkfm-records-logo.png" alt="TKFM Records"/></div>
+        <div>
+          <div class="k">TKFM Records</div>
+          <div class="title">Distribution Assist</div>
+        </div>
+      </a>
+      <nav class="nav">
+        <a class="pill" href="/start-here.html">Start Here</a>
+        <a class="pill" href="/radio-hub.html">On Air</a>
+        <a class="pill" href="/label-hub.html">Records Hub</a>
+        <a class="pill hot" href="/distribution-engine.html">Distribution</a>
+        <a class="pill" href="/pricing.html">Monthly Tiers</a>
+        <a class="pill" href="/client-vault.html">My Portal</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="glass card">
+      <div class="k">Distribution V2</div>
+      <div class="h1"><span class="grad">Buy → Auto-Create → Submit → Track</span></div>
+      <p class="p">
+        Singles, EPs, Albums & Mixtapes. Checkout creates your release automatically.
+        Finish details and track everything in your Portal.
+      </p>
+    </section>
+  </main>
+
+  <script src="/js/nav-sanitize.js"></script>
+  <script type="module" src="/js/tkfm-distribution-v2.js"></script>
+  <script>window.TKFM_FX&&TKFM_FX.mount({ theme: 'records' });</script>
+  <script type="module" src="/js/tkfm-launch-polish.js"></script>
+  <script src="/js/tkfm-owner-override.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="tkfm-theme" content="label" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-label.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="UTF-8" />
+  <title>DJ KRAVE — Mixtape Brief</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script src="/js/tkfm-fx.js"></script>
+  <script src="/js/tkfm-quick-checkout.js"></script>
+  <script src="/js/tkfm-paid-lane-modal.js" defer></script>
+  <script src="/js/tkfm-paid-lane-submit.js" defer></script>
+
+  <!-- 🔓 AUTO UNLOCK AFTER STRIPE -->
+  <script src="/js/tkfm-sponsor-read-unlock.js"></script>
+</head>
+
+<body class="bg-black text-purple-100 min-h-screen font-mono" data-tkfm-theme="radio">
+<script>window.TKFM_FX&&TKFM_FX.mount({ theme: 'radio' });</script>
+
+  <header class="border-b border-purple-700 px-6 py-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-bold tracking-wide">
+        🔥 DJ KRAVE Mixtape Brief
+      </h1>
+      <p class="text-sm text-purple-400 mt-1">
+        Payment confirmed. Drop your <strong>details + links</strong> so TKFM can lock in your tape.
+      </p>
+    </div>
+    <div class="text-right text-xs md:text-sm text-purple-400">
+      <div>Session: <span id="sessionIdLabel" class="font-semibold">—</span></div>
+      <div class="text-[10px]">Pulled from Stripe Checkout URL</div>
+    </div>
+  </header>
+
+  <main class="p-4 md:p-8 max-w-3xl mx-auto">
+    <section class="bg-black/70 border border-purple-700 rounded-2xl shadow-xl p-5 md:p-7">
+      <h2 class="text-xl font-semibold mb-4">
+        🎧 Artist & Project Details
+      </h2>
+
+      <form id="briefForm" class="space-y-4">
+        <input type="hidden" id="sessionId" />
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs mb-1 text-purple-300">Artist / DJ Name</label>
+            <input id="artistName" type="text"
+                   class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                   placeholder="Your artist or stage name" required />
+          </div>
+          <div>
+            <label class="block text-xs mb-1 text-purple-300">Contact Email</label>
+            <input id="email" type="email"
+                   class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                   placeholder="you@example.com" required />
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs mb-1 text-purple-300">Project / Mixtape Title</label>
+            <input id="projectTitle" type="text"
+                   class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                   placeholder="Name of your tape" required />
+          </div>
+          <div>
+            <label class="block text-xs mb-1 text-purple-300">Purchased Tier</label>
+            <select id="tier"
+                    class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400">
+              <option value="">Select tier (optional)</option>
+              <option value="starter">Starter — 30 min</option>
+              <option value="pro">Pro — 45–60 min</option>
+              <option value="elite">Elite — Full project</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs mb-1 text-purple-300">Download / Asset Links</label>
+          <textarea id="links" rows="3"
+                    class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                    placeholder="Dropbox / Google Drive / WeTransfer / DJ pools / private links etc."></textarea>
+          <p class="text-[10px] text-purple-500 mt-1">
+            Include WAV/MP3s, stems, cover art, and references.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs mb-1 text-purple-300">Notes for DJ KRAVE</label>
+          <textarea id="notes" rows="4"
+                    class="w-full bg-black/70 border border-purple-700 rounded px-3 py-2 text-sm focus:outline-none focus:border-purple-400"
+                    placeholder="Vibe, transitions, shoutouts, deadlines, etc."></textarea>
+        </div>
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-4">
+          <button type="submit"
+                  class="bg-purple-700 hover:bg-purple-600 text-white text-sm font-semibold px-5 py-2 rounded-lg shadow-lg shadow-purple-900/60">
+            🚀 Submit Mixtape Brief
+          </button>
+          <p id="statusText" class="text-[11px] text-purple-400">
+            Once submitted, TKFM will lock your brief to your order.
+          </p>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script type="module" src="/js/tkfm-logo-resolver.js"></script>
+  <script src="/js/tkfm-checkout.js"></script>
+  <script src="/js/tkfm-paid-lane-modal.js"></script>
+  <script src="/js/tkfm-owner-override.js"></script>
+</body>
+</html>

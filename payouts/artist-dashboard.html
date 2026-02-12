@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Artist Dashboard — TKFM Records</title>
+<script src="/js/charts/tkfm-artist-charts.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Artist Dashboard</h2>
+
+<p>Rank: <span id="rank"></span></p>
+<p>Total Plays: <span id="plays"></span></p>
+<p>Total Earnings: $<span id="earnings"></span></p>
+
+<ul id="trackList"></ul>
+
+<script>
+const email = document.querySelector('meta[name="artist-email"]')?.content;
+if(!email) document.body.innerHTML = "Artist email missing.";
+
+const stats = TKFM_CHARTS.artistStats(email);
+let totalPlays=0, totalEarnings=0;
+
+stats.forEach(s=>{
+  totalPlays += s.plays;
+  totalEarnings += s.earnings;
+  const li = document.createElement("li");
+  li.textContent = `${s.trackId.split("_")[1]} - Plays: ${s.plays}, Earnings: $${s.earnings.toFixed(2)}`;
+  document.getElementById("trackList").appendChild(li);
+});
+
+document.getElementById("plays").textContent = totalPlays;
+document.getElementById("earnings").textContent = totalEarnings.toFixed(2);
+document.getElementById("rank").textContent = TKFM_CHARTS.artistRank(email);
+</script>
+
+</body>
+</html>

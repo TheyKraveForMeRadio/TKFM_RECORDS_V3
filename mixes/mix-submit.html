@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TKFM Records — Mix Submission</title>
+
+<meta name="tkfm-lane" content="records-only">
+<meta name="artist-email" content="">
+
+<script src="/js/tkfm-contract-engine.js"></script>
+<script src="/js/tkfm-mix-workflow.js"></script>
+</head>
+
+<body data-tkfm-theme="records">
+
+<h2>Submit Mix for Approval</h2>
+
+<input id="title" placeholder="Track Title"><br>
+<button onclick="submit()">Submit Mix</button>
+
+<script>
+function submit(){
+  const email = document.querySelector('meta[name="artist-email"]').content;
+
+  if (TKFM_CONTRACT.isLocked(email)) {
+    alert("Contract issue. Mix submission blocked.");
+    return;
+  }
+
+  TKFM_MIXES.submit({
+    artistEmail: email,
+    title: title.value
+  });
+
+  alert("Mix submitted for label review.");
+}
+</script>
+
+</body>
+</html>

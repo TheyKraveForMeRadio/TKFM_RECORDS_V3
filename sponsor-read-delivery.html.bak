@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TKFM Sponsor Read Delivery</title>
+
+<link rel="stylesheet" href="/css/tkfm-shell.css"/>
+<link rel="stylesheet" href="/css/tkfm-records.css"/>
+
+<style>
+.wrap{max-width:900px;margin:0 auto;padding:28px}
+.card{
+  background:rgba(2,6,23,.72);
+  border:1px solid rgba(168,85,247,.35);
+  border-radius:18px;
+  padding:20px;
+}
+.badge{
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  background:rgba(34,211,238,.12);
+  border:1px solid rgba(34,211,238,.35);
+}
+audio{width:100%;margin-top:14px}
+.btn{
+  display:inline-block;
+  margin-top:14px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(250,204,21,.35);
+  background:rgba(250,204,21,.15);
+  color:#fff;
+  font-weight:700;
+  text-decoration:none;
+}
+</style>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-records-autoload.js"></script>
+</head>
+
+<body class="tkfm-records-root" data-tkfm-theme="records">
+
+<div class="wrap">
+  <div class="card">
+    <span class="badge">✔ Delivered</span>
+    <h1>Your Sponsor Read Is Ready</h1>
+    <p>Thank you for choosing <b>They Krave For Me Radio</b>.</p>
+
+    <audio id="player" controls></audio>
+
+    <a id="downloadBtn" class="btn" download>⬇ Download Audio</a>
+
+    <p style="margin-top:18px;font-size:12px;opacity:.75">
+      Request ID: <span id="req"></span>
+    </p>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const audio = params.get('audio');
+const id = params.get('id');
+
+if(audio){
+  document.getElementById('player').src = audio;
+  document.getElementById('downloadBtn').href = audio;
+}
+if(id){
+  document.getElementById('req').textContent = id;
+}
+</script>
+
+</body>
+</html>

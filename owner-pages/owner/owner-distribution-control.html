@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TKFM Owner — Distribution Control</title>
+<script src="/js/tkfm-distribution-store.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Distribution Queue</h2>
+<div id="list"></div>
+
+<script>
+const list = TKFM_DISTRIBUTION.all();
+list.forEach(r => {
+  const d = document.createElement("div");
+  d.innerHTML = `
+    <b>${r.title}</b> — ${r.artistName}<br>
+    Status: ${r.status}<br>
+    <button onclick="approve('${r.id}')">Approve</button>
+    <button onclick="reject('${r.id}')">Reject</button>
+    <hr>
+  `;
+  document.getElementById("list").appendChild(d);
+});
+
+function approve(id){
+  TKFM_DISTRIBUTION.update(id,"approved");
+  location.reload();
+}
+
+function reject(id){
+  TKFM_DISTRIBUTION.update(id,"rejected");
+  location.reload();
+}
+</script>
+
+</body>
+</html>

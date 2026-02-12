@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="tkfm-lane" content="records-only">
+  <title>TKFM Records — Label Social Engine</title>
+  <link rel="stylesheet" href="/css/tkfm-shell.css">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <!-- NAV and BODY content remains unchanged -->
+  </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TKFM Artist Statement</title>
+  <script src="/js/tkfm-royalty-engine.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Your Royalty Statement</h2>
+
+<input id="email" placeholder="Your Artist Email">
+<button onclick="load()">Load Statement</button>
+
+<pre id="output"></pre>
+
+<script>
+function load() {
+  const stmt = TKFM_ROYALTY.generateStatement(email.value);
+  output.textContent = JSON.stringify(stmt, null, 2);
+}
+</script>
+
+</body>
+</html>

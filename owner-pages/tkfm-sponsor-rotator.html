@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="/js/tkfm-owner-guard.js"></script>
+  <script src="/js/tkfm-owner-gate-no-redirect.js"></script>
+  <meta name="tkfm-access" content="owner" />
+  <script src="/js/access-gates.js" defer></script>
+
+  <meta charset="utf-8">
+  <title>TKFM â€¢ Sponsor Rotator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <style>
+    :root{
+      --bg:#020617;
+      --card:#0f172a;
+      --border:rgba(236,72,153,.6);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#ec4899;
+      --cyan:#22d3ee;
+    }
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;
+    }
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 0 0,rgba(236,72,153,.28),transparent 60%),
+        radial-gradient(circle at 100% 100%,rgba(34,211,238,.26),transparent 60%),
+        linear-gradient(to bottom,#020617,#000);
+      color:var(--text);
+      padding:20px;
+    }
+    h1{
+      font-size:1.3rem;
+      margin-bottom:6px;
+    }
+    p{
+      font-size:.85rem;
+      color:var(--muted);
+      max-width:640px;
+    }
+    hr{
+      border:none;
+      border-top:1px solid rgba(148,163,184,.5);
+      margin:14px 0;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      border:1px solid var(--border);
+      padding:14px;
+      margin:10px 0;
+      box-shadow:0 0 24px rgba(15,23,42,.9);
+    }
+    h2{
+      font-size:.95rem;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:var(--muted);
+    }
+
+    label{
+      font-size:.75rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--muted);
+      display:block;
+      margin-bottom:4px;
+    }
+    input, select{
+      width:100%;
+      padding:7px 9px;
+      border-radius:8px;
+      border:1px solid #475569;
+      background:#020617;
+      color:var(--text);
+      font-size:.8rem;
+      margin-bottom:4px;
+    }
+    .hint{
+      font-size:.75rem;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    button{
+      font-size:.75rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+    .btn-main{
+      background:var(--accent);
+      color:black;
+      border-color:var(--accent);
+      font-weight:600;
+      margin-right:6px;
+    }
+    .btn-secondary{
+      background:#020617;
+      color:var(--muted);
+      border-color:#64748b;
+    }
+    .btn-small{
+      font-size:.7rem;
+      padding:5px 9px;
+    }
+
+    .sponsor-item{
+      background:#020617;
+      border-radius:10px;
+      border:1px solid #1f2937;
+      padding:10px;
+      margin-bottom:8px;
+      font-size:.8rem;
+    }
+    .sponsor-name{
+      font-weight:600;
+      margin-bottom:2px;
+    }
+    .sponsor-url{
+      font-size:.75rem;
+      color:var(--muted);
+      word-break:break-all;
+      margin-bottom:2px;
+    }
+    .sponsor-meta{
+      font-size:.75rem;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    .pill{
+      display:inline-block;
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid #64748b;
+      color:var(--muted);
+      margin-right:4px;
+    }
+    .pill-accent{
+      border-color:var(--cyan);
+      color:var(--cyan);
+    }
+
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:6px;
+      margin-top:6px;
+    }
+
+    .status{
+      font-size:.75rem;
+      color:var(--muted);
+      margin-top:6px;
+    }
+    .status span.good{ color:#22c55e; }
+    .status span.bad{ color:#fb7185; }
+  </style>
+<script src="/js/tkfm-fx.js"></script>
+  <script src="/js/tkfm-quick-checkout.js"></script>
+  <script src="/js/tkfm-paid-lane-modal.js" defer></script>
+  <script src="/js/tkfm-paid-lane-submit.js" defer></script>
+</head>
+<body data-tkfm-theme="radio">
+  <div id="tkfmOwnerLock"></div>
+<script>window.TKFM_FX&&TKFM_FX.mount({ theme: 'radio' });</script>
+  <h1>ðŸ’¸ TKFM Sponsor Rotator</h1>
+  <p>
+    Define sponsor bumpers that Autopilot can inject into rotation packs.
+    This page writes to <code>localStorage</code> only. Autopilot will call
+    <code>window.injectSponsorBumpers(pack)</code> if it exists.
+  </p>
+
+  <hr>
+
+  <div class="card">
+    <h2>Add Sponsor</h2>
+
+    <label for="sName">Sponsor Name</label>
+    <input id="sName" placeholder="e.g. Red Bull, Sneaker Store, Local Brand">
+
+    <label for="sAudio">Bumper Audio URL</label>
+    <input id="sAudio" placeholder="/audio/sponsor-bumper.mp3 or https://...">
+
+    <div class="hint">
+      This should be the audio file your AI DJ or encoder can play as a bumper.
+    </div>
+
+    <button id="addBtn" class="btn-main">Add Sponsor</button>
+  </div>
+
+  <div class="card">
+    <h2>Current Sponsors</h2>
+    <div id="sponsorList"></div>
+  </div>
+
+  <div class="card">
+    <h2>Rotation Rules</h2>
+
+    <label for="intervalSelect">Insert bumper after every N tracks</label>
+    <select id="intervalSelect">
+      <option value="4">Every 4 tracks</option>
+      <option value="5">Every 5 tracks</option>
+      <option value="6" selected>Every 6 tracks</option>
+      <option value="8">Every 8 tracks</option>
+    </select>
+
+    <div class="hint">
+      This affects how <strong>window.injectSponsorBumpers</strong> modifies new Autopilot packs.
+      The value is stored in <code>localStorage</code> so each browser can have its own setting.
+    </div>
+
+    <div class="row">
+      <button id="applyBtn" class="btn-main btn-small">Save Interval</button>
+      <span class="pill pill-accent">Used by Autopilot Engine</span>
+    </div>
+
+    <div id="intervalStatus" class="status">
+      Interval not configured yet.
+    </div>
+  </div>
+
+  <script>
+    const KEY_SPONSORS = 'tkfm_sponsors';
+    const KEY_INTERVAL = 'tkfm_sponsor_interval';
+
+    const sName         = document.getElementById('sName');
+    const sAudio        = document.getElementById('sAudio');
+    const addBtn        = document.getElementById('addBtn');
+    const sponsorList   = document.getElementById('sponsorList');
+    const intervalSel   = document.getElementById('intervalSelect');
+    const applyBtn      = document.getElementById('applyBtn');
+    const intervalStatus= document.getElementById('intervalStatus');
+
+    function loadSponsorsFromStorage(){
+      try{
+        const raw = localStorage.getItem(KEY_SPONSORS);
+        const arr = raw ? JSON.parse(raw) : [];
+        if(!Array.isArray(arr)) return [];
+        return arr;
+      }catch(e){
+        console.error('Error parsing sponsors from localStorage', e);
+        return [];
+      }
+    }
+
+    function saveSponsorsToStorage(list){
+      try{
+        localStorage.setItem(KEY_SPONSORS, JSON.stringify(list));
+      }catch(e){
+        console.error('Error saving sponsors to localStorage', e);
+      }
+    }
+
+    function loadIntervalFromStorage(){
+      try{
+        const raw = localStorage.getItem(KEY_INTERVAL);
+        const n = Number(raw);
+        if(!raw || isNaN(n) || n <= 0) return null;
+        return n;
+      }catch(e){
+        return null;
+      }
+    }
+
+    function saveIntervalToStorage(n){
+      try{
+        localStorage.setItem(KEY_INTERVAL, String(n));
+      }catch(e){
+        console.error('Error saving sponsor interval', e);
+      }
+    }
+
+    function renderInterval(){
+      const val = loadIntervalFromStorage();
+      if(!val){
+        intervalStatus.innerHTML = 'Interval not configured yet. Default will be <span class="good">6 tracks</span>.';
+        intervalSel.value = '6';
+      }else{
+        intervalStatus.innerHTML = 'Current setting: insert a bumper every <span class="good">'+val+' tracks</span>.';
+        if(intervalSel.value !== String(val)){
+          if(['4','5','6','8'].includes(String(val))){
+            intervalSel.value = String(val);
+          }
+        }
+      }
+    }
+
+    function renderSponsors(){
+      const data = loadSponsorsFromStorage();
+      sponsorList.innerHTML = '';
+
+      if(!data.length){
+        const empty = document.createElement('div');
+        empty.className = 'hint';
+        empty.textContent = 'No sponsors configured yet. Add at least one to start selling radio inventory.';
+        sponsorList.appendChild(empty);
+        return;
+      }
+
+      data.forEach((s, index) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'sponsor-item';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'sponsor-name';
+        nameEl.textContent = s.name || 'Unnamed Sponsor';
+
+        const urlEl = document.createElement('div');
+        urlEl.className = 'sponsor-url';
+        urlEl.textContent = s.audioUrl || '(no audio URL set)';
+
+        const metaEl = document.createElement('div');
+        metaEl.className = 'sponsor-meta';
+        const imp = s.impressions || 0;
+        metaEl.textContent = 'Impressions: ' + imp;
+
+        const row = document.createElement('div');
+        row.className = 'row';
+
+        const pillIndex = document.createElement('span');
+        pillIndex.className = 'pill';
+        pillIndex.textContent = 'Slot #' + (index + 1);
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'btn-secondary btn-small';
+        removeBtn.textContent = 'Remove';
+        removeBtn.addEventListener('click', () => {
+          const current = loadSponsorsFromStorage();
+          current.splice(index, 1);
+          saveSponsorsToStorage(current);
+          renderSponsors();
+        });
+
+        row.appendChild(pillIndex);
+        row.appendChild(removeBtn);
+
+        wrap.appendChild(nameEl);
+        wrap.appendChild(urlEl);
+        wrap.appendChild(metaEl);
+        wrap.appendChild(row);
+
+        sponsorList.appendChild(wrap);
+      });
+    }
+
+    addBtn.addEventListener('click', () => {
+      const name = sName.value.trim();
+      const audio = sAudio.value.trim();
+
+      if(!name || !audio){
+        alert('Please fill in sponsor name and audio URL.');
+        return;
+      }
+
+      const sponsors = loadSponsorsFromStorage();
+      sponsors.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + sponsors.length,
+        name,
+        audioUrl: audio,
+        impressions: 0
+      });
+
+      saveSponsorsToStorage(sponsors);
+      sName.value = '';
+      sAudio.value = '';
+      renderSponsors();
+    });
+
+    applyBtn.addEventListener('click', () => {
+      const n = Number(intervalSel.value);
+      if(!n || isNaN(n) || n <= 0){
+        alert('Invalid interval');
+        return;
+      }
+      saveIntervalToStorage(n);
+      renderInterval();
+    });
+
+    window.injectSponsorBumpers = function(pack){
+      try{
+        const sponsors = loadSponsorsFromStorage();
+        if(!Array.isArray(pack) || !pack.length || !sponsors.length){
+          return pack;
+        }
+
+        const interval = loadIntervalFromStorage() || 6;
+        const result = [];
+        let count = 0;
+        let sponsorQueue = sponsors.slice();
+
+        for(const track of pack){
+          result.push(track);
+          count++;
+
+          if(count % interval === 0){
+            if(!sponsorQueue.length){
+              sponsorQueue = sponsors.slice();
+            }
+            const s = sponsorQueue.shift();
+            if(!s) continue;
+
+            s.impressions = (s.impressions || 0) + 1;
+
+            const bumper = {
+              title: '**SPONSOR_BREAK**',
+              sponsorName: s.name,
+              audioUrl: s.audioUrl,
+              isBumper: true
+            };
+            result.push(bumper);
+          }
+        }
+
+        saveSponsorsToStorage(sponsors);
+        return result;
+      }catch(e){
+        console.error('injectSponsorBumpers error', e);
+        return pack;
+      }
+    };
+
+    renderSponsors();
+    renderInterval();
+  </script>
+  <script type="module" src="/js/tkfm-logo-resolver.js"></script>
+<script src="/js/tkfm-checkout.js"></script>
+<script src="/js/tkfm-paid-lane-modal.js"></script>
+  <script src="/js/tkfm-owner-override.js"></script>
+</body>
+</html>

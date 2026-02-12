@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+<meta charset="utf-8">
+<title>TKFM Records — Label Analytics</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- OWNER LOCK -->
+<script src="/js/tkfm-owner-guard.js"></script>
+<script src="/js/owner-lock.js"></script>
+
+<style>
+:root{
+ --bg:#020617;--gold:#facc15;--txt:#f8fafc;
+ --panel:rgba(2,6,23,.9);--stroke:rgba(255,255,255,.08)
+}
+*{box-sizing:border-box}
+body{
+ margin:0;padding:24px;font-family:system-ui;
+ background:var(--bg);color:var(--txt)
+}
+h1{color:var(--gold)}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:18px;max-width:1000px
+}
+.card{
+ background:var(--panel);border:1px solid var(--stroke);
+ border-radius:20px;padding:20px
+}
+.big{font-size:2.4rem;font-weight:900;color:var(--gold)}
+.label{opacity:.8}
+</style>
+</head>
+
+<body>
+  <div class="tkfm-bg-main"></div>
+  <div class="tkfm-bg-orbit"></div>
+<h1>📊 TKFM Label Analytics</h1>
+<p>Live data from Label Queue (local).</p>
+
+<div class="grid">
+ <div class="card">
+  <div class="big" id="total">0</div>
+  <div class="label">Total Submissions</div>
+ </div>
+
+ <div class="card">
+  <div class="big" id="radio">0</div>
+  <div class="label">Radio Spotlight</div>
+ </div>
+
+ <div class="card">
+  <div class="big" id="home">0</div>
+  <div class="label">Homepage Feature</div>
+ </div>
+
+ <div class="card">
+  <div class="big" id="contract">0</div>
+  <div class="label">Contract Offers</div>
+ </div>
+
+ <div class="card">
+  <div class="big" id="revenue">$0</div>
+  <div class="label">Projected Revenue</div>
+ </div>
+</div>
+
+<script>
+if(!ownerLock('label-analytics')) throw 'LOCKED';
+
+const q = JSON.parse(localStorage.getItem('labelQueue')||'[]');
+
+total.textContent = q.length;
+radio.textContent = q.filter(x=>x.radio).length;
+home.textContent = q.filter(x=>x.home).length;
+contract.textContent = q.filter(x=>x.contract).length;
+
+const rev = q.reduce((s,x)=>s+(x.price||0),0);
+revenue.textContent = '$' + rev.toFixed(2);
+</script>
+</body>
+</html>

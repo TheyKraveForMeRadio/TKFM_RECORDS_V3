@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="tkfm-lane" content="records-only">
+  <script src="/js/tkfm-master-autoload.js" defer></script>
+  <meta name="tkfm-theme" content="records" />
+  <link rel="stylesheet" href="/css/tkfm-shell.css" />
+  <link rel="stylesheet" href="/css/tkfm-records.css" />
+  <script src="/js/tkfm-shell.js" defer></script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact TKFM Records — They Krave For Me</title>
+  <meta name="description" content="Contact TKFM Records — inquiries for label features, releases, and artist collaborations." />
+
+  <style>
+    body.tkfm-graphfx-root {
+      position: relative !important;
+      min-height: 100vh !important;
+      overflow-x: hidden !important;
+      background: radial-gradient(circle at top left, #020617, #000000 80%) !important;
+      color: #f9fafb !important;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .tkfm-bg-main {
+      position: fixed;
+      inset: -25%;
+      pointer-events: none;
+      z-index: -3;
+      background:
+        radial-gradient(circle at 0 0, rgba(250, 204, 21, 0.5), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.45), transparent 60%);
+      filter: blur(12px);
+      animation: tkfmGlowContact 28s linear infinite alternate;
+      opacity: 0.9;
+    }
+
+    .tkfm-bg-orbit {
+      position: fixed;
+      inset: -40%;
+      pointer-events: none;
+      z-index: -4;
+      background:
+        conic-gradient(
+          from 200deg,
+          rgba(250, 204, 21, 0.28),
+          rgba(250, 204, 21, 0.16),
+          rgba(250, 204, 21, 0.28)
+        );
+      mix-blend-mode: screen;
+      opacity: 0.4;
+      filter: blur(45px);
+      animation: tkfmOrbitContact 44s linear infinite;
+    }
+
+    @keyframes tkfmGlowContact {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(2%, -3%,0) scale(1.02); }
+      100% { transform: translate3d(-3%,3%,0) scale(1.03); }
+    }
+
+    @keyframes tkfmOrbitContact {
+      0% { transform: rotate(0deg) scale(1.06); }
+      100% { transform: rotate(360deg) scale(1.06); }
+    }
+
+    main.tkfm-main {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 1.75rem 1.25rem 3.5rem;
+    }
+
+    .tkfm-page-header {
+      margin-bottom: 1.6rem;
+    }
+
+    .tkfm-kicker {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #facc15;
+      margin-bottom: 0.3rem;
+    }
+
+    .tkfm-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.6rem;
+      justify-content: space-between;
+    }
+
+    .tkfm-title {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 900;
+      background: linear-gradient(110deg, #facc15, #f97316, #eab308);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 20px rgba(250, 204, 21, 0.7),
+        0 0 34px rgba(250, 123, 22, 0.7);
+    }
+
+    .tkfm-sub {
+      font-size: 0.9rem;
+      color: rgba(226, 232, 240, 0.94);
+      max-width: 38rem;
+      margin-top: 0.35rem;
+    }
+
+    .tkfm-header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .tkfm-pill-tag {
+      font-size: 0.78rem;
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid rgba(250, 204, 21, 0.9);
+      background: rgba(15,23,42,0.9);
+      color: #facc15;
+    }
+
+    .tkfm-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.45rem 1rem;
+      font-size: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(250, 204, 21, 0.75);
+      color: #facc15;
+      background: radial-gradient(circle at top left, rgba(250,204,21,0.52), rgba(15,23,42,0.98));
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .tkfm-btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 10px 25px rgba(15,23,42,0.9),
+        0 0 20px rgba(250,204,21,0.65);
+      border-color: #facc15;
+    }
+
+    .tkfm-layout {
+      display: grid;
+      grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
+      gap: 1.4rem;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 980px) {
+      .tkfm-layout {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .tkfm-contact-form {
+      position: relative;
+      border-radius: 22px;
+      padding: 1rem;
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.96));
+      border: 1px solid rgba(250,204,21,0.45);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.95);
+    }
+
+    .tkfm-grid-panel {
+      position: relative;
+      border-radius: 22px;
+      padding: 0.9rem;
+      background: radial-gradient(circle at top left, rgba(250,204,21,0.78), rgba(15,23,42,0.98));
+      border: 1px solid rgba(250,204,21,0.45);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.95);
+      overflow: hidden;
+    }
+
+    .tkfm-bottom-row {
+      margin-top: 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: rgba(250,204,21,0.95);
+    }
+  </style>
+
+</head>
+<body class="tkfm-graphfx-root" data-tkfm-theme="records">
+  <div class="tkfm-bg-main"></div>
+  <div class="tkfm-bg-orbit"></div>
+
+  <main class="tkfm-main">
+    <header class="tkfm-page-header">
+      <div class="tkfm-kicker">Contact TKFM Records</div>
+      <div class="tkfm-title-row">
+        <div>
+          <h1 class="tkfm-title">Reach Out to TKFM Records</h1>
+          <p class="tkfm-sub">
+            <span>Artists, Labels, Collaborators.</span> Inbox for features, releases, and serious moves.
+          </p>
+        </div>
+        <div class="tkfm-header-actions">
+          <div class="tkfm-pill-tag">Independent Artist Power Station</div>
+          <a href="/index.html" class="tkfm-btn">Back Home</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="tkfm-layout">
+      <div class="tkfm-contact-form">
+        <form class="tkfm-form" autocomplete="on">
+          <div class="tkfm-row-inline">
+            <div class="tkfm-field">
+              <label class="tkfm-label" for="name">Name <span>*</span></label>
+              <input id="name" name="name" type="text" class="tkfm-input" placeholder="Your name or brand" required />
+            </div>
+            <div class="tkfm-field">
+              <label class="tkfm-label" for="email">Email <span>*</span></label>
+              <input id="email" name="email" type="email" class="tkfm-input" placeholder="you@email.com" required />
+            </div>
+          </div>
+
+          <div class="tkfm-field">
+            <label class="tkfm-label" for="lane">Your Role</label>
+            <select id="lane" name="lane" class="tkfm-select">
+              <option value="">Pick your lane</option>
+              <option value="artist">Artist</option>
+              <option value="label">Label</option>
+              <option value="collaborator">Collaborator</option>
+            </select>
+          </div>
+
+          <div class="tkfm-field">
+            <label class="tkfm-label" for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" class="tkfm-input" placeholder="Release, feature, collab, etc." />
+          </div>
+
+          <div class="tkfm-field">
+            <label class="tkfm-label" for="message">Message <span>*</span></label>
+            <textarea id="message" name="message" class="tkfm-textarea" placeholder="Who you are, what you want to do, and timeline." required></textarea>
+          </div>
+
+          <div class="tkfm-form-actions">
+            <button type="button" class="tkfm-btn tkfm-btn-primary">Draft Email</button>
+            <span class="tkfm-mini-meta">
+              Wire to Netlify Forms or Supabase later.
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <aside class="tkfm-grid-panel">
+        <div class="tkfm-grid-header">
+          <div class="tkfm-grid-title">Inbox Signals</div>
+        </div>
+        <div class="tkfm-grid">
+          <div class="tkfm-grid-body">
+            <div>
+              <div class="tkfm-grid-row-label">Lane Signals</div>
+              <div class="tkfm-grid-row">
+                <span>Artist</span><span>Heat & Consistency</span>
+              </div>
+              <div class="tkfm-grid-row">
+                <span>Label</span><span>Roster & Rollout</span>
+              </div>
+              <div class="tkfm-grid-row">
+                <span>Collaborator</span><span>Fit & Story</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tkfm-contact-meta">
+          <strong>Backup contact:</strong> theykraveforrecords@gmail.com
+        </div>
+      </aside>
+    </section>
+
+    <section class="tkfm-bottom-row">
+      <span>
+        <strong>TKFM Records rule:</strong> say it plain — who you are, what you want, and when you want to move.
+      </span>
+    </section>
+  </main>
+</body>
+</html>

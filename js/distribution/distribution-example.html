@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TKFM Records Distribution</title>
+<script src="/js/distribution/tkfm-distribute.js"></script>
+</head>
+<body data-tkfm-theme="records">
+
+<h2>Distribute a Release</h2>
+
+<button onclick="TKFM_DISTRIBUTE.submitRelease('artist@example.com', 'Drop001', 'single')">
+  Distribute Single
+</button>
+
+<button onclick="TKFM_DISTRIBUTE.submitRelease('artist@example.com', 'Drop001', 'artist_monthly')">
+  Distribute Artist Monthly
+</button>
+
+<button onclick="TKFM_DISTRIBUTE.submitRelease('artist@example.com', 'Drop001', 'label_monthly')">
+  Distribute Label Monthly
+</button>
+
+</body>
+</html>
