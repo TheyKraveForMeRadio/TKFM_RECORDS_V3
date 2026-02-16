@@ -1,0 +1,19 @@
+{
+  "name": "tkfm-records-v3-chain",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "test": "hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.28.6"
+  },
+  "dependencies": {
+    "@ethereumjs/wallet": "^10.0.0",
+    "@openzeppelin/contracts": "^4.9.3"
+  }
+}

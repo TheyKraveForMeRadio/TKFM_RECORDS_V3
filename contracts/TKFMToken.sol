@@ -1,21 +1,46 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TKFMToken is ERC1155, Ownable {
-    uint256 public constant AI_DROP_25 = 1;
-    uint256 public constant SPONSOR_READ_20PACK = 2;
-    uint256 public constant RADIO_PLAY = 3;
+error NOT_AUTHORITY();
+error MINTING_LOCKED();
 
-    constructor() ERC1155("https://tkfm-records.com/metadata/{id}.json") {}
+contract TKFMToken is ERC20, Ownable {
+    address public authority;
+    bool public mintingLocked;
 
-    function mint(address to, uint256 id, uint256 amount) external onlyOwner {
-        _mint(to, id, amount, "");
+    modifier onlyAuthority() {
+        if (msg.sender != authority) revert NOT_AUTHORITY();
+        _;
     }
 
-    function batchMint(address to, uint256[] memory ids, uint256[] memory amounts) external onlyOwner {
-        _mintBatch(to, ids, amounts, "");
+    modifier mintingAllowed() {
+        if (mintingLocked) revert MINTING_LOCKED();
+        _;
+    }
+
+    constructor(address initialAuthority) ERC20("TKFM Token", "TKFMT") {
+        authority = initialAuthority;
+        _mint(initialAuthority, 1_000_000 * 10 ** decimals());
+        mintingLocked = true; // start locked by default
+    }
+
+    function lockMinting() external onlyAuthority {
+        mintingLocked = true;
+    }
+
+    function unlockMinting() external onlyAuthority {
+        mintingLocked = false;
+    }
+
+    // Corrected transfer override: public + override
+    function transfer(address to, uint256 amount) public override mintingAllowed returns (bool) {
+        return super.transfer(to, amount);
+    }
+
+    function transferAuthority(address newAuthority) external onlyOwner {
+        authority = newAuthority;
     }
 }

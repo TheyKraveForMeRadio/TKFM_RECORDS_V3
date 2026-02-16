@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import TKFMTokenABI from '../../contracts/TKFMToken.json' assert { type: "json" };
+import TKFMTokenABI from '../../contracts/TKFMToken.json' with { type: "json" };
 
 export async function handler(event) {
   const { artistAddress, tokenId, amount } = JSON.parse(event.body);

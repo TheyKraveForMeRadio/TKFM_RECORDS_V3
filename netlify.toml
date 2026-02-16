@@ -1,22 +1,23 @@
-﻿[build]
+[build]
   publish = "."
   functions = "netlify/functions"
 
 [[edge_functions]]
-  path = "/*"
   function = "lockdown"
+  path = "/admin/*"
 
 [[edge_functions]]
-  path = "/*"
-  function = "owner-pass"
+  function = "lockdown"
+  path = "/owner/*"
 
 [[edge_functions]]
-  path = "/*"
-  function = "audit"
+  function = "lockdown"
+  path = "/secure/*"
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-TKFM-MODE = "BLACKOUT"
-    X-TKFM-OWNER = "TRUE"
-    X-TKFM-VISIBILITY = "NONE"
+[[edge_functions]]
+  function = "lockdown"
+  path = "/private/*"
+
+[[edge_functions]]
+  function = "lockdown"
+  path = "/.netlify/*"
