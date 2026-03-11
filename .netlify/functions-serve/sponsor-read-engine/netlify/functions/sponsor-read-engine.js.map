@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/sponsor-read-engine.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-FoOxTolzoTa0",
+  "sourcesContent": ["let sponsorCredits = {}; // simulate DB\n\nexports.handler = async (event) => {\n  try {\n    const { artistEmail, readPackKey } = JSON.parse(event.body || \"{}\");\n    if (!artistEmail || !readPackKey) return { statusCode: 400, body: \"Missing parameters\" };\n\n    sponsorCredits[artistEmail] = sponsorCredits[artistEmail] || 0;\n    if (sponsorCredits[artistEmail] < 1) {\n      return { statusCode: 400, body: \"Not enough sponsor credits\" };\n    }\n\n    sponsorCredits[artistEmail] -= 1;\n\n    const sponsorUrl = `https://tkfmrecords.com/sponsor-reads/${Date.now()}-${readPackKey}.mp3`;\n\n    return {\n      statusCode: 200,\n      body: JSON.stringify({ success: true, url: sponsorUrl, remainingCredits: sponsorCredits[artistEmail] }),\n    };\n  } catch (err) {\n    console.error(err);\n    return { statusCode: 500, body: \"Server error\" };\n  }\n};\n"],
+  "mappings": ";AAAA,IAAI,iBAAiB,CAAC;AAEtB,QAAQ,UAAU,OAAO,UAAU;AACjC,MAAI;AACF,UAAM,EAAE,aAAa,YAAY,IAAI,KAAK,MAAM,MAAM,QAAQ,IAAI;AAClE,QAAI,CAAC,eAAe,CAAC,YAAa,QAAO,EAAE,YAAY,KAAK,MAAM,qBAAqB;AAEvF,mBAAe,WAAW,IAAI,eAAe,WAAW,KAAK;AAC7D,QAAI,eAAe,WAAW,IAAI,GAAG;AACnC,aAAO,EAAE,YAAY,KAAK,MAAM,6BAA6B;AAAA,IAC/D;AAEA,mBAAe,WAAW,KAAK;AAE/B,UAAM,aAAa,yCAAyC,KAAK,IAAI,CAAC,IAAI,WAAW;AAErF,WAAO;AAAA,MACL,YAAY;AAAA,MACZ,MAAM,KAAK,UAAU,EAAE,SAAS,MAAM,KAAK,YAAY,kBAAkB,eAAe,WAAW,EAAE,CAAC;AAAA,IACxG;AAAA,EACF,SAAS,KAAK;AACZ,YAAQ,MAAM,GAAG;AACjB,WAAO,EAAE,YAAY,KAAK,MAAM,eAAe;AAAA,EACjD;AACF;",
+  "names": []
+}

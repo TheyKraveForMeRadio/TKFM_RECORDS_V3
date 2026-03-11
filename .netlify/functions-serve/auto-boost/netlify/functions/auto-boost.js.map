@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/auto-boost.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-qLpidbEBkqry",
+  "sourcesContent": ["exports.handler = async () => {\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ status: \"auto-boost placeholder active\" })\n  };\n};\n"],
+  "mappings": ";AAAA,QAAQ,UAAU,YAAY;AAC5B,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU,EAAE,QAAQ,gCAAgC,CAAC;AAAA,EAClE;AACF;",
+  "names": []
+}
