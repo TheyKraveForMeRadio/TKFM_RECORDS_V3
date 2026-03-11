@@ -6,8 +6,18 @@
 publish = "."
 functions = "netlify/functions"
 
+[build.environment]
+NODE_VERSION = "22"
+NODE_ENV = "production"
+DEBUG_MODE = "false"
+
+############################################
+# FUNCTIONS CONFIGURATION
+############################################
+
 [functions]
 node_bundler = "esbuild"
+external_node_modules = ["stripe","jsonwebtoken","bcryptjs","@supabase/supabase-js"]
 
 ############################################
 # MASTER ORCHESTRATION SCHEDULER
@@ -18,7 +28,7 @@ path = "/.netlify/functions/tkfm-master-cron"
 schedule = "*/5 * * * *"
 
 ############################################
-# CRITICAL LOW-LATENCY ENGINES
+# CRITICAL LOW LATENCY ENGINES
 ############################################
 
 [[scheduled]]
@@ -253,12 +263,3 @@ path = "/private/*"
 [[edge_functions]]
 function = "lockdown"
 path = "/.netlify/*"
-
-############################################
-# ENVIRONMENT
-############################################
-
-[build.environment]
-NODE_ENV = "production"
-DEBUG_MODE = "false"
-
