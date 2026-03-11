@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Institutional Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM Institutional Investor Dashboard</h1>
+
+<h2>Portfolio Value</h2>
+<div id="value"></div>
+
+<h2>Risk Scores</h2>
+<div id="risk"></div>
+
+<h2>Royalty Forecast</h2>
+<canvas id="forecastChart"></canvas>
+
+<script>
+
+async function load(){
+
+const pools = [
+{deposits:50000,revenue:6000},
+{deposits:70000,revenue:8000}
+]
+
+const totalValue =
+pools.reduce((a,b)=>a+b.deposits,0)
+
+document.getElementById("value").innerHTML =
+"$"+totalValue
+
+const riskScore = 65
+
+document.getElementById("risk").innerHTML =
+"Catalog Risk Score: "+riskScore
+
+const ctx =
+document.getElementById("forecastChart")
+
+new Chart(ctx,{
+type:'line',
+data:{
+labels:["2024","2025","2026"],
+datasets:[{
+label:"Royalty Forecast",
+data:[12000,15000,18000]
+}]
+}
+})
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

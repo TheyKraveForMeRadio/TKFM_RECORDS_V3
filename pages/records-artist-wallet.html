@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TKFM Records • Artist Wallet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body {
+  margin:0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:#020617;
+  color:#facc15;
+}
+header {
+  background:linear-gradient(90deg,#facc15,#eab308,#f97316);
+  color:#020617;
+  padding:20px;
+  font-size:24px;
+  font-weight:900;
+  text-align:center;
+}
+.container {
+  max-width:1100px;
+  margin:30px auto;
+  padding:20px;
+}
+.card {
+  background:#0f172a;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:25px;
+  box-shadow:0 0 30px rgba(250,204,21,.08);
+}
+h2 { margin-top:0; }
+button {
+  background:#facc15;
+  color:#020617;
+  border:none;
+  padding:12px 18px;
+  font-weight:800;
+  border-radius:8px;
+  cursor:pointer;
+}
+button:hover { background:#fde047; }
+.stat {
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+  font-size:18px;
+}
+canvas { background:#020617; border-radius:12px; }
+.warning {
+  background:#451a03;
+  padding:15px;
+  border-radius:10px;
+  color:#fde68a;
+  font-weight:700;
+}
+</style>
+</head>
+<body>
+
+<header>TKFM RECORDS — ARTIST WALLET</header>
+
+<div class="container">
+
+<div class="card" id="authCard">
+  <h2>Wallet Status</h2>
+  <div id="walletStatus">Checking access…</div>
+</div>
+
+<div class="card" id="statsCard" style="display:none;">
+  <h2>Your Earnings</h2>
+  <div class="stat"><span>Total Revenue</span><span id="rev">0</span></div>
+  <div class="stat"><span>Withdrawn</span><span id="withdrawn">0</span></div>
+  <div class="stat"><span>Claimable</span><span id="claimable">0</span></div>
+  <br>
+  <button id="withdrawBtn">Withdraw Claimable</button>
+</div>
+
+<div class="card" id="chartCard" style="display:none;">
+  <h2>Revenue History</h2>
+  <canvas id="revChart" height="120"></canvas>
+</div>
+
+</div>
+
+<script type="module">
+import pkg from "../node_modules/hardhat/dist/src/index.js";
+const { ethers } = pkg;
+import deployed from "../deployed.json" assert { type: "json" };
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+let signer, records, artistAddr;
+
+const RECORDS_ABI = [
+  "function artistHasRelease(address) view returns (bool)",
+  "function artistTotals(address) view returns (uint256 revenue,uint256 withdrawn,uint256 claimable)",
+  "function withdrawArtist()"
+];
+
+async function init() {
+  if (!window.ethereum) {
+    document.getElementById('walletStatus').innerText = "Wallet not detected";
+    return;
+  }
+
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+  artistAddr = await signer.getAddress();
+
+  records = new ethers.Contract(deployed.TKFMRecords, RECORDS_ABI, signer);
+
+  const hasAccess = await records.artistHasRelease(artistAddr);
+  if (!hasAccess) {
+    document.getElementById('walletStatus').innerHTML =
+      "<div class='warning'>No signed releases found for this wallet.</div>";
+    return;
+  }
+
+  document.getElementById('walletStatus').innerText =
+    "Connected: " + artistAddr;
+
+  document.getElementById('statsCard').style.display = "block";
+  document.getElementById('chartCard').style.display = "block";
+
+  await loadStats();
+  drawChart();
+}
+
+async function loadStats() {
+  const t = await records.artistTotals(artistAddr);
+  document.getElementById('rev').innerText = t.revenue;
+  document.getElementById('withdrawn').innerText = t.withdrawn;
+  document.getElementById('claimable').innerText = t.claimable;
+}
+
+document.getElementById('withdrawBtn').onclick = async () => {
+  await records.withdrawArtist();
+  await loadStats();
+};
+
+function drawChart() {
+  const ctx = document.getElementById('revChart').getContext('2d');
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:['Launch','Month 1','Month 2','Month 3'],
+      datasets:[{
+        label:'Earnings',
+        data:[0,30,60,120],
+        fill:true
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false}}
+    }
+  });
+}
+
+init();
+</script>
+
+</body>
+</html>

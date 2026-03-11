@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Upload Music to TKFM</title>
+</head>
+
+<body>
+
+<h1>Upload Track</h1>
+
+<input id="artist" placeholder="Artist">
+<input id="title" placeholder="Track Title">
+
+<button onclick="upload()">Upload</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function upload(){
+
+ const artist=document.getElementById("artist").value
+ const title=document.getElementById("title").value
+
+ const res = await fetch(
+ "/.netlify/functions/upload-track",
+ {
+  method:"POST",
+  body:JSON.stringify({
+   artist:artist,
+   title:title,
+   file_url:"pending"
+  })
+ }
+ )
+
+ const data = await res.json()
+
+ document.getElementById("result").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

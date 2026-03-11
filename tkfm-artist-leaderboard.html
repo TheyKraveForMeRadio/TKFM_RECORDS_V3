@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Artist Leaderboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+background:#0f172a;
+padding:15px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.rank{
+color:#22d3ee;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Top Artists On TKFM</h1>
+
+<p>Artists ranked by market performance.</p>
+
+<div id="leaderboard"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch("/.netlify/functions/artist-leaderboard")
+const data = await res.json()
+
+const board=document.getElementById("leaderboard")
+board.innerHTML=""
+
+data.artists.forEach((artist,i)=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span class='rank'>#"+(i+1)+"</span>"+
+"<span>"+artist.name+"</span>"+
+"<span>$"+artist.market_cap+"</span>"
+
+board.appendChild(row)
+
+})
+
+}
+
+load()
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

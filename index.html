@@ -1,113 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TKFM RECORDS — Label OS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="They Krave For Me Records — Independent Artist Power Station" />
 
-  <style>
-    :root {
-      --bg: #020617;
-      --accent: #facc15;
-      --accent-dark: #eab308;
-      --orange: #f97316;
-      --text: #e5e7eb;
-    }
+<meta charset="UTF-8" />
+<title>TKFM — Music Market</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    * { box-sizing: border-box; }
+<meta name="description" content="TKFM Records — The Music Market. Turn songs into assets." />
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-    }
+<style>
 
-    .os {
-      max-width: 960px;
-      padding: 48px;
-      text-align: center;
-    }
+:root{
+--bg:#020617;
+--gold:#facc15;
+--gold2:#eab308;
+--orange:#f97316;
+--text:#e5e7eb;
+--panel:#0f172a;
+--green:#22c55e;
+--red:#ef4444;
+}
 
-    .logo {
-      max-width: 180px;
-      margin-bottom: 24px;
-    }
+*{
+box-sizing:border-box;
+}
 
-    h1 {
-      color: var(--accent);
-      font-size: 2.6rem;
-      margin-bottom: 12px;
-      letter-spacing: 0.04em;
-    }
+body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
 
-    p {
-      color: #cbd5f5;
-      margin-bottom: 36px;
-      font-size: 1.1rem;
-    }
+/* HERO */
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
+.hero{
+text-align:center;
+padding:90px 20px 70px 20px;
+}
 
-    a {
-      text-decoration: none;
-    }
+.logo{
+width:160px;
+margin-bottom:20px;
+}
 
-    .card {
-      border: 1px solid var(--accent-dark);
-      padding: 20px;
-      border-radius: 10px;
-      background: rgba(250, 204, 21, 0.04);
-      color: var(--accent);
-      font-weight: 600;
-      transition: all 0.15s ease;
-    }
+h1{
+color:var(--gold);
+font-size:3rem;
+margin-bottom:10px;
+}
 
-    .card:hover {
-      background: rgba(250, 204, 21, 0.12);
-      transform: translateY(-2px);
-    }
+.tagline{
+color:#cbd5f5;
+font-size:1.2rem;
+margin-bottom:30px;
+}
 
-    footer {
-      margin-top: 48px;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-  </style>
+.cta{
+background:var(--orange);
+border:none;
+padding:16px 40px;
+font-size:20px;
+cursor:pointer;
+border-radius:8px;
+color:white;
+}
 
-  <script>
-    window.TKFM_SITE_MODE = "{{TKFM_SITE_MODE}}";
-  </script>
-  <script src="/tkfm-os-router.js"></script>
+/* MARKET TICKER */
+
+.ticker{
+background:#000;
+overflow:hidden;
+white-space:nowrap;
+padding:10px 0;
+border-top:1px solid #111;
+border-bottom:1px solid #111;
+}
+
+.ticker span{
+display:inline-block;
+padding:0 40px;
+color:#22d3ee;
+}
+
+/* STATS */
+
+.stats{
+max-width:1000px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+padding:40px 20px;
+}
+
+.stat{
+background:var(--panel);
+padding:20px;
+border-radius:8px;
+text-align:center;
+}
+
+.stat-value{
+font-size:28px;
+color:var(--gold);
+margin-top:5px;
+}
+
+/* MARKET */
+
+.market{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+.section-title{
+color:var(--gold);
+font-size:1.5rem;
+margin-bottom:20px;
+}
+
+.market-row{
+display:flex;
+justify-content:space-between;
+background:var(--panel);
+padding:14px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.price{
+color:#22d3ee;
+}
+
+/* ACTIVITY */
+
+.activity{
+max-width:1000px;
+margin:auto;
+padding:20px;
+}
+
+.activity-row{
+background:var(--panel);
+padding:12px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+/* GRID */
+
+.grid{
+max-width:1000px;
+margin:auto;
+padding:40px 20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:18px;
+}
+
+.card{
+background:var(--panel);
+padding:20px;
+border-radius:8px;
+border:1px solid rgba(250,204,21,0.15);
+color:var(--gold);
+font-weight:600;
+transition:.15s;
+text-align:center;
+}
+
+.card:hover{
+transform:translateY(-3px);
+background:rgba(250,204,21,0.06);
+}
+
+footer{
+text-align:center;
+padding:40px;
+font-size:.85rem;
+color:#64748b;
+}
+
+</style>
+
+<script>
+window.TKFM_SITE_MODE="{{TKFM_SITE_MODE}}";
+</script>
+
+<script src="/tkfm-os-router.js"></script>
+
 </head>
+
 <body>
-  <div class="os">
-    <img src="/tkfm-records-logo.png" alt="TKFM Records" class="logo" />
 
-    <h1>TKFM</h1>
-    <p>Independent Artist Power Station · Label OS</p>
+<div class="hero">
 
-    <div class="grid">
-      <a href="/label-home.html"><div class="card">Label Home</div></a>
-      <a href="/label-hub.html"><div class="card">Label Hub</div></a>
-      <a href="/artist-dashboard.html"><div class="card">Artist Dashboard</div></a>
-      <a href="/owner-dashboard.html"><div class="card">Owner Dashboard</div></a>
-      <a href="/tkfm-sponsor-read-engine.html"><div class="card">Sponsor Engine</div></a>
-      <a href="/tkfm-mixtape-spotlight.html"><div class="card">Mixtape Spotlight</div></a>
-    </div>
+<img src="/tkfm-records-logo.png" class="logo"/>
 
-    <footer>
-      © TKFM · DJ KRAVE · OS ACTIVE
-    </footer>
-  </div>
+<h1>TKFM Music Market</h1>
+
+<div class="tagline">
+Turn Songs Into Assets · Fans Own Music
+</div>
+
+<button class="cta" onclick="window.location='/tkfm-one-click-onboarding.html'">
+Upload Your Song
+</button>
+
+</div>
+
+
+<div class="ticker" id="ticker"></div>
+
+
+<div class="stats">
+
+<div class="stat">
+Total Market Cap
+<div class="stat-value" id="marketcap">$0</div>
+</div>
+
+<div class="stat">
+Songs Trading
+<div class="stat-value" id="songs">0</div>
+</div>
+
+<div class="stat">
+Artists
+<div class="stat-value" id="artists">0</div>
+</div>
+
+</div>
+
+
+<div class="market">
+
+<div class="section-title">Trending Songs</div>
+
+<div id="market"></div>
+
+</div>
+
+
+<div class="activity">
+
+<div class="section-title">Live Activity</div>
+
+<div id="activity"></div>
+
+</div>
+
+
+<div class="grid">
+
+<a href="/label-home.html"><div class="card">Label Home</div></a>
+<a href="/label-hub.html"><div class="card">Label Hub</div></a>
+<a href="/artist-dashboard.html"><div class="card">Artist Dashboard</div></a>
+<a href="/owner-dashboard.html"><div class="card">Owner Dashboard</div></a>
+<a href="/tkfm-sponsor-read-engine.html"><div class="card">Sponsor Engine</div></a>
+<a href="/tkfm-mixtape-spotlight.html"><div class="card">Mixtape Spotlight</div></a>
+<a href="/tkfm-market-terminal.html"><div class="card">Music Market</div></a>
+<a href="/tkfm-artist-leaderboard.html"><div class="card">Artist Leaderboard</div></a>
+
+</div>
+
+<footer>
+© TKFM · DJ KRAVE · Music Economy Active
+</footer>
+
+
+<script>
+
+/* TRENDING MARKET */
+
+async function loadMarket(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+const container=document.getElementById("market")
+container.innerHTML=""
+
+let total=0
+
+(data.market||[]).slice(0,5).forEach(s=>{
+
+const row=document.createElement("div")
+row.className="market-row"
+
+row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
+
+container.appendChild(row)
+
+total+=s.price
+
+})
+
+document.getElementById("marketcap").innerText="$"+total
+
+}
+
+/* TICKER */
+
+async function loadTicker(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+const ticker=document.getElementById("ticker")
+
+ticker.innerHTML=""
+
+(data.market||[]).forEach(s=>{
+
+const span=document.createElement("span")
+span.innerText=s.catalog_id+" $"+s.price
+
+ticker.appendChild(span)
+
+})
+
+}
+
+/* ACTIVITY */
+
+function loadActivity(){
+
+const events=[
+"🔥 Fan bought shares",
+"📈 Song price increased",
+"🎧 Artist uploaded a new song",
+"💰 Royalty payout sent"
+]
+
+const container=document.getElementById("activity")
+container.innerHTML=""
+
+events.forEach(e=>{
+
+const row=document.createElement("div")
+row.className="activity-row"
+row.innerText=e
+
+container.appendChild(row)
+
+})
+
+}
+
+loadMarket()
+loadTicker()
+loadActivity()
+
+setInterval(loadMarket,5000)
+setInterval(loadTicker,7000)
+
+</script>
+
 </body>
 </html>

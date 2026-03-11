@@ -1,0 +1,39 @@
+<div style="max-width:900px;margin:auto;padding:40px 20px;">
+
+<h2 style="color:#facc15;">Live Activity</h2>
+
+<div id="activity"></div>
+
+<script>
+
+async function loadActivity(){
+
+const res = await fetch("/.netlify/functions/economy-activity-feed")
+const data = await res.json()
+
+const container=document.getElementById("activity")
+container.innerHTML=""
+
+(data.events||[]).forEach(e=>{
+
+const row=document.createElement("div")
+
+row.style.background="#0f172a"
+row.style.padding="12px"
+row.style.marginBottom="8px"
+row.style.borderRadius="6px"
+
+row.innerText=e.message
+
+container.appendChild(row)
+
+})
+
+}
+
+loadActivity()
+setInterval(loadActivity,4000)
+
+</script>
+
+</div>

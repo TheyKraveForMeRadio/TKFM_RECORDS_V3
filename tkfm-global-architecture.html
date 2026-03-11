@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Global Music Economy</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.layer{
+margin:30px 0;
+padding:20px;
+background:#111827;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Global Music Economy Stack</h1>
+
+<button onclick="load()">View Architecture</button>
+
+<div id="stack"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/tkfm-economy-stack"
+)
+
+const data = await res.json()
+
+let html=""
+
+for(const layer in data){
+
+html += "<div class='layer'><h2>"+layer+"</h2>"
+
+data[layer].forEach(item=>{
+html += "<div>"+item+"</div>"
+})
+
+html += "</div>"
+
+}
+
+document.getElementById("stack").innerHTML = html
+
+}
+
+</script>
+
+</body>
+
+</html>

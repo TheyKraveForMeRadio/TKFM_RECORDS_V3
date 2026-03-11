@@ -1,0 +1,33 @@
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(
+ process.env.SUPABASE_URL,
+ process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+export const handler = async()=>{
+
+ const { data } =
+ await supabase
+ .from("referral_signups")
+ .select("*")
+
+ const rewards = []
+
+ for(const r of data || []){
+
+  rewards.push({
+   referral:r.referral_code,
+   reward:"10 TKFM Credits"
+  })
+
+ }
+
+ return{
+  statusCode:200,
+  body:JSON.stringify({
+   rewards
+  })
+ }
+
+}

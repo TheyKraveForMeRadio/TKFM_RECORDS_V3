@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Referral Program</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+button{
+padding:12px 20px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Invite Artists to TKFM</h1>
+
+<input id="artist" placeholder="Artist Name">
+
+<button onclick="create()">Generate Referral Link</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function create(){
+
+const artist=document.getElementById("artist").value
+
+const res=await fetch(
+"/.netlify/functions/create-referral-link",
+{
+method:"POST",
+body:JSON.stringify({artist})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+data.referral_link
+
+}
+
+</script>
+
+</body>
+
+</html>

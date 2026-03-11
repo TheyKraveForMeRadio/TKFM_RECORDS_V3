@@ -1,77 +1,116 @@
-#!/usr/bin/env node
+import pkg from "hardhat";
 import fs from "fs";
-import hardhat from "hardhat";
-const { ethers } = hardhat;
+const { ethers } = pkg;
 
 async function main() {
-  if (!fs.existsSync("deployed.json")) {
-    console.error("ERROR: deployed.json not found. Run deploy-all first.");
-    process.exit(1);
-  }
+  const deployed = JSON.parse(fs.readFileSync("deployed.json", "utf-8"));
 
-  const deployed = JSON.parse(fs.readFileSync("deployed.json", "utf8"));
-  const [deployer, user1] = await ethers.getSigners();
-
-  console.log("\n=== Deployer Info ===");
+  const [deployer, user1, user2] = await ethers.getSigners();
+  console.log("\n=== DEPLOYER ===");
   console.log("Address:", deployer.address);
 
-  const token = await ethers.getContractAt("TKFMToken", deployed.TKFMToken);
-  const artistNFT = await ethers.getContractAt("TKFMArtistNFT", deployed.TKFMArtistNFT);
-  const royalty = await ethers.getContractAt("TKFMRoyaltySplitter", deployed.TKFMRoyaltySplitter);
+  // Attach contracts
+  const Token = await ethers.getContractFactory("TKFMToken");
+  const token = await Token.attach(deployed.TKFMToken);
 
-  console.log("\n=== TKFMToken Checks ===");
-  const decimals = await token.decimals();
-  const deployerBal = await token.balanceOf(deployer.address);
+  const ArtistNFT = await ethers.getContractFactory("TKFMArtistNFT");
+  const artistNFT = await ArtistNFT.attach(deployed.TKFMArtistNFT);
 
-  console.log("Deployer balance:", ethers.formatUnits(deployerBal, decimals));
-  console.log("Minting locked:", await token.mintingLocked());
-  console.log("Owner:", await token.owner());
-  console.log("Authority:", await token.authority());
+  const Records = await ethers.getContractFactory("TKFMRecords");
+  const records = await Records.attach(deployed.TKFMRecords);
 
-  if (await token.mintingLocked()) {
-    console.log("\nUnlocking minting for test...");
-    if (token.unlockMinting) {
-      const tx = await token.unlockMinting();
-      await tx.wait();
-    } else {
-      const tx = await token.setMintingLocked(false);
-      await tx.wait();
-    }
+  // --- TOKEN TEST ---
+  console.log("\n=== TOKEN TEST ===");
+  // Mint initial balances
+  await token.mint(deployer.address, 1000000);
+  await token.mint(user1.address, 1000);
+  console.log("Deployer balance:", (await token.balanceOf(deployer.address)).toString());
+  console.log("User1 balance:", (await token.balanceOf(user1.address)).toString());
+
+  // --- NFT TEST ---
+  console.log("\n=== NFT TEST ===");
+  const nftId = await records.mintArtistNFT(user1.address);
+  console.log("Minted Artist NFT ID:", nftId);
+
+  // --- RELEASE TEST ---
+  console.log("\n=== RELEASE TEST ===");
+  const payees = [deployer.address, user2.address];
+  const shares = [70, 30]; // 70% / 30% split
+
+  // Create release with 5 sec time-locked advance
+  const releaseId = await records.createRelease(
+    "Release 1",
+    payees,
+    shares,
+    5
+  );
+  console.log("Created releaseId:", releaseId);
+
+  const releaseAddress = await records.releaseContracts(releaseId);
+  console.log("Release contract address:", releaseAddress);
+
+  // Attach Release contract
+  const Release = await ethers.getContractFactory("TKFMRelease");
+  const release = await Release.attach(releaseAddress);
+
+  // Try signing (should fail if not owner)
+  try {
+    await release.signRelease();
+  } catch(e) {
+    console.log("Sign attempt by non-owner correctly reverted:", e.message.split("\n")[0]);
   }
 
-  console.log("\n=== Token Transfer Test ===");
-  const amount = ethers.parseUnits("2000", decimals);
-  const txTransfer = await token.transfer(user1.address, amount);
-  await txTransfer.wait();
+  // Sign with NFT owner
+  const user1Release = release.connect(user1);
+  await user1Release.signRelease();
+  console.log("NFT owner signed release");
 
-  const userBal = await token.balanceOf(user1.address);
-  console.log("User1 balance after transfer:", ethers.formatUnits(userBal, decimals));
+  // --- DEPOSIT TOKFM TOKEN AS REVENUE ---
+  await token.transfer(releaseAddress, 1000);
+  console.log("Deposited 1000 TKFMToken to release contract");
 
-  console.log("\n=== NFT Minting Test ===");
-  const txMint = await artistNFT.mint(user1.address);
-  const receipt = await txMint.wait();
-
-  let tokenId = "unknown";
-  for (const log of receipt.logs) {
-    try {
-      const parsed = artistNFT.interface.parseLog(log);
-      if (parsed.name === "Transfer") {
-        tokenId = parsed.args.tokenId.toString();
-        break;
-      }
-    } catch {}
+  // --- TIME-LOCK ENFORCEMENT ---
+  try {
+    await records.releaseFunds(releaseId);
+  } catch(e) {
+    console.log("Release funds before lock correctly reverted:", e.message.split("\n")[0]);
   }
 
-  console.log("NFT minted to User1 | tokenId:", tokenId);
+  console.log("Waiting 6 seconds to unlock funds...");
+  await new Promise(r => setTimeout(r, 6000));
 
-  console.log("\n=== Royalty Splitter Test ===");
-  const shares = await royalty.shares(deployer.address);
-  console.log("Deployer shares:", shares.toString());
+  // Release funds after lock
+  await records.releaseFunds(releaseId);
+  console.log("Funds released successfully after time lock");
 
-  console.log("\n✅ ALL TESTS PASSED\n");
+  // --- MULTIPLE RELEASES ---
+  const release2Id = await records.createRelease(
+    "Release 2",
+    payees,
+    shares,
+    2
+  );
+  console.log("Created second releaseId:", release2Id);
+
+  const release2Address = await records.releaseContracts(release2Id);
+  const release2 = await Release.attach(release2Address);
+  const user1Release2 = release2.connect(user1);
+  await user1Release2.signRelease();
+  console.log("NFT owner signed second release");
+
+  // Deposit tokens
+  await token.transfer(release2Address, 500);
+  console.log("Deposited 500 TKFMToken to second release");
+
+  // Wait for time-lock
+  await new Promise(r => setTimeout(r, 3000));
+  await records.releaseFunds(release2Id);
+  console.log("Second release funds released after time lock");
+
+  console.log("\n✅ ALL TESTS COMPLETED SUCCESSFULLY");
 }
 
-main().catch((err) => {
-  console.error("UNCAUGHT TEST ERROR:", err);
-  process.exit(1);
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
 });

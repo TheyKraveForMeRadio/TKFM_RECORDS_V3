@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Capital Marketplace</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+}
+button { background:#facc15; border:none; padding:6px 12px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h1>Capital Marketplace</h1>
+
+<div class="card">
+  <button onclick="loadMarketplace()">Load Pools</button>
+</div>
+
+<div class="card">
+  <pre id="output"></pre>
+</div>
+
+<script>
+async function loadMarketplace() {
+
+  const pools = await fetch(
+    "/.netlify/functions/institutional-reporting-pack"
+  );
+
+  const monte = await fetch(
+    "/.netlify/functions/monte-carlo-portfolio"
+  );
+
+  const data = {
+    pools: await pools.json(),
+    monteCarlo: await monte.json()
+  };
+
+  document.getElementById("output").textContent =
+    JSON.stringify(data,null,2);
+}
+</script>
+
+</body>
+</html>

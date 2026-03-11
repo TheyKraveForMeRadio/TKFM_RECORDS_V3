@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Remix Network</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Remix Network</h1>
+
+<p>
+Discover remixable tracks and collaborate with artists worldwide.
+</p>
+
+<button onclick="load()">View Remix Feed</button>
+
+<pre id="feed"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/remix-discovery"
+)
+
+const data = await res.json()
+
+document.getElementById("feed").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

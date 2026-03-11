@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Artist Growth Reactor</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+margin:10px;
+border-radius:10px;
+display:inline-block;
+width:200px;
+}
+
+.metric{
+font-size:32px;
+color:#22d3ee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Artist Growth Reactor</h1>
+
+<div class="card">
+<div>Artists</div>
+<div id="artists" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Catalogs</div>
+<div id="catalogs" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Catalog IPOs</div>
+<div id="ipos" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Referrals</div>
+<div id="referrals" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Investments</div>
+<div id="investments" class="metric">0</div>
+</div>
+
+<script>
+
+async function load(){
+
+const res = await fetch("/.netlify/functions/artist-growth-reactor")
+const data = await res.json()
+
+document.getElementById("artists").innerText = data.artists
+document.getElementById("catalogs").innerText = data.catalogs
+document.getElementById("ipos").innerText = data.ipos
+document.getElementById("referrals").innerText = data.referrals
+document.getElementById("investments").innerText = data.investments
+
+}
+
+load()
+
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

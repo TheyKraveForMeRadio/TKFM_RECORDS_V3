@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Investor Terminal</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+ background:#020617;
+ color:white;
+ font-family:Arial;
+ padding:20px;
+}
+
+.card{
+ background:#111827;
+ padding:20px;
+ margin-bottom:20px;
+ border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Investor Terminal</h1>
+
+<div class="card">
+<h2>Platform Metrics</h2>
+<pre id="metrics"></pre>
+</div>
+
+<div class="card">
+<h2>Royalty Yield Chart</h2>
+<canvas id="yieldChart"></canvas>
+</div>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/investor-terminal")
+
+ const data = await res.json()
+
+ document.getElementById("metrics").innerText =
+ JSON.stringify(data,null,2)
+
+ const ctx = document.getElementById("yieldChart")
+
+ new Chart(ctx,{
+  type:"line",
+  data:{
+   labels:["Jan","Feb","Mar","Apr","May","Jun"],
+   datasets:[{
+    label:"Royalty Yield",
+    data:[3,5,7,6,8,10]
+   }]
+  }
+ })
+
+}
+
+load()
+
+</script>
+
+</body>
+
+</html>

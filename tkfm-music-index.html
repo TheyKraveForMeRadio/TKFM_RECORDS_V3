@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Index Fund</title>
+</head>
+
+<body>
+
+<h1>TKFM Music Index Fund</h1>
+
+<p>
+Invest in the top music catalogs on the TKFM network.
+</p>
+
+<button onclick="load()">View Fund</button>
+
+<pre id="fund"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/music-index-fund"
+)
+
+const data = await res.json()
+
+document.getElementById("fund").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

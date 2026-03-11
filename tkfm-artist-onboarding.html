@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Join TKFM</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+input{
+padding:12px;
+margin:10px;
+width:260px;
+}
+
+button{
+padding:12px 24px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Join TKFM</h1>
+
+<p>Launch your music catalog and raise capital from fans.</p>
+
+<input id="artist" placeholder="Artist Name">
+<input id="email" placeholder="Email">
+
+<button onclick="join()">Join TKFM</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function join(){
+
+const artist=document.getElementById("artist").value
+const email=document.getElementById("email").value
+
+const res=await fetch(
+"/.netlify/functions/onboard-artist",
+{
+method:"POST",
+body:JSON.stringify({
+artist_name:artist,
+email:email
+})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

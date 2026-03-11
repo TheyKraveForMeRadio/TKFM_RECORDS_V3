@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Catalog Verification</h1>
+
+<input id="artist" placeholder="Artist ID"><br><br>
+<input id="title" placeholder="Catalog Title"><br><br>
+
+<button onclick="verify()">Submit</button>
+
+<script>
+
+async function verify(){
+
+ await fetch(
+ '/.netlify/functions/catalog-verification',
+ {
+  method:"POST",
+  body:JSON.stringify({
+
+   artist:document.getElementById("artist").value,
+   title:document.getElementById("title").value
+
+  })
+ });
+
+ alert("Catalog submitted");
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Song Asset</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+button{
+background:#22d3ee;
+padding:10px;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="song">Song</h1>
+
+<p>This song is a tradable asset.</p>
+
+<button onclick="buy()">Buy Shares</button>
+
+<script>
+
+async function load(){
+
+const params=new URLSearchParams(window.location.search)
+const id=params.get("song")
+
+const res=await fetch("/.netlify/functions/catalog-detail?id="+id)
+const data=await res.json()
+
+document.getElementById("song").innerText=data.title
+
+}
+
+async function buy(){
+
+await fetch("/.netlify/functions/buy-catalog-shares",{
+method:"POST",
+body:JSON.stringify({amount:50})
+})
+
+alert("Shares purchased")
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

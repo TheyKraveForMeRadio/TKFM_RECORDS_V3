@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Layer1 Blockchain</title>
+</head>
+
+<body>
+
+<h1>TKFM Music Blockchain</h1>
+
+<pre id="status"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+  "/.netlify/functions/tkfm-chain-status"
+ );
+
+ const data = await res.json();
+
+ document.getElementById("status").innerText =
+  JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

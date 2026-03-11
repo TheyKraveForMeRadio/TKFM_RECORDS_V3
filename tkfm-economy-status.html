@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Economy Status</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Economy Status</h1>
+
+<button onclick="load()">Check Economy</button>
+
+<div id="status"></div>
+
+<script>
+
+async function load(){
+
+const r = await fetch("/.netlify/functions/economy-activator")
+
+const data = await r.json()
+
+document.getElementById("status").innerHTML =
+"<div class='card'>Stage: "+data.stage+"</div>"+
+"<div class='card'>Artists: "+data.metrics.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.metrics.catalogs+"</div>"+
+"<div class='card'>IPOs: "+data.metrics.ipos+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

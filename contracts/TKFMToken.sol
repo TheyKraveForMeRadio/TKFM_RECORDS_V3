@@ -1,46 +1,22 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-error NOT_AUTHORITY();
-error MINTING_LOCKED();
-
 contract TKFMToken is ERC20, Ownable {
-    address public authority;
-    bool public mintingLocked;
+    bool public mintingLocked = true;
 
-    modifier onlyAuthority() {
-        if (msg.sender != authority) revert NOT_AUTHORITY();
-        _;
+    constructor() ERC20("TKFM Token", "TKFMT") {
+        _mint(msg.sender, 1000000 * 10 ** decimals()); // initial supply to deployer
     }
 
-    modifier mintingAllowed() {
-        if (mintingLocked) revert MINTING_LOCKED();
-        _;
+    function setMintingLocked(bool locked) external onlyOwner {
+        mintingLocked = locked;
     }
 
-    constructor(address initialAuthority) ERC20("TKFM Token", "TKFMT") {
-        authority = initialAuthority;
-        _mint(initialAuthority, 1_000_000 * 10 ** decimals());
-        mintingLocked = true; // start locked by default
-    }
-
-    function lockMinting() external onlyAuthority {
-        mintingLocked = true;
-    }
-
-    function unlockMinting() external onlyAuthority {
-        mintingLocked = false;
-    }
-
-    // Corrected transfer override: public + override
-    function transfer(address to, uint256 amount) public override mintingAllowed returns (bool) {
-        return super.transfer(to, amount);
-    }
-
-    function transferAuthority(address newAuthority) external onlyOwner {
-        authority = newAuthority;
+    function mint(address to, uint256 amount) external onlyOwner {
+        require(!mintingLocked, "Minting locked");
+        _mint(to, amount);
     }
 }

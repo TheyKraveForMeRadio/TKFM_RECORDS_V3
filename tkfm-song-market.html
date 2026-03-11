@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Music Market</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Music Market</h1>
+
+<div id="market"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+const el = document.getElementById("market")
+el.innerHTML=""
+
+for(const item of data.market || []){
+
+const div=document.createElement("div")
+div.className="card"
+
+div.innerText=item.catalog_id+" price: "+item.price
+
+el.appendChild(div)
+
+}
+
+}
+
+load()
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

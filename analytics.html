@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { background:#020617; color:#fff; font-family:Arial, sans-serif; margin:0; padding:20px; }
+  header { text-align:center; font-size:2em; margin-bottom:20px; color:#facc15; }
+  .chart-container { width:90%; max-width:1200px; margin:auto; margin-bottom:40px; background:#111; padding:20px; border-radius:10px; border:2px solid #f97316; }
+  h2 { color:#eab308; text-align:center; margin-bottom:20px; }
+</style>
+</head>
+<body>
+<header>TKFM Records Analytics Dashboard</header>
+
+<div class="chart-container">
+  <h2>Revenue Over Time</h2>
+  <canvas id="revenueChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Withdrawals Over Time</h2>
+  <canvas id="withdrawalsChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Artist Earnings Over Time</h2>
+  <canvas id="earningsChart"></canvas>
+</div>
+
+<script type="module">
+import deployed from './deployed.json' assert { type: 'json' };
+import { ethers } from "ethers";
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+let signer;
+let records;
+
+async function init() {
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+  const recordsABI = [
+    "function getRevenueHistory(uint256 releaseId) view returns (uint256[] memory, uint256[] memory)",
+    "function getWithdrawalsHistory(uint256 releaseId) view returns (uint256[] memory, uint256[] memory)",
+    "function getArtistEarningsHistory(address artist) view returns (uint256[] memory, uint256[] memory)"
+  ];
+  records = new ethers.Contract(deployed.TKFMRecords, recordsABI, signer);
+
+  await loadRevenueChart(0);      // releaseId 0
+  await loadWithdrawalsChart(0);  // releaseId 0
+  await loadEarningsChart(await signer.getAddress());
+}
+
+// Revenue chart
+async function loadRevenueChart(releaseId){
+  try{
+    const [timestamps, values] = await records.getRevenueHistory(releaseId);
+    new Chart(document.getElementById('revenueChart').getContext('2d'), {
+      type:'line',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Revenue (TKFMToken)', data: values, borderColor:'#facc15', backgroundColor:'rgba(250,204,21,0.2)'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+// Withdrawals chart
+async function loadWithdrawalsChart(releaseId){
+  try{
+    const [timestamps, values] = await records.getWithdrawalsHistory(releaseId);
+    new Chart(document.getElementById('withdrawalsChart').getContext('2d'), {
+      type:'bar',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Withdrawals (TKFMToken)', data: values, backgroundColor:'#eab308'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+// Artist earnings chart
+async function loadEarningsChart(artistAddr){
+  try{
+    const [timestamps, values] = await records.getArtistEarningsHistory(artistAddr);
+    new Chart(document.getElementById('earningsChart').getContext('2d'), {
+      type:'line',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Artist Earnings', data: values, borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.2)'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

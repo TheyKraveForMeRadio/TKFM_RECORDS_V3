@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Global Music Economy</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Global Music Economy Simulation</h1>
+
+<button onclick="load()">Run Simulation</button>
+
+<div id="metrics"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/global-music-economy-simulator"
+)
+
+const data = await res.json()
+
+document.getElementById("metrics").innerHTML =
+
+"<div class='card'>Artists: "+data.artists+"</div>"+
+"<div class='card'>Catalog Value: $"+data.catalog_value_usd+"</div>"+
+"<div class='card'>Investors: "+data.investors+"</div>"+
+"<div class='card'>Fans: "+data.fans+"</div>"+
+"<div class='card'>Annual Streams: "+data.annual_streams+"</div>"+
+"<div class='card'>Annual Royalties: $"+data.annual_royalties+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

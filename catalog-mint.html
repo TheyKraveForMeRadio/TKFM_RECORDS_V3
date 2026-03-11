@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Mint Catalog</title>
+</head>
+
+<body>
+
+<h2>Mint New Catalog</h2>
+
+<input id="artist_wallet" placeholder="Artist Wallet"><br>
+<input id="catalog_name" placeholder="Catalog Name"><br>
+<input id="artist_name" placeholder="Artist Name"><br>
+<input id="metadata_uri" placeholder="Metadata URI"><br>
+<input id="token_supply" placeholder="Token Supply"><br>
+
+<button onclick="mint()">Mint Catalog</button>
+
+<script>
+
+async function mint(){
+
+ const res = await fetch(
+ "/.netlify/functions/catalog-mint-engine",
+ {
+  method:"POST",
+  body:JSON.stringify({
+   artist_wallet:document.getElementById("artist_wallet").value,
+   catalog_name:document.getElementById("catalog_name").value,
+   artist_name:document.getElementById("artist_name").value,
+   metadata_uri:document.getElementById("metadata_uri").value,
+   token_supply:document.getElementById("token_supply").value
+  })
+ });
+
+ const data = await res.json();
+
+ alert(JSON.stringify(data));
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Song Market Chart</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:system-ui;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.chart-box{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+max-width:900px;
+margin:auto;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="title">Song Market Chart</h1>
+
+<div class="chart-box">
+<canvas id="priceChart"></canvas>
+</div>
+
+<script>
+
+async function loadChart(){
+
+const params=new URLSearchParams(window.location.search)
+const catalog=params.get("id")
+
+const res=await fetch("/.netlify/functions/catalog-price-history?id="+catalog)
+const data=await res.json()
+
+const labels=data.history.map(p=>p.time)
+const prices=data.history.map(p=>p.price)
+
+const ctx=document.getElementById("priceChart")
+
+new Chart(ctx,{
+type:'line',
+data:{
+labels:labels,
+datasets:[{
+label:"Song Price",
+data:prices,
+borderColor:"#22d3ee",
+backgroundColor:"rgba(34,211,238,0.1)",
+tension:0.3
+}]
+},
+options:{
+plugins:{
+legend:{display:false}
+},
+scales:{
+x:{
+ticks:{color:"#94a3b8"}
+},
+y:{
+ticks:{color:"#94a3b8"}
+}
+}
+}
+})
+
+}
+
+loadChart()
+
+</script>
+
+</body>
+</html>

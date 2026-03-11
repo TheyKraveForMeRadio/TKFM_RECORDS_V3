@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>TKFM Music Marketplace</h1>
+
+<pre id="catalogs"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/catalog-index-builder');
+
+ const data = await res.json();
+
+ document.getElementById("catalogs")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

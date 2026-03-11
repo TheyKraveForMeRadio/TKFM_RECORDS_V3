@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Operating Console</title>
+
+<style>
+
+body{
+ font-family:Arial;
+ background:#020617;
+ color:white;
+}
+
+.card{
+ background:#111827;
+ padding:20px;
+ margin:10px;
+ border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Operating Console</h1>
+
+<div id="data"></div>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/tkfm-operating-console")
+
+ const data = await res.json()
+
+ const div = document.getElementById("data")
+
+ div.innerHTML = `
+ <div class="card">
+ <h2>Platform</h2>
+ ${data.console}
+ </div>
+
+ <div class="card">
+ <h2>Modules</h2>
+ <pre>${JSON.stringify(data.modules,null,2)}</pre>
+ </div>
+
+ <div class="card">
+ <h2>Timestamp</h2>
+ ${data.timestamp}
+ </div>
+ `
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Executive Control Center</title>
+  <style>
+    body { background:#020617; color:white; font-family:system-ui; padding:40px; }
+    .card { background:#111827; padding:20px; margin-bottom:20px; border-radius:8px; }
+    h1 { color:#facc15; }
+  </style>
+</head>
+<body>
+
+<h1>Executive Control Center</h1>
+
+<div class="card">
+  <h3>Core Metrics</h3>
+  <pre id="metrics"></pre>
+</div>
+
+<div class="card">
+  <h3>Pipeline Forecast</h3>
+  <pre id="pipeline"></pre>
+</div>
+
+<div class="card">
+  <h3>Revenue Quality</h3>
+  <pre id="quality"></pre>
+</div>
+
+<script>
+
+async function load() {
+
+  const metrics =
+    await fetch('/.netlify/functions/metrics-engine');
+  document.getElementById("metrics").textContent =
+    JSON.stringify(await metrics.json(),null,2);
+
+  const pipeline =
+    await fetch('/.netlify/functions/pipeline-forecast');
+  document.getElementById("pipeline").textContent =
+    JSON.stringify(await pipeline.json(),null,2);
+
+  const quality =
+    await fetch('/.netlify/functions/revenue-quality');
+  document.getElementById("quality").textContent =
+    JSON.stringify(await quality.json(),null,2);
+}
+
+load();
+setInterval(load,30000);
+
+</script>
+
+</body>
+</html>

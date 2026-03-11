@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>TKFM Label Panel</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
+  <style>
+    body {
+      background: #020617;
+      color: #22d3ee;
+      font-family: Arial;
+      padding: 30px;
+    }
+    h1 { color: #a855f7; }
+    h2 { color: #ec4899; margin-top:40px; }
+    button {
+      background:#3b82f6;
+      color:white;
+      border:none;
+      padding:8px 15px;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    input {
+      padding:8px;
+      width:300px;
+    }
+    table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top:15px;
+    }
+    th, td {
+      border:1px solid #22d3ee;
+      padding:8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎧 TKFM FULL LABEL CONTROL PANEL</h1>
+
+<h2>🔗 Connect Wallet</h2>
+<button onclick="connect()">Connect MetaMask</button>
+<p id="wallet"></p>
+
+<h2>🎵 Mint New Release</h2>
+<input id="titleInput" placeholder="Release Title" />
+<br/>
+<button onclick="mintRelease()">Mint Release</button>
+
+<h2>📀 On-Chain Releases</h2>
+<button onclick="loadReleases()">Refresh</button>
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Artist</th>
+<th>Timestamp</th>
+<th>Tx</th>
+</tr>
+</thead>
+<tbody id="releaseTable"></tbody>
+</table>
+
+<script>
+
+const AUTHORITY_ADDRESS =0x5FbDB2315678afecb367f032d93F642f64180aa3
+;
+
+const AUTHORITY_ABI = [
+  "function verifyAndEmitRelease(bytes32,address,string,uint256,bytes)",
+  "event ReleaseVerified(bytes32 indexed releaseId, address indexed artist, string title, uint256 timestamp)"
+];
+
+let provider;
+let signer;
+let contract;
+
+async function connect() {
+  await window.ethereum.request({ method: "eth_requestAccounts" });
+  provider = new ethers.BrowserProvider(window.ethereum);
+  signer = await provider.getSigner();
+  contract = new ethers.Contract(AUTHORITY_ADDRESS, AUTHORITY_ABI, signer);
+
+  document.getElementById("wallet").innerText =
+    "Connected: " + await signer.getAddress();
+}
+
+async function mintRelease() {
+
+  const title = document.getElementById("titleInput").value;
+  const artist = await signer.getAddress();
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  const releaseId = ethers.id(title + Date.now());
+
+  const domain = {
+    name: "TKFM Authority",
+    version: "1",
+    chainId: await signer.provider.getNetwork().then(n => Number(n.chainId)),
+    verifyingContract: AUTHORITY_ADDRESS
+  };
+
+  const types = {
+    Release: [
+      { name: "releaseId", type: "bytes32" },
+      { name: "artist", type: "address" },
+      { name: "title", type: "string" },
+      { name: "timestamp", type: "uint256" }
+    ]
+  };
+
+  const value = { releaseId, artist, title, timestamp };
+
+  const signature = await signer.signTypedData(domain, types, value);
+
+  const tx = await contract.verifyAndEmitRelease(
+    releaseId,
+    artist,
+    title,
+    timestamp,
+    signature
+  );
+
+  await tx.wait();
+  alert("Release Minted!");
+  loadReleases();
+}
+
+async function loadReleases() {
+  const readProvider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+  const readContract = new ethers.Contract(
+    AUTHORITY_ADDRESS,
+    AUTHORITY_ABI,
+    readProvider
+  );
+
+  const events = await readContract.queryFilter("ReleaseVerified", 0, "latest");
+
+  const table = document.getElementById("releaseTable");
+  table.innerHTML = "";
+
+  events.forEach(e => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${e.args.title}</td>
+      <td>${e.args.artist}</td>
+      <td>${new Date(Number(e.args.timestamp)*1000).toLocaleString()}</td>
+      <td>${e.transactionHash.slice(0,12)}...</td>
+    `;
+    table.appendChild(row);
+  });
+}
+
+</script>
+
+</body>
+</html>

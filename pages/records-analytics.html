@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records - Release Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { background:#020617; color:#fff; font-family:Arial, sans-serif; margin:0; padding:20px; }
+  header { text-align:center; font-size:2em; margin-bottom:20px; color:#facc15; }
+  nav { display:flex; justify-content:center; gap:20px; margin-bottom:30px; }
+  nav a { color:#eab308; text-decoration:none; font-weight:bold; }
+  .chart-container { width:90%; max-width:1200px; margin:auto; margin-bottom:40px; background:#111; padding:20px; border-radius:10px; border:2px solid #f97316; }
+  h2 { color:#eab308; text-align:center; margin-bottom:20px; }
+  select { display:block; margin:0 auto 20px auto; background:#111; color:#facc15; border:2px solid #f97316; border-radius:5px; padding:5px 10px; font-size:1em; }
+</style>
+</head>
+<body>
+<header>TKFM Records Analytics Dashboard</header>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="releases.html">Releases</a>
+  <a href="records-analytics.html">Analytics</a>
+</nav>
+
+<label for="artistFilter">Filter by Artist:</label>
+<select id="artistFilter">
+  <option value="">All Artists</option>
+</select>
+
+<div class="chart-container">
+  <h2>Revenue Over Time</h2>
+  <canvas id="revenueChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Withdrawals Over Time</h2>
+  <canvas id="withdrawalsChart"></canvas>
+</div>
+
+<div class="chart-container">
+  <h2>Artist Earnings Over Time</h2>
+  <canvas id="earningsChart"></canvas>
+</div>
+
+<script type="module">
+import deployed from '../deployed.json' assert { type: 'json' };
+import { ethers } from "ethers";
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+let signer;
+let records;
+
+const urlParams = new URLSearchParams(window.location.search);
+const releaseId = urlParams.has('releaseId') ? parseInt(urlParams.get('releaseId')) : 0;
+
+let revenueChart, withdrawalsChart, earningsChart;
+
+async function init() {
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+
+  const recordsABI = [
+    "function getAllReleases() view returns (tuple(uint256 id,string name,uint256 advance,address[] payees,uint256[] shares)[])",
+    "function getRevenueHistory(uint256 releaseId) view returns (uint256[] memory, uint256[] memory)",
+    "function getWithdrawalsHistory(uint256 releaseId) view returns (uint256[] memory, uint256[] memory)",
+    "function getArtistEarningsHistory(address artist) view returns (uint256[] memory, uint256[] memory)"
+  ];
+
+  records = new ethers.Contract(deployed.TKFMRecords, recordsABI, signer);
+
+  await populateArtistDropdown();
+  await loadCharts();
+}
+
+async function populateArtistDropdown(){
+  const releases = await records.getAllReleases();
+  const artistSet = new Set();
+  releases.forEach(r => r.payees.forEach(p => artistSet.add(p.toLowerCase())));
+  const select = document.getElementById('artistFilter');
+  Array.from(artistSet).forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a;
+    opt.innerText = a;
+    select.appendChild(opt);
+  });
+  select.onchange = loadCharts;
+}
+
+async function loadCharts(){
+  const artistAddr = document.getElementById('artistFilter').value || await signer.getAddress();
+  await loadRevenueChart(releaseId);
+  await loadWithdrawalsChart(releaseId);
+  await loadEarningsChart(artistAddr);
+}
+
+async function loadRevenueChart(releaseId){
+  try{
+    const [timestamps, values] = await records.getRevenueHistory(releaseId);
+    if(revenueChart) revenueChart.destroy();
+    revenueChart = new Chart(document.getElementById('revenueChart').getContext('2d'), {
+      type:'line',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Revenue (TKFMToken)', data: values, borderColor:'#facc15', backgroundColor:'rgba(250,204,21,0.2)'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+async function loadWithdrawalsChart(releaseId){
+  try{
+    const [timestamps, values] = await records.getWithdrawalsHistory(releaseId);
+    if(withdrawalsChart) withdrawalsChart.destroy();
+    withdrawalsChart = new Chart(document.getElementById('withdrawalsChart').getContext('2d'), {
+      type:'bar',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Withdrawals (TKFMToken)', data: values, backgroundColor:'#eab308'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+async function loadEarningsChart(artistAddr){
+  try{
+    const [timestamps, values] = await records.getArtistEarningsHistory(artistAddr);
+    if(earningsChart) earningsChart.destroy();
+    earningsChart = new Chart(document.getElementById('earningsChart').getContext('2d'), {
+      type:'line',
+      data: {
+        labels: timestamps.map(t => new Date(t*1000).toLocaleDateString()),
+        datasets: [{ label:'Artist Earnings', data: values, borderColor:'#f97316', backgroundColor:'rgba(249,115,22,0.2)'}]
+      },
+      options:{ responsive:true, plugins:{legend:{display:true}} }
+    });
+  }catch(e){console.error(e);}
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

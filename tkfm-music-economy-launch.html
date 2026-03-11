@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Economy Launch</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+h1{
+color:#facc15;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Minimum Viable Music Economy</h1>
+
+<button onclick="load()">Check Activation</button>
+
+<div id="data"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/music-economy-activation"
+)
+
+const data = await res.json()
+
+document.getElementById("data").innerHTML =
+"<div class='card'>Artists: "+data.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.catalogs+"</div>"+
+"<div class='card'>Catalog IPOs: "+data.ipos+"</div>"+
+"<div class='card'>Economy Active: "+data.economy_active+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

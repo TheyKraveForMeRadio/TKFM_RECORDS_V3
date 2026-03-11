@@ -1,22 +1,33 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+import { supabase } from './supabase.js';
 
-// Simulated DB for track earnings
-let trackEarningsDB = {}; // { email: [{ trackName, revenue, splits }] }
+export async function handler(event) {
 
-exports.handler = async (event) => {
-  const { email, trackName, revenue } = JSON.parse(event.body || "{}");
-  if (!email || !trackName || revenue == null) return { statusCode: 400, body: "Missing parameters" };
+  const { email, trackName, revenue } = JSON.parse(event.body);
 
-  const artistSplit = 0.7; // 70% to artist
-  const labelSplit = 0.3;  // 30% to label
+  if (!email || !revenue) {
+    return { statusCode: 400, body: "Missing fields" };
+  }
 
-  const splits = {
-    artist: parseFloat((revenue * artistSplit).toFixed(2)),
-    label: parseFloat((revenue * labelSplit).toFixed(2))
+  const artistShare = revenue * 0.8;
+  const labelShare = revenue * 0.2;
+
+  await supabase.from('artist_balances')
+    .upsert({
+      email,
+      available_balance: artistShare,
+      lifetime_earned: artistShare
+    }, { onConflict: 'email', ignoreDuplicates: false });
+
+  await supabase.from('royalty_ledger').insert({
+    email,
+    track_name: trackName,
+    revenue,
+    artist_share: artistShare,
+    label_share: labelShare
+  });
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ success: true })
   };
-
-  if (!trackEarningsDB[email]) trackEarningsDB[email] = [];
-  trackEarningsDB[email].push({ trackName, revenue, splits, date: new Date().toISOString() });
-
-  return { statusCode: 200, body: JSON.stringify({ success: true, splits }) };
-};
+}

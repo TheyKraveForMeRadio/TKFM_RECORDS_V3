@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Catalog Detail</title>
+
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Catalog Detail</h1>
+
+<div id="catalog"></div>
+
+<button onclick="buy()">Buy Royalty Shares</button>
+
+<script>
+
+const params = new URLSearchParams(
+ window.location.search
+);
+
+const id = params.get("id");
+
+async function loadCatalog(){
+
+ const res = await fetch(
+  '/.netlify/functions/catalog-detail?id='+id
+ );
+
+ const data = await res.json();
+
+ document.getElementById("catalog").innerHTML =
+ JSON.stringify(data,null,2);
+
+}
+
+async function buy(){
+
+ await fetch(
+ '/.netlify/functions/execute-trade',
+ {
+  method:"POST",
+  body:JSON.stringify({catalog_id:id})
+ }
+ );
+
+ alert("Trade executed");
+
+}
+
+loadCatalog();
+
+</script>
+
+</body>
+</html>

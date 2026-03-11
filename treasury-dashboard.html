@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Treasury Dashboard</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:8px;
+}
+h1 { color:#facc15; }
+button {
+  background:#facc15;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Treasury Control Center</h1>
+
+<div class="card">
+  <input id="acct" placeholder="Connected Account ID">
+  <button onclick="load()">Load Treasury</button>
+</div>
+
+<div class="card">
+  <pre id="output"></pre>
+</div>
+
+<script>
+async function load() {
+  const acct = document.getElementById("acct").value;
+  const res = await fetch(
+    "/.netlify/functions/treasury-dashboard?connected_account_id="+acct
+  );
+  const data = await res.json();
+  document.getElementById("output").textContent =
+    JSON.stringify(data,null,2);
+}
+</script>
+
+</body>
+</html>

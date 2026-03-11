@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Rights Clearinghouse</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Royalty Clearinghouse</h1>
+
+<button onclick="load()">Load Clearing Volume</button>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/royalty-clearinghouse"
+)
+
+const data = await res.json()
+
+document.getElementById("data").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

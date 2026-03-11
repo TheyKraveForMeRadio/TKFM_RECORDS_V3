@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>MUSD Stablecoin Supply</h1>
+
+<pre id="supply"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/stablecoin-supply');
+
+ const data =
+ await res.json();
+
+ document.getElementById("supply")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

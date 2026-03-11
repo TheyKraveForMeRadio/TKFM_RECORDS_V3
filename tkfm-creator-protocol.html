@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Creator Protocol</title>
+</head>
+
+<body>
+
+<h1>TKFM Creator Protocol</h1>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/creator-protocol-api")
+
+ const data = await res.json()
+
+ document.getElementById("data").innerText =
+  JSON.stringify(data,null,2)
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Royalty Liquidity Pool</h1>
+
+<input id="tokenA" placeholder="Token A">
+<input id="tokenB" placeholder="Token B">
+
+<button onclick="add()">Add Liquidity</button>
+
+<script>
+
+async function add(){
+
+ await fetch(
+ '/.netlify/functions/amm-liquidity',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   tokenA:
+   document.getElementById("tokenA").value,
+
+   tokenB:
+   document.getElementById("tokenB").value
+  })
+ });
+
+ alert("Liquidity added");
+
+}
+
+</script>
+
+</body>
+</html>

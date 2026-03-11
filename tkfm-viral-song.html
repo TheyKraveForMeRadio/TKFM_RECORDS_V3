@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Own This Song</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+text-align:center;
+}
+
+button{
+background:#22d3ee;
+padding:12px;
+border:none;
+cursor:pointer;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="title">Song</h1>
+
+<p>Own shares of this music asset.</p>
+
+<button onclick="invest()">Buy Shares</button>
+
+<p id="status"></p>
+
+<script>
+
+async function load(){
+
+const params=new URLSearchParams(window.location.search)
+const id=params.get("song")
+
+const res=await fetch("/.netlify/functions/catalog-detail?id="+id)
+const data=await res.json()
+
+document.getElementById("title").innerText=data.title
+
+}
+
+async function invest(){
+
+document.getElementById("status").innerText="Processing investment..."
+
+await fetch("/.netlify/functions/buy-catalog-shares",{
+method:"POST",
+body:JSON.stringify({amount:50})
+})
+
+document.getElementById("status").innerText="Shares purchased."
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

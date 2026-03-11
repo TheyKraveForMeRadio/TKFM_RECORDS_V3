@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Global Music Economy Control Room</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+}
+
+.metric{
+font-size:32px;
+color:#22d3ee;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Global Music Economy Control Room</h1>
+
+<div class="grid">
+
+<div class="card">
+<div>Artists</div>
+<div id="artists" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Catalogs</div>
+<div id="catalogs" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Catalog IPOs</div>
+<div id="ipos" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Trading Volume</div>
+<div id="volume" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Music Index</div>
+<div id="index" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Royalties Generated</div>
+<div id="royalties" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Liquidity Pools</div>
+<div id="liquidity" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Derivatives Market</div>
+<div id="derivatives" class="metric">0</div>
+</div>
+
+</div>
+
+<script>
+
+async function load(){
+
+const res = await fetch("/.netlify/functions/global-economy-metrics")
+const data = await res.json()
+
+document.getElementById("artists").innerText = data.artists || 0
+document.getElementById("catalogs").innerText = data.catalogs || 0
+document.getElementById("ipos").innerText = data.ipos || 0
+document.getElementById("volume").innerText = data.volume || 0
+document.getElementById("index").innerText = data.index || 0
+document.getElementById("royalties").innerText = data.royalties || 0
+document.getElementById("liquidity").innerText = data.liquidity || 0
+document.getElementById("derivatives").innerText = data.derivatives || 0
+
+}
+
+load()
+
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

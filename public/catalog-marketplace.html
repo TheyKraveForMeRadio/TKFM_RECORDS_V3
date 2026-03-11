@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>TKFM Catalog Marketplace</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+ background:#020617;
+ color:#e5e7eb;
+ font-family:system-ui;
+ padding:40px;
+}
+
+h1{
+ color:#facc15;
+}
+
+h2{
+ color:#eab308;
+ margin-top:30px;
+}
+
+.card{
+ background:rgba(250,204,21,0.06);
+ border:1px solid #eab308;
+ border-radius:10px;
+ padding:20px;
+ margin-bottom:20px;
+}
+
+button{
+ background:#facc15;
+ border:none;
+ padding:8px 12px;
+ cursor:pointer;
+}
+
+button:hover{
+ background:#eab308;
+}
+
+input{
+ padding:6px;
+ margin-right:10px;
+}
+
+.market-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Royalty Catalog Exchange</h1>
+
+<h2>Trending Catalogs</h2>
+
+<div id="catalogList" class="market-grid"></div>
+
+<h2>Token Price Chart</h2>
+
+<div class="card">
+<canvas id="priceChart"></canvas>
+</div>
+
+<h2>Buy / Sell Catalog Shares</h2>
+
+<div class="card">
+
+<input id="tokenInput" placeholder="Token ID">
+
+<input id="priceInput" placeholder="Price">
+
+<input id="quantityInput" placeholder="Quantity">
+
+<button onclick="buy()">BUY</button>
+
+<button onclick="sell()">SELL</button>
+
+</div>
+
+<h2>Liquidity Pool Stats</h2>
+
+<div class="card">
+<pre id="liquidityStats"></pre>
+</div>
+
+<h2>Investor Portfolio</h2>
+
+<div class="card">
+
+<div id="portfolioStats"></div>
+
+</div>
+
+<script src="/js/catalog-market.js"></script>
+
+</body>
+</html>

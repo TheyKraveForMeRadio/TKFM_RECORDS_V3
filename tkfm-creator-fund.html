@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Creator Fund</title>
+</head>
+
+<body>
+
+<h1>TKFM Creator Fund</h1>
+
+<button onclick="load()">Load Fund NAV</button>
+
+<pre id="nav"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/fund-nav-engine"
+)
+
+const data = await res.json()
+
+document.getElementById("nav").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

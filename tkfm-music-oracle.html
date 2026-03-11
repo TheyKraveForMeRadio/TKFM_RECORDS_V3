@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Data Oracle</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Music Data Oracle</h1>
+
+<button onclick="load()">Load Market Data</button>
+
+<pre id="output"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+ "/.netlify/functions/music-data-oracle"
+ )
+
+ const data = await res.json()
+
+ document.getElementById("output").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

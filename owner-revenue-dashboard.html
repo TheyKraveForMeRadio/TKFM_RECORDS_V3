@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Revenue Dashboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:system-ui;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+text-align:center;
+}
+
+.value{
+font-size:28px;
+color:#22d3ee;
+margin-top:10px;
+}
+
+.table{
+margin-top:40px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:10px;
+background:#0f172a;
+margin-bottom:6px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Founder Revenue Dashboard</h1>
+
+<div class="stats">
+
+<div class="card">
+Total Platform Revenue
+<div class="value" id="revenue">$0</div>
+</div>
+
+<div class="card">
+Total Trading Volume
+<div class="value" id="volume">$0</div>
+</div>
+
+<div class="card">
+Total Investors
+<div class="value" id="investors">0</div>
+</div>
+
+<div class="card">
+Artists On Platform
+<div class="value" id="artists">0</div>
+</div>
+
+</div>
+
+<div class="table">
+
+<h2>Recent Transactions</h2>
+
+<div id="transactions"></div>
+
+</div>
+
+<script>
+
+async function loadDashboard(){
+
+const res = await fetch("/.netlify/functions/owner-revenue-metrics")
+const data = await res.json()
+
+document.getElementById("revenue").innerText="$"+data.revenue
+document.getElementById("volume").innerText="$"+data.volume
+document.getElementById("investors").innerText=data.investors
+document.getElementById("artists").innerText=data.artists
+
+const container=document.getElementById("transactions")
+container.innerHTML=""
+
+(data.transactions||[]).forEach(t=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span>"+t.catalog+"</span><span>$"+t.amount+"</span>"
+
+container.appendChild(row)
+
+})
+
+}
+
+loadDashboard()
+setInterval(loadDashboard,5000)
+
+</script>
+
+</body>
+</html>

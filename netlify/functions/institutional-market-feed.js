@@ -1,0 +1,35 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabase =
+ createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE
+ );
+
+export async function handler(){
+
+ const { data } =
+ await supabase
+ .from("trades")
+ .select("*");
+
+ const volume =
+ data.reduce(
+  (a,b)=>a+b.price,
+  0
+ );
+
+ return {
+
+  statusCode:200,
+
+  body:JSON.stringify({
+
+   trade_volume:volume,
+   trade_count:data.length
+
+  })
+
+ };
+
+}

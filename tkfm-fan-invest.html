@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Invest In Music</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+button{
+padding:10px;
+background:#22d3ee;
+border:none;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Invest In Songs</h1>
+
+<p>Buy shares in music catalogs.</p>
+
+<button onclick="buy()">Buy Catalog Shares</button>
+
+<p id="status"></p>
+
+<script>
+
+async function buy(){
+
+document.getElementById("status").innerText="Submitting order..."
+
+await fetch("/.netlify/functions/buy-catalog-shares",{
+method:"POST",
+body:JSON.stringify({amount:100})
+})
+
+document.getElementById("status").innerText="Investment placed."
+
+}
+
+</script>
+
+</body>
+</html>

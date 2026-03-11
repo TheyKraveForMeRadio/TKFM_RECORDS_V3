@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Licensing Marketplace</title>
+</head>
+
+<body>
+
+<h1>Music Licensing Marketplace</h1>
+
+<button onclick="browse()">Browse Catalog</button>
+
+<pre id="results"></pre>
+
+<script>
+
+async function browse(){
+
+ const res = await fetch(
+ "/.netlify/functions/licensing-marketplace"
+ )
+
+ const data = await res.json()
+
+ document.getElementById("results").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

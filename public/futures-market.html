@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Catalog Futures Market</h1>
+
+<pre id="futures"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/futures-engine'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("futures")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

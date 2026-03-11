@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records Dashboard</title>
+<script type="module">
+import pkg from 'ethers';
+const { ethers } = pkg;
+
+const deployed = await fetch('/deployed.json').then(res => res.json());
+const provider = new ethers.JsonRpcProvider('http://localhost:8545');
+const signer = provider.getSigner(); // default first account
+
+const token = new ethers.Contract(deployed.token, [
+  "function balanceOf(address) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)"
+], signer);
+
+const records = new ethers.Contract(deployed.records, [
+  "function getRelease(uint256) view returns (address artist, string name, uint256 advance, address[] payees, uint256[] shares, uint256 deposited, uint256 withdrawn)",
+  "function releaseCount() view returns (uint256)",
+  "function depositRevenue(uint256 releaseId, uint256 amount)",
+  "function withdraw(uint256 releaseId)"
+], signer);
+
+async function renderDashboard() {
+  const count = await records.releaseCount();
+  const dashboard = document.getElementById('dashboard');
+  dashboard.innerHTML = '';
+
+  for (let i = 0; i < count; i++) {
+    const r = await records.getRelease(i);
+    const div = document.createElement('div');
+    div.style = 'border:1px solid #ccc; padding:10px; margin:10px; border-radius:8px; background:#020617; color:#ec4899;';
+    
+    const depositInputId = `deposit-${i}`;
+    
+    div.innerHTML = `
+      <h3>${r.name} (ID: ${i})</h3>
+      <p>Artist: ${r.artist}</p>
+      <p>Advance: ${ethers.formatUnits(r.advance, 0)} TKFM</p>
+      <p>Deposited: ${ethers.formatUnits(r.deposited, 0)} TKFM</p>
+      <p>Withdrawn: ${ethers.formatUnits(r.withdrawn, 0)} TKFM</p>
+      <h4>Payees:</h4>
+      <ul>
+        ${r.payees.map((p, idx) => `<li>${p} - Share: ${r.shares[idx]}%</li>`).join('')}
+      </ul>
+      <input type="number" id="${depositInputId}" placeholder="Deposit amount" style="width:120px; margin-right:8px;" />
+      <button id="depositBtn-${i}">Deposit</button>
+      <button id="withdrawBtn-${i}">Withdraw</button>
+      <p id="status-${i}" style="margin-top:5px;"></p>
+    `;
+    dashboard.appendChild(div);
+
+    document.getElementById(`depositBtn-${i}`).onclick = async () => {
+      const amt = document.getElementById(depositInputId).value;
+      const status = document.getElementById(`status-${i}`);
+      try {
+        await token.approve(records.target, ethers.parseUnits(amt, 0));
+        await records.depositRevenue(i, ethers.parseUnits(amt, 0));
+        status.innerText = `Deposited ${amt} TKFM!`;
+        renderDashboard();
+      } catch(e) {
+        status.innerText = `Deposit failed: ${e.reason || e}`;
+      }
+    };
+
+    document.getElementById(`withdrawBtn-${i}`).onclick = async () => {
+      const status = document.getElementById(`status-${i}`);
+      try {
+        await records.withdraw(i);
+        status.innerText = `Withdrawal complete!`;
+        renderDashboard();
+      } catch(e) {
+        status.innerText = `Withdraw failed: ${e.reason || e}`;
+      }
+    };
+  }
+}
+
+window.addEventListener('load', renderDashboard);
+</script>
+</head>
+<body style="font-family:sans-serif; background:#020617; color:#ec4899;">
+<h1 style="text-align:center; color:#facc15;">TKFM Records Interactive Dashboard</h1>
+<div id="dashboard" style="max-width:900px; margin:auto;"></div>
+</body>
+</html>

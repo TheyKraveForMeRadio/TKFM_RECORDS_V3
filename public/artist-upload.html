@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload Catalog</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Artist Catalog Upload</h1>
+
+<input id="artist" placeholder="Artist Name"><br><br>
+<input id="title" placeholder="Catalog Title"><br><br>
+<input id="revenue" placeholder="Monthly Revenue"><br><br>
+
+<button onclick="upload()">Upload Catalog</button>
+
+<script>
+
+async function upload(){
+
+ const artist =
+ document.getElementById("artist").value;
+
+ const title =
+ document.getElementById("title").value;
+
+ const revenue =
+ document.getElementById("revenue").value;
+
+ await fetch(
+ '/.netlify/functions/artist-upload',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   artist,
+   title,
+   monthly_revenue:revenue
+  })
+ });
+
+ alert("Catalog uploaded");
+
+}
+
+</script>
+
+</body>
+</html>

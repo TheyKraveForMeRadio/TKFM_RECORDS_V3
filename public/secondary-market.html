@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Secondary Market</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Investor Secondary Market</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="shares" placeholder="Shares">
+<input id="price" placeholder="Price">
+
+<button onclick="sell()">Create Sell Order</button>
+
+<script>
+
+async function sell(){
+
+ const catalog =
+ document.getElementById("catalog").value;
+
+ const shares =
+ document.getElementById("shares").value;
+
+ const price =
+ document.getElementById("price").value;
+
+ await fetch(
+ '/.netlify/functions/create-sell-order',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   catalog,
+   shares,
+   price
+  })
+ }
+ );
+
+ alert("Sell order created");
+
+}
+
+</script>
+
+</body>
+</html>

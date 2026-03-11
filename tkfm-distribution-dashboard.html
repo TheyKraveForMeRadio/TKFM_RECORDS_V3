@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Distribution Engine</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Distribution</h1>
+
+<button onclick="upload()">Upload Track</button>
+<button onclick="route()">Route Distribution</button>
+<button onclick="deliver()">Deliver to Platforms</button>
+
+<script>
+
+async function upload(){
+
+ await fetch("/.netlify/functions/upload-track",{
+  method:"POST",
+  body:JSON.stringify({
+   title:"Test Song",
+   artist:"TKFM Artist",
+   audio_url:"https://example.com/audio.mp3"
+  })
+ })
+
+ alert("Track uploaded")
+
+}
+
+async function route(){
+
+ await fetch("/.netlify/functions/distribution-router")
+
+ alert("Distribution queued")
+
+}
+
+async function deliver(){
+
+ await fetch("/.netlify/functions/deliver-to-platforms")
+
+ alert("Delivered")
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Fan Army</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+text-align:center;
+}
+
+h1{
+color:#facc15;
+}
+
+button{
+background:#22d3ee;
+border:none;
+padding:14px 30px;
+margin-top:20px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Join the Fan Army</h1>
+
+<p>Promote songs. Earn rewards.</p>
+
+<button onclick="joinArmy()">Join Army</button>
+
+<p id="status"></p>
+
+<script>
+
+async function joinArmy(){
+
+document.getElementById("status").innerText="Joining..."
+
+await fetch("/.netlify/functions/join-fan-army",{
+method:"POST"
+})
+
+document.getElementById("status").innerText="You joined the fan army."
+
+}
+
+</script>
+
+</body>
+</html>
