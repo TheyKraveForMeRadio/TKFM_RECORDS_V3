@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/owner-jwt.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-6NdMBKZry0O8",
+  "sourcesContent": ["\uFEFFexports.handler = async () => {\n  return {\n    statusCode: 200,\n    body: JSON.stringify({\n      role: 'OWNER',\n      permissions: ['ALL'],\n      expires: 'NEVER'\n    })\n  };\n};\n"],
+  "mappings": ";AAAC,QAAQ,UAAU,YAAY;AAC7B,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU;AAAA,MACnB,MAAM;AAAA,MACN,aAAa,CAAC,KAAK;AAAA,MACnB,SAAS;AAAA,IACX,CAAC;AAAA,EACH;AACF;",
+  "names": []
+}

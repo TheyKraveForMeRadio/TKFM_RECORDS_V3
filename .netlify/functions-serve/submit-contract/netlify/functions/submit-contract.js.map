@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/submit-contract.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-CFxzvy3oh3Ii",
+  "sourcesContent": ["exports.handler = async (event) => {\n  try {\n    const { email, contractAccepted } = JSON.parse(event.body || \"{}\");\n    if (!email || typeof contractAccepted !== \"boolean\") {\n      return { statusCode: 400, body: \"Missing parameters\" };\n    }\n\n    // Simulate DB write (replace with real DB)\n    const db = global.artistContracts || {};\n    db[email] = { accepted: contractAccepted, timestamp: new Date().toISOString() };\n    global.artistContracts = db;\n\n    return { statusCode: 200, body: JSON.stringify({ success: true, accepted: contractAccepted }) };\n  } catch (err) {\n    console.error(err);\n    return { statusCode: 500, body: \"Server error\" };\n  }\n};\n"],
+  "mappings": ";AAAA,QAAQ,UAAU,OAAO,UAAU;AACjC,MAAI;AACF,UAAM,EAAE,OAAO,iBAAiB,IAAI,KAAK,MAAM,MAAM,QAAQ,IAAI;AACjE,QAAI,CAAC,SAAS,OAAO,qBAAqB,WAAW;AACnD,aAAO,EAAE,YAAY,KAAK,MAAM,qBAAqB;AAAA,IACvD;AAGA,UAAM,KAAK,OAAO,mBAAmB,CAAC;AACtC,OAAG,KAAK,IAAI,EAAE,UAAU,kBAAkB,YAAW,oBAAI,KAAK,GAAE,YAAY,EAAE;AAC9E,WAAO,kBAAkB;AAEzB,WAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,MAAM,UAAU,iBAAiB,CAAC,EAAE;AAAA,EAChG,SAAS,KAAK;AACZ,YAAQ,MAAM,GAAG;AACjB,WAAO,EAAE,YAAY,KAAK,MAAM,eAAe;AAAA,EACjD;AACF;",
+  "names": []
+}

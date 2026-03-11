@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/track-ai-usage.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-jhGyclb6ewxV",
+  "sourcesContent": ["exports.handler = async (event) => {\n  try {\n    const { email, engineType, quantity } = JSON.parse(event.body || \"{}\");\n    if (!email || !engineType || !quantity) return { statusCode: 400, body: \"Missing parameters\" };\n\n    // TODO: Replace with DB update\n    console.log(`Artist ${email} used ${quantity} ${engineType}`);\n\n    return { statusCode: 200, body: JSON.stringify({ success: true }) };\n  } catch (err) {\n    console.error(err);\n    return { statusCode: 500, body: \"Server error\" };\n  }\n};\n"],
+  "mappings": ";AAAA,QAAQ,UAAU,OAAO,UAAU;AACjC,MAAI;AACF,UAAM,EAAE,OAAO,YAAY,SAAS,IAAI,KAAK,MAAM,MAAM,QAAQ,IAAI;AACrE,QAAI,CAAC,SAAS,CAAC,cAAc,CAAC,SAAU,QAAO,EAAE,YAAY,KAAK,MAAM,qBAAqB;AAG7F,YAAQ,IAAI,UAAU,KAAK,SAAS,QAAQ,IAAI,UAAU,EAAE;AAE5D,WAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,KAAK,CAAC,EAAE;AAAA,EACpE,SAAS,KAAK;AACZ,YAAQ,MAAM,GAAG;AACjB,WAAO,EAAE,YAAY,KAAK,MAAM,eAAe;AAAA,EACjD;AACF;",
+  "names": []
+}

@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/fetch-revenue.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-A73OJML9jOGt",
+  "sourcesContent": ["const ARTISTS_DB = [\n  { email: \"artist1@example.com\", active: true, monthlyFee: 49 },\n  { email: \"artist2@example.com\", active: false, monthlyFee: 49 },\n  // Add real artist records or connect to DB\n];\n\nexports.handler = async () => {\n  try {\n    const totalIncome = ARTISTS_DB.reduce((sum,a) => sum + (a.active ? a.monthlyFee : 0),0);\n    const activeSubs = ARTISTS_DB.filter(a => a.active).length;\n    const pendingPayouts = 0; // Replace with real payouts DB\n\n    return {\n      statusCode: 200,\n      body: JSON.stringify({ totalIncome, activeSubs, pendingPayouts }),\n    };\n  } catch (err) {\n    console.error(err);\n    return { statusCode: 500, body: \"Server error\" };\n  }\n};\n"],
+  "mappings": ";AAAA,IAAM,aAAa;AAAA,EACjB,EAAE,OAAO,uBAAuB,QAAQ,MAAM,YAAY,GAAG;AAAA,EAC7D,EAAE,OAAO,uBAAuB,QAAQ,OAAO,YAAY,GAAG;AAAA;AAEhE;AAEA,QAAQ,UAAU,YAAY;AAC5B,MAAI;AACF,UAAM,cAAc,WAAW,OAAO,CAAC,KAAI,MAAM,OAAO,EAAE,SAAS,EAAE,aAAa,IAAG,CAAC;AACtF,UAAM,aAAa,WAAW,OAAO,OAAK,EAAE,MAAM,EAAE;AACpD,UAAM,iBAAiB;AAEvB,WAAO;AAAA,MACL,YAAY;AAAA,MACZ,MAAM,KAAK,UAAU,EAAE,aAAa,YAAY,eAAe,CAAC;AAAA,IAClE;AAAA,EACF,SAAS,KAAK;AACZ,YAAQ,MAAM,GAAG;AACjB,WAAO,EAAE,YAAY,KAAK,MAAM,eAAe;AAAA,EACjD;AACF;",
+  "names": []
+}

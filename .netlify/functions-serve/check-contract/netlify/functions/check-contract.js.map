@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/check-contract.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-i5SbI3n2JHT7",
+  "sourcesContent": ["exports.handler = async (event) => {\n  const email = event.queryStringParameters?.email;\n  if (!email) return { statusCode: 400, body: \"Email required\" };\n\n  const db = global.artistContracts || {};\n  const contract = db[email] || { accepted: false };\n\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ accepted: contract.accepted }),\n  };\n};\n"],
+  "mappings": ";AAAA,QAAQ,UAAU,OAAO,UAAU;AACjC,QAAM,QAAQ,MAAM,uBAAuB;AAC3C,MAAI,CAAC,MAAO,QAAO,EAAE,YAAY,KAAK,MAAM,iBAAiB;AAE7D,QAAM,KAAK,OAAO,mBAAmB,CAAC;AACtC,QAAM,WAAW,GAAG,KAAK,KAAK,EAAE,UAAU,MAAM;AAEhD,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU,EAAE,UAAU,SAAS,SAAS,CAAC;AAAA,EACtD;AACF;",
+  "names": []
+}

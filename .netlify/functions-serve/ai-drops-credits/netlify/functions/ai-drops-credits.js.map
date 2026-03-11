@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/ai-drops-credits.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-2IcKyr9dmG1o",
+  "sourcesContent": ["let artistCredits = {}; // simulate DB\n\nexports.handler = async (event) => {\n  const { artistEmail, action, amount } = JSON.parse(event.body || \"{}\");\n  if (!artistEmail) return { statusCode: 400, body: \"Missing artistEmail\" };\n\n  artistCredits[artistEmail] = artistCredits[artistEmail] || 0;\n\n  if (action === \"get\") {\n    return { statusCode: 200, body: JSON.stringify({ credits: artistCredits[artistEmail] }) };\n  }\n  if (action === \"add\") {\n    artistCredits[artistEmail] += Number(amount || 0);\n  }\n  if (action === \"use\") {\n    if (artistCredits[artistEmail] < amount) return { statusCode: 400, body: \"Not enough credits\" };\n    artistCredits[artistEmail] -= amount;\n  }\n\n  return { statusCode: 200, body: JSON.stringify({ credits: artistCredits[artistEmail] }) };\n};\n"],
+  "mappings": ";AAAA,IAAI,gBAAgB,CAAC;AAErB,QAAQ,UAAU,OAAO,UAAU;AACjC,QAAM,EAAE,aAAa,QAAQ,OAAO,IAAI,KAAK,MAAM,MAAM,QAAQ,IAAI;AACrE,MAAI,CAAC,YAAa,QAAO,EAAE,YAAY,KAAK,MAAM,sBAAsB;AAExE,gBAAc,WAAW,IAAI,cAAc,WAAW,KAAK;AAE3D,MAAI,WAAW,OAAO;AACpB,WAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,cAAc,WAAW,EAAE,CAAC,EAAE;AAAA,EAC1F;AACA,MAAI,WAAW,OAAO;AACpB,kBAAc,WAAW,KAAK,OAAO,UAAU,CAAC;AAAA,EAClD;AACA,MAAI,WAAW,OAAO;AACpB,QAAI,cAAc,WAAW,IAAI,OAAQ,QAAO,EAAE,YAAY,KAAK,MAAM,qBAAqB;AAC9F,kBAAc,WAAW,KAAK;AAAA,EAChC;AAEA,SAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,cAAc,WAAW,EAAE,CAAC,EAAE;AAC1F;",
+  "names": []
+}
