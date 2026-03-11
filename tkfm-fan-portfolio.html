@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>My Music Portfolio</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.portfolio-row{
+display:flex;
+justify-content:space-between;
+background:#0f172a;
+padding:15px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.value{
+color:#22d3ee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>My Music Portfolio</h1>
+
+<p>Assets you own</p>
+
+<div id="portfolio"></div>
+
+<script>
+
+async function loadPortfolio(){
+
+const res = await fetch("/.netlify/functions/fan-portfolio")
+const data = await res.json()
+
+const container=document.getElementById("portfolio")
+container.innerHTML=""
+
+data.assets.forEach(asset=>{
+
+const row=document.createElement("div")
+row.className="portfolio-row"
+
+row.innerHTML=
+"<span>"+asset.song+"</span>"+
+"<span>"+asset.shares+" shares</span>"+
+"<span class='value'>$"+asset.value+"</span>"
+
+container.appendChild(row)
+
+})
+
+}
+
+loadPortfolio()
+setInterval(loadPortfolio,5000)
+
+</script>
+
+</body>
+</html>

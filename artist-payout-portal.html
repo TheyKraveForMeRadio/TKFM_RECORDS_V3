@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Artist Payout Portal</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+h1 { color:#facc15; }
+.card { background:rgba(250,204,21,0.06); border:1px solid #eab308; padding:20px; margin-bottom:20px; }
+button { background:#facc15; border:none; padding:8px 12px; cursor:pointer; margin-top:10px; }
+button:hover { background:#eab308; }
+</style>
+</head>
+<body>
+
+<h1>Artist Payout Portal</h1>
+
+<div class="card">
+  <h3>Available Balance</h3>
+  <div id="balance"></div>
+</div>
+
+<div class="card">
+  <h3>Payout History</h3>
+  <pre id="history"></pre>
+</div>
+
+<div class="card">
+  <h3>Tax Documents</h3>
+  <button onclick="download1099()">Download 1099</button>
+</div>
+
+<script>
+
+const email = new URLSearchParams(location.search).get("email");
+
+async function loadPortal() {
+
+  const balanceRes = await fetch(`/.netlify/functions/get-artist-balance?email=${email}`);
+  const balance = await balanceRes.json();
+
+  document.getElementById("balance").innerHTML =
+    `<strong>$${balance.available_balance || 0}</strong>`;
+
+  const historyRes = await fetch(`/.netlify/functions/get-artist-payouts?email=${email}`);
+  const history = await historyRes.json();
+
+  document.getElementById("history").textContent =
+    JSON.stringify(history || [], null, 2);
+}
+
+function download1099() {
+  const year = new Date().getFullYear() - 1;
+  window.location = `/.netlify/functions/generate-1099-pdf?email=${email}&year=${year}`;
+}
+
+loadPortal();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Music Market Terminal</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.section{
+margin-top:40px;
+}
+
+.market-row{
+display:flex;
+justify-content:space-between;
+background:#0f172a;
+padding:15px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.price{
+color:#22d3ee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Music Market</h1>
+
+<p>Live trading market for music assets</p>
+
+<div class="section">
+
+<h2>Top Gainers</h2>
+<div id="gainers"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Top Losers</h2>
+<div id="losers"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Highest Market Cap</h2>
+<div id="marketcap"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Live Trades</h2>
+<div id="trades"></div>
+
+</div>
+
+<script>
+
+async function loadMarket(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+renderMarket(data.market || [])
+
+}
+
+function renderMarket(list){
+
+const gainers=document.getElementById("gainers")
+const losers=document.getElementById("losers")
+const marketcap=document.getElementById("marketcap")
+const trades=document.getElementById("trades")
+
+gainers.innerHTML=""
+losers.innerHTML=""
+marketcap.innerHTML=""
+trades.innerHTML=""
+
+list.slice(0,5).forEach(s=>{
+
+const row=document.createElement("div")
+row.className="market-row"
+
+row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
+
+gainers.appendChild(row)
+
+})
+
+list.slice(5,10).forEach(s=>{
+
+const row=document.createElement("div")
+row.className="market-row"
+
+row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
+
+losers.appendChild(row)
+
+})
+
+list.slice(10,15).forEach(s=>{
+
+const row=document.createElement("div")
+row.className="market-row"
+
+row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
+
+marketcap.appendChild(row)
+
+})
+
+list.slice(0,5).forEach(s=>{
+
+const row=document.createElement("div")
+row.className="market-row"
+
+row.innerHTML="<span>Trade</span><span>"+s.catalog_id+" $"+s.price+"</span>"
+
+trades.appendChild(row)
+
+})
+
+}
+
+loadMarket()
+setInterval(loadMarket,5000)
+
+</script>
+
+</body>
+</html>

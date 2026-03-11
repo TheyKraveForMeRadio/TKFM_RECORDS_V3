@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Investor Portfolio</h1>
+
+<input id="wallet" placeholder="Investor Wallet">
+
+<button onclick="load()">Load Portfolio</button>
+
+<pre id="portfolio"></pre>
+
+<script>
+
+async function load(){
+
+ const wallet =
+ document.getElementById("wallet").value;
+
+ const res =
+ await fetch(
+ '/.netlify/functions/investor-portfolio?wallet='+wallet
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("portfolio")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+</script>
+
+</body>
+</html>

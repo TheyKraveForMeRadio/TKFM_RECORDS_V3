@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Growth Intelligence</title>
+  <style>
+    body { font-family:system-ui; background:#020617; color:white; padding:30px; }
+    .card { background:#111827; padding:20px; margin-bottom:20px; border-radius:8px; }
+  </style>
+</head>
+<body>
+
+<h1>Real-Time Growth Dashboard</h1>
+
+<div class="card">
+  <h3>Revenue Metrics</h3>
+  <pre id="revenue"></pre>
+</div>
+
+<div class="card">
+  <h3>NRR</h3>
+  <pre id="nrr"></pre>
+</div>
+
+<div class="card">
+  <h3>Churn Risk</h3>
+  <pre id="churn"></pre>
+</div>
+
+<script>
+
+async function load() {
+
+  const rev = await fetch('/.netlify/functions/revenue-forecast-dashboard');
+  document.getElementById("revenue").textContent =
+    JSON.stringify(await rev.json(),null,2);
+
+  const nrr = await fetch('/.netlify/functions/net-revenue-retention');
+  document.getElementById("nrr").textContent =
+    JSON.stringify(await nrr.json(),null,2);
+
+  const churn = await fetch('/.netlify/functions/churn-prediction');
+  document.getElementById("churn").textContent =
+    JSON.stringify(await churn.json(),null,2);
+}
+
+load();
+setInterval(load,30000);
+
+</script>
+
+</body>
+</html>

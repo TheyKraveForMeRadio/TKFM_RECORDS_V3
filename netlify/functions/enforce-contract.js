@@ -1,14 +1,25 @@
-let contractDB = {}; // { email: accepted: true/false }
+import { supabase } from './supabase.js';
+import { success, failure } from './_response.js';
 
-exports.handler = async (event) => {
-  const { email, accept } = JSON.parse(event.body || "{}");
-  if (!email) return { statusCode: 400, body: "Email required" };
+export async function handler(event) {
+  const email = event.queryStringParameters?.email;
 
-  if (accept != null) {
-    contractDB[email] = { accepted: !!accept, date: new Date().toISOString() };
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+  if (!email) {
+    return failure('Email required', 400);
   }
 
-  const status = contractDB[email]?.accepted || false;
-  return { statusCode: 200, body: JSON.stringify({ accepted: status }) };
-};
+  try {
+    const { data, error } = await supabase
+      .from('tkfm_artists')
+      .select('contract_accepted')
+      .eq('email', email)
+      .single();
+
+    if (error) return failure(error.message, 400);
+
+    return success({ allowed: data?.contract_accepted || false });
+
+  } catch (err) {
+    return failure(err.message, 500);
+  }
+}

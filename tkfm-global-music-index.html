@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Global Music Index</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.index-value{
+font-size:48px;
+color:#22d3ee;
+margin-bottom:20px;
+}
+
+.section{
+margin-top:40px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+background:#0f172a;
+padding:12px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Global Music Index</h1>
+
+<p>Market performance of TKFM music assets</p>
+
+<div class="index-value" id="index">0</div>
+
+<div class="section">
+
+<h2>Top Songs</h2>
+<div id="songs"></div>
+
+</div>
+
+<script>
+
+async function loadIndex(){
+
+const res = await fetch("/.netlify/functions/music-index")
+const data = await res.json()
+
+document.getElementById("index").innerText="$"+data.index
+
+const container=document.getElementById("songs")
+container.innerHTML=""
+
+data.songs.forEach(song=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span>"+song.name+"</span><span>$"+song.price+"</span>"
+
+container.appendChild(row)
+
+})
+
+}
+
+loadIndex()
+setInterval(loadIndex,5000)
+
+</script>
+
+</body>
+</html>

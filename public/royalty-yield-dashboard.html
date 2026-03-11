@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Royalty Yield Dashboard</h1>
+
+<pre id="yield"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/royalty-yield');
+
+ const data = await res.json();
+
+ document.getElementById("yield")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

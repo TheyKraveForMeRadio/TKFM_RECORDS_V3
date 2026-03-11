@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Royalty Pool Marketplace</title>
+</head>
+
+<body>
+
+<h1>Music Royalty Pools</h1>
+
+<div id="pools"></div>
+
+<script>
+
+async function loadPools(){
+
+const res = await fetch("http://localhost:4000",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+query:`{ pools { id catalogId totalDeposits } }`
+})
+});
+
+const data = await res.json();
+
+document.getElementById("pools").innerHTML =
+data.data.pools.map(p=>
+`<div>
+Pool ${p.id}<br>
+Catalog ${p.catalogId}<br>
+Deposits ${p.totalDeposits}
+</div>`
+).join("");
+
+}
+
+loadPools();
+
+</script>
+
+</body>
+</html>

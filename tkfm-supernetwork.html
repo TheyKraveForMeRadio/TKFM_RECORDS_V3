@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Supernetwork</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Music Supernetwork</h1>
+
+<pre id="status"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+  "/.netlify/functions/tkfm-peer-registry"
+ );
+
+ const data = await res.json();
+
+ document.getElementById("status").innerText =
+  JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

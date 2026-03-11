@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Song Trading</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:system-ui;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.container{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:30px;
+max-width:1200px;
+margin:auto;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+}
+
+.order-row{
+display:flex;
+justify-content:space-between;
+padding:6px 0;
+font-size:14px;
+}
+
+.buy{
+color:#22c55e;
+}
+
+.sell{
+color:#ef4444;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+cursor:pointer;
+}
+
+.buy-btn{
+background:#22c55e;
+color:white;
+}
+
+.sell-btn{
+background:#ef4444;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1 id="songTitle">Song Market</h1>
+
+<div class="container">
+
+<div class="panel">
+
+<canvas id="chart"></canvas>
+
+</div>
+
+<div>
+
+<div class="panel">
+
+<h3>Order Book</h3>
+
+<div id="orders"></div>
+
+</div>
+
+<div class="panel">
+
+<h3>Trade</h3>
+
+<input id="amount" placeholder="Amount $" style="width:100%;padding:8px">
+
+<button class="buy-btn" onclick="buy()">Buy Shares</button>
+<button class="sell-btn" onclick="sell()">Sell Shares</button>
+
+<p id="status"></p>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function loadOrders(){
+
+const res = await fetch("/.netlify/functions/orderbook-engine")
+const data = await res.json()
+
+const container=document.getElementById("orders")
+container.innerHTML=""
+
+(data.orders||[]).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="order-row"
+
+row.innerHTML="<span>"+o.side+"</span><span>$"+o.price+"</span>"
+
+container.appendChild(row)
+
+})
+
+}
+
+async function buy(){
+
+document.getElementById("status").innerText="Buying..."
+
+await fetch("/.netlify/functions/create-buy-order",{
+method:"POST"
+})
+
+document.getElementById("status").innerText="Order placed."
+
+}
+
+async function sell(){
+
+document.getElementById("status").innerText="Selling..."
+
+await fetch("/.netlify/functions/create-sell-order",{
+method:"POST"
+})
+
+document.getElementById("status").innerText="Order placed."
+
+}
+
+loadOrders()
+setInterval(loadOrders,4000)
+
+</script>
+
+</body>
+</html>

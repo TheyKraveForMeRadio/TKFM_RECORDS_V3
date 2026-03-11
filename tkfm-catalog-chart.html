@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Catalog Price Chart</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+canvas{
+background:#111827;
+padding:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Catalog Market Chart</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+
+<button onclick="load()">Load Chart</button>
+
+<canvas id="chart" width="800" height="400"></canvas>
+
+<script>
+
+async function load(){
+
+const catalog=document.getElementById("catalog").value
+
+const res = await fetch(
+"/.netlify/functions/catalog-price-history?catalog="+catalog
+)
+
+const data = await res.json()
+
+const ctx = document.getElementById("chart").getContext("2d")
+
+const prices = data.map(x=>x.price)
+
+ctx.clearRect(0,0,800,400)
+
+ctx.beginPath()
+
+prices.forEach((p,i)=>{
+
+const x=i*40
+const y=400-(p*10)
+
+if(i===0) ctx.moveTo(x,y)
+else ctx.lineTo(x,y)
+
+})
+
+ctx.strokeStyle="#facc15"
+ctx.stroke()
+
+}
+
+</script>
+
+</body>
+
+</html>

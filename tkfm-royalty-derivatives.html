@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Royalty Derivatives Market</title>
+</head>
+
+<body>
+
+<h1>Royalty Futures & Options</h1>
+
+<p>
+Trade the future value of music royalties.
+</p>
+
+<button onclick="load()">View Derivatives Market</button>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/royalty-derivatives-engine"
+)
+
+const data = await res.json()
+
+document.getElementById("data").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Catalog Exchange</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+input{
+padding:12px;
+margin:10px;
+width:240px;
+}
+
+button{
+padding:12px 24px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Catalog Exchange</h1>
+
+<p>Trade music catalog shares.</p>
+
+<input id="user" placeholder="User">
+<input id="catalog" placeholder="Catalog ID">
+<input id="shares" placeholder="Shares">
+<input id="price" placeholder="Price">
+
+<button onclick="buy()">Buy</button>
+<button onclick="sell()">Sell</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function buy(){
+
+const user=document.getElementById("user").value
+const catalog=document.getElementById("catalog").value
+const shares=document.getElementById("shares").value
+const price=document.getElementById("price").value
+
+const res=await fetch(
+"/.netlify/functions/create-buy-order",
+{
+method:"POST",
+body:JSON.stringify({
+buyer:user,
+catalog,
+shares,
+price
+})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+async function sell(){
+
+const user=document.getElementById("user").value
+const catalog=document.getElementById("catalog").value
+const shares=document.getElementById("shares").value
+const price=document.getElementById("price").value
+
+const res=await fetch(
+"/.netlify/functions/create-sell-order",
+{
+method:"POST",
+body:JSON.stringify({
+seller:user,
+catalog,
+shares,
+price
+})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

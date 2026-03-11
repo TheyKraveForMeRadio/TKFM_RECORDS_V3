@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Trending Music Market</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.section{
+margin-top:50px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+margin-bottom:10px;
+border-radius:6px;
+}
+
+.price{
+color:#22d3ee;
+font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Trending Music Market</h1>
+
+<div class="section">
+
+<h2>Top Gainers</h2>
+
+<div id="gainers"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Most Invested Songs</h2>
+
+<div id="invested"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Highest Market Cap</h2>
+
+<div id="marketcap"></div>
+
+</div>
+
+<script>
+
+async function load(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+render(data.market || [])
+
+}
+
+function render(list){
+
+const gainers=document.getElementById("gainers")
+const invested=document.getElementById("invested")
+const marketcap=document.getElementById("marketcap")
+
+gainers.innerHTML=""
+invested.innerHTML=""
+marketcap.innerHTML=""
+
+list.slice(0,5).forEach(s=>{
+
+const div=document.createElement("div")
+div.className="card"
+
+div.innerHTML="Song ID: "+s.catalog_id+"<br><span class='price'>$"+s.price+"</span>"
+
+gainers.appendChild(div)
+
+})
+
+list.slice(5,10).forEach(s=>{
+
+const div=document.createElement("div")
+div.className="card"
+
+div.innerHTML="Song ID: "+s.catalog_id+"<br><span class='price'>$"+s.price+"</span>"
+
+invested.appendChild(div)
+
+})
+
+list.slice(10,15).forEach(s=>{
+
+const div=document.createElement("div")
+div.className="card"
+
+div.innerHTML="Song ID: "+s.catalog_id+"<br><span class='price'>$"+s.price+"</span>"
+
+marketcap.appendChild(div)
+
+})
+
+}
+
+load()
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

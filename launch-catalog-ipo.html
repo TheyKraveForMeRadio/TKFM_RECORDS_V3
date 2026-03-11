@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Launch Your Music Catalog IPO</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#020617;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+h1{
+font-size:42px;
+color:#facc15;
+}
+
+h2{
+color:#eab308;
+}
+
+button{
+padding:14px 28px;
+font-size:18px;
+background:#facc15;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:20px;
+}
+
+input{
+padding:12px;
+margin:10px;
+width:260px;
+}
+
+.section{
+margin-top:60px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<img src="/public/tkfm-records-logo.png" width="140">
+
+<h1>Launch Your Music Catalog IPO</h1>
+
+<h2>Raise Capital From Fans & Investors</h2>
+
+<p>
+Turn your music catalog into an investable asset.
+Sell shares of royalties and raise funding for your career.
+</p>
+
+<div class="section">
+
+<h2>Start Your Catalog IPO</h2>
+
+<input id="artist" placeholder="Artist Name"><br>
+<input id="catalog" placeholder="Catalog Title"><br>
+<input id="raise" placeholder="Capital Goal ($)"><br>
+
+<button onclick="launch()">Launch Catalog IPO</button>
+
+</div>
+
+<div class="section">
+
+<h2>Why Artists Join TKFM</h2>
+
+<p>
+✔ Raise capital from fans<br>
+✔ Earn royalties automatically<br>
+✔ Global distribution<br>
+✔ Licensing opportunities<br>
+✔ Music investment marketplace
+</p>
+
+</div>
+
+<pre id="result"></pre>
+
+<script>
+
+async function launch(){
+
+const artist=document.getElementById("artist").value
+const catalog=document.getElementById("catalog").value
+const raise=document.getElementById("raise").value
+
+const res=await fetch(
+"/.netlify/functions/launch-catalog-ipo",
+{
+method:"POST",
+body:JSON.stringify({
+artist,
+catalog,
+raise_goal:raise
+})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

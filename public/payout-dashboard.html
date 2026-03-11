@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Royalty Payout Dashboard</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Royalty Payout Dashboard</h1>
+
+<pre id="payouts"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+ '/.netlify/functions/royalty-payouts'
+ );
+
+ const data = await res.json();
+
+ document.getElementById("payouts")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

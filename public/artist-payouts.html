@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Artist Payouts</h1>
+
+<button onclick="connect()">Connect Stripe</button>
+
+<script>
+
+async function connect(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/stripe-connect-onboard'
+ );
+
+ const data =
+ await res.json();
+
+ window.location =
+ data.url;
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+type Catalog {
+  id: ID!
+  owner: String!
+  metadataURI: String!
+  royaltyPool: String!
+}
+
+type Pool {
+  id: ID!
+  catalogId: String!
+  totalDeposits: Float!
+}
+
+type Investor {
+  id: ID!
+  deposited: Float!
+}
+
+type Query {
+  catalogs: [Catalog]
+  pools: [Pool]
+  investors: [Investor]
+}

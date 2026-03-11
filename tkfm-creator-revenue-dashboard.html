@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Creator Dashboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.metric{
+font-size:28px;
+margin-top:10px;
+color:#22d3ee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Creator Revenue Dashboard</h1>
+
+<p>Total Royalties</p>
+<div id="royalties" class="metric">0</div>
+
+<p>Investors</p>
+<div id="investors" class="metric">0</div>
+
+<script>
+
+async function load(){
+
+const res=await fetch("/.netlify/functions/get-royalties")
+const data=await res.json()
+
+document.getElementById("royalties").innerText=data.total || 0
+document.getElementById("investors").innerText=data.investors || 0
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Label Factory</title>
+</head>
+
+<body>
+
+<h1>Launch Your Label</h1>
+
+<input id="name" placeholder="Label Name">
+
+<button onclick="create()">Create Label</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function create(){
+
+ const name=document.getElementById("name").value
+
+ const res = await fetch(
+  "/.netlify/functions/create-label",
+  {
+   method:"POST",
+   body:JSON.stringify({
+    name:name,
+    owner:"user"
+   })
+  }
+ )
+
+ const data = await res.json()
+
+ document.getElementById("result").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

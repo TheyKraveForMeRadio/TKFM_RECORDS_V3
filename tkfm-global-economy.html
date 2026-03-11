@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Global Music Economy</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+pre{
+background:#111827;
+padding:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Global Music Economy</h1>
+
+<button onclick="load()">Load Economy Metrics</button>
+
+<div id="metrics"></div>
+
+<h2>Global Architecture</h2>
+
+<pre>
+
+              ┌──────────────────────────────┐
+              │        ARTIST NETWORK        │
+              │ 1,000 Artists Worldwide      │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │        CATALOG LAYER         │
+              │ 10,000 Music Catalogs        │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │     CATALOG IPO MARKETS      │
+              │ Fans fund music catalogs     │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │      TRADING EXCHANGE        │
+              │ Buy / Sell Catalog Shares    │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │       FINANCIAL LAYER        │
+              │ Liquidity Pools              │
+              │ Market Maker AI              │
+              │ Royalty Yield Markets        │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │      MUSIC INFRASTRUCTURE    │
+              │ Global Distribution          │
+              │ Licensing Marketplace        │
+              │ Sync Deal Engine             │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │      DATA INTELLIGENCE       │
+              │ AI Music Discovery           │
+              │ Music Data Oracle            │
+              │ Market Analytics             │
+              └──────────────┬───────────────┘
+                             │
+              ┌──────────────▼───────────────┐
+              │     PLATFORM INFRASTRUCTURE  │
+              │ Netlify • Supabase • Stripe  │
+              └──────────────────────────────┘
+
+</pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/global-economy-metrics"
+)
+
+const data = await res.json()
+
+document.getElementById("metrics").innerHTML =
+"<div class='card'>Artists: "+data.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.catalogs+"</div>"+
+"<div class='card'>Market Value: $"+data.market_value+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

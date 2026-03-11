@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Treasury Governance</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+button {
+  background:#facc15;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Treasury Governance</h1>
+
+<div class="card">
+  <input id="entity" placeholder="Entity ID">
+  <button onclick="loadStatement()">Load Statement</button>
+</div>
+
+<div class="card">
+  <pre id="output"></pre>
+</div>
+
+<script>
+async function loadStatement() {
+  const id = document.getElementById("entity").value;
+
+  const res = await fetch(
+    "/.netlify/functions/label-financial-statement?entity_id="+id
+  );
+
+  const data = await res.json();
+  document.getElementById("output").textContent =
+    JSON.stringify(data,null,2);
+}
+</script>
+
+</body>
+</html>

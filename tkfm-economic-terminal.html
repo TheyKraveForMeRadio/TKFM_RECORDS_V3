@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Global Music Economic Terminal</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.card{
+background:#0f172a;
+padding:20px;
+border-radius:10px;
+}
+
+.metric{
+font-size:28px;
+color:#22d3ee;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Global Music Economic Terminal</h1>
+
+<div class="grid">
+
+<div class="card">
+<div>Music Index</div>
+<div id="index" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Total Market Cap</div>
+<div id="cap" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Average Royalty Yield</div>
+<div id="yield" class="metric">0</div>
+</div>
+
+<div class="card">
+<div>Institutional Capital</div>
+<div id="capital" class="metric">0</div>
+</div>
+
+</div>
+
+<script>
+
+async function load(){
+
+const indexRes = await fetch("/.netlify/functions/global-music-index-engine")
+const indexData = await indexRes.json()
+
+const yieldRes = await fetch("/.netlify/functions/royalty-yield-feed")
+const yieldData = await yieldRes.json()
+
+const capRes = await fetch("/.netlify/functions/institutional-capital-feed")
+const capData = await capRes.json()
+
+document.getElementById("index").innerText = indexData.index || 0
+document.getElementById("cap").innerText = indexData.market_cap || 0
+document.getElementById("yield").innerText = yieldData.average_yield || 0
+document.getElementById("capital").innerText = capData.institutional_capital || 0
+
+}
+
+load()
+setInterval(load,5000)
+
+</script>
+
+</body>
+</html>

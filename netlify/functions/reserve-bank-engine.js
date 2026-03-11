@@ -1,0 +1,35 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+ process.env.SUPABASE_URL,
+ process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+export const handler = async()=>{
+
+ const { data: revenue } = await supabase
+ .from("catalog_revenue_totals")
+ .select("*");
+
+ let reserves = 0;
+
+ for(const r of revenue){
+  reserves += Number(r.total_revenue);
+ }
+
+ await supabase
+ .from("music_reserve_bank")
+ .insert({
+  reserves,
+  timestamp:new Date().toISOString()
+ });
+
+ return{
+  statusCode:200,
+  body:JSON.stringify({
+   status:"reserve updated",
+   reserves
+  })
+ };
+
+};

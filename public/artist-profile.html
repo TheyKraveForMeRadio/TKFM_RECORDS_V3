@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Artist Profile</h1>
+
+<input id="artist" placeholder="Artist ID">
+
+<button onclick="load()">Load Catalog</button>
+
+<pre id="catalog"></pre>
+
+<script>
+
+async function load(){
+
+ const id =
+ document.getElementById("artist").value;
+
+ const res =
+ await fetch(
+ '/.netlify/functions/artist-profile?artist_id='+id
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("catalog")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM W-9 Submission</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+h1 { color:#facc15; }
+input, textarea { width:100%; padding:8px; margin-bottom:10px; }
+button { background:#facc15; border:none; padding:10px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<h1>W-9 Tax Information Submission</h1>
+
+<input id="legal_name" placeholder="Legal Name">
+<input id="business_name" placeholder="Business Name (Optional)">
+<input id="tax_id" placeholder="SSN or EIN">
+<textarea id="address" placeholder="Street Address"></textarea>
+<input id="city" placeholder="City">
+<input id="state" placeholder="State">
+<input id="zip" placeholder="ZIP Code">
+<input id="country" placeholder="Country">
+<input id="signature" placeholder="Electronic Signature">
+
+<button onclick="submitW9()">Submit</button>
+
+<script>
+
+const email = new URLSearchParams(location.search).get("email");
+
+async function submitW9() {
+
+  const body = {
+    email,
+    legal_name: legal_name.value,
+    business_name: business_name.value,
+    tax_id: tax_id.value,
+    address: address.value,
+    city: city.value,
+    state: state.value,
+    zip: zip.value,
+    country: country.value,
+    signature: signature.value
+  };
+
+  const res = await fetch('/.netlify/functions/submit-w9', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  const json = await res.json();
+  if (json.success) alert("W-9 submitted successfully");
+}
+
+</script>
+</body>
+</html>

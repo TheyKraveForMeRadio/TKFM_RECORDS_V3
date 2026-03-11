@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Index</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM Music Index</h1>
+
+<canvas id="indexChart"></canvas>
+
+<script>
+
+const ctx=document.getElementById("indexChart");
+
+let chart=new Chart(ctx,{
+ type:"line",
+ data:{
+  labels:[],
+  datasets:[{
+   label:"Music Index",
+   data:[],
+   borderColor:"purple"
+  }]
+ }
+});
+
+async function loadIndex(){
+
+ const res=await fetch("/.netlify/functions/index-dashboard");
+
+ const data=await res.json();
+
+ chart.data.labels=data.map(d=>d.timestamp);
+
+ chart.data.datasets[0].data=data.map(d=>d.value);
+
+ chart.update();
+
+}
+
+loadIndex();
+
+setInterval(loadIndex,60000);
+
+</script>
+
+</body>
+</html>

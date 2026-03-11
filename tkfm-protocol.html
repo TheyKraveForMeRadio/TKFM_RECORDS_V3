@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Global Music Protocol</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Music Protocol</h1>
+
+<button onclick="load()">Load Protocol Info</button>
+
+<pre id="output"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/tkfm-protocol-core"
+)
+
+const data = await res.json()
+
+document.getElementById("output").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

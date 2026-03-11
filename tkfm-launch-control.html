@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Launch Control</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Launch Control</h1>
+
+<button onclick="load()">Load Economy Metrics</button>
+
+<div id="metrics"></div>
+
+<h2>Economy Activity</h2>
+<pre id="activity"></pre>
+
+<script>
+
+async function load(){
+
+const metrics = await fetch(
+"/.netlify/functions/tkfm-launch-control"
+)
+
+const data = await metrics.json()
+
+document.getElementById("metrics").innerHTML=
+"<div class='card'>Artists: "+data.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.catalogs+"</div>"+
+"<div class='card'>Catalog IPOs: "+data.ipos+"</div>"+
+"<div class='card'>Market Cap: $"+data.market_cap+"</div>"
+
+const feed = await fetch(
+"/.netlify/functions/economy-activity-feed"
+)
+
+const activity = await feed.json()
+
+document.getElementById("activity").innerText =
+JSON.stringify(activity,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

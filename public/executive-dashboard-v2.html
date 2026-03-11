@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Executive Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background:#020617; color:white; padding:40px; }
+  </style>
+</head>
+<body>
+
+<h1>Executive Revenue Chart</h1>
+
+<canvas id="revChart"></canvas>
+
+<script>
+
+async function loadChart() {
+
+  const res = await fetch('/.netlify/functions/revenue-growth-loop');
+  const data = await res.json();
+
+  const labels = data.map(d=>d.month);
+  const values = data.map(d=>parseFloat(d.growthRate));
+
+  new Chart(document.getElementById('revChart'), {
+    type:'line',
+    data:{
+      labels,
+      datasets:[{
+        label:'Growth %',
+        data:values
+      }]
+    }
+  });
+}
+
+loadChart();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Invite Fans</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+button{
+background:#22d3ee;
+padding:10px;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Invite Fans To Own Your Music</h1>
+
+<p>Share this link with your fans.</p>
+
+<input id="link" value="https://tkfm.com/song/123">
+
+<button onclick="copy()">Copy Link</button>
+
+<script>
+
+function copy(){
+
+const link=document.getElementById("link")
+
+link.select()
+document.execCommand("copy")
+
+alert("Link copied")
+
+}
+
+</script>
+
+</body>
+</html>

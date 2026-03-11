@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records - Releases</title>
+<style>
+  body { background:#020617; color:#fff; font-family:Arial, sans-serif; margin:0; padding:20px; }
+  header { text-align:center; font-size:2em; margin-bottom:20px; color:#facc15; }
+  .release-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+  .release-tile { background:#111; padding:20px; border-radius:10px; border:2px solid #f97316; cursor:pointer; transition:0.2s; }
+  .release-tile:hover { transform:scale(1.03); border-color:#eab308; }
+  h2 { margin:0 0 10px 0; color:#eab308; }
+  p { margin:5px 0; }
+</style>
+</head>
+<body>
+<header>TKFM Records Releases</header>
+<div class="release-grid" id="releaseGrid"></div>
+
+<script type="module">
+import deployed from '../deployed.json' assert { type: 'json' };
+import { ethers } from "ethers";
+
+const provider = new ethers.BrowserProvider(window.ethereum);
+let signer;
+let records;
+
+async function init(){
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+
+  const recordsABI = [
+    "function getAllReleases() view returns (tuple(uint256 id,string name,uint256 advance,address[] payees,uint256[] shares)[])"
+  ];
+
+  records = new ethers.Contract(deployed.TKFMRecords, recordsABI, signer);
+  await loadReleases();
+}
+
+async function loadReleases(){
+  const releases = await records.getAllReleases();
+  const grid = document.getElementById('releaseGrid');
+  releases.forEach(r => {
+    const tile = document.createElement('div');
+    tile.className = 'release-tile';
+    tile.innerHTML = `<h2>${r.name}</h2>
+                      <p>Advance: ${r.advance}</p>
+                      <p>ID: ${r.id}</p>
+                      <p>Payees: ${r.payees.length}</p>`;
+    tile.onclick = () => {
+      // Redirect to analytics page with query param
+      window.location.href = `records-analytics.html?releaseId=${r.id}`;
+    };
+    grid.appendChild(tile);
+  });
+}
+
+window.onload = init;
+</script>
+</body>
+</html>

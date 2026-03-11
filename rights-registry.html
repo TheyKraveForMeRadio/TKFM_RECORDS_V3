@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Rights Registry</title>
+</head>
+
+<body>
+
+<h1>TKFM Global Music Rights Registry</h1>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+  "/.netlify/functions/rights-dashboard"
+ );
+
+ const data = await res.json();
+
+ document.getElementById("data").innerText =
+  JSON.stringify(data,null,2);
+
+}
+
+load();
+
+setInterval(load,60000);
+
+</script>
+
+</body>
+</html>

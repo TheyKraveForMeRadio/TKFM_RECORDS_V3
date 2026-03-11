@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM Records Owner Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: Arial, sans-serif; background: #020617; color: #facc15; margin:0; padding:0; }
+header { background: #eab308; padding: 20px; text-align: center; color: #020617; font-size: 24px; font-weight: bold; }
+.container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.filter { margin-bottom: 20px; display:flex; gap:10px; align-items:center; }
+canvas { background: #1a1a1a; border-radius: 8px; padding: 10px; }
+</style>
+</head>
+<body>
+
+<header>TKFM Records Owner Dashboard</header>
+
+<div class="container">
+  <div class="filter">
+    <label for="artistSelect">Artist:</label>
+    <select id="artistSelect"><option value="all">All</option></select>
+
+    <label for="releaseSelect">Release:</label>
+    <select id="releaseSelect"><option value="all">All</option></select>
+
+    <label for="timeRange">Time Range (days):</label>
+    <input type="number" id="timeRange" value="30" min="1" max="365">
+    <button id="refreshBtn">Refresh</button>
+  </div>
+
+  <div id="chartsContainer"></div>
+</div>
+
+<script type="module">
+import pkg from "../node_modules/hardhat/dist/src/index.js";
+const { ethers, network } = pkg;
+import deployed from "../deployed.json" assert { type: "json" };
+
+// Contract instances
+const provider = new ethers.JsonRpcProvider("http://localhost:8545"); // adjust if needed
+const token = new ethers.Contract(deployed.TKFMToken, [
+  "function balanceOf(address) view returns (uint256)",
+  "function approve(address spender,uint256 amount)"
+], provider);
+const records = new ethers.Contract(deployed.TKFMRecords, [
+  "function getAllReleases() view returns (tuple(uint256 id, address artist, string name)[])",
+  "function depositRevenue(uint256 releaseId, uint256 amount)",
+  "function revenueOf(uint256 releaseId) view returns (uint256)",
+  "function withdrawalsOf(uint256 releaseId) view returns (uint256)",
+  "function artistEarningsOf(uint256 releaseId) view returns (uint256)"
+], provider);
+
+// Fetch releases from contract
+async function getAllReleases() {
+  try {
+    return await records.getAllReleases();
+  } catch (err) {
+    console.error("Error fetching releases:", err);
+    return [];
+  }
+}
+
+// Fetch historical time series (simplified as cumulative revenue for demo)
+async function getReleaseTimeSeries(releaseId, days) {
+  const daySec = 24*60*60;
+  const now = Math.floor(Date.now()/1000);
+  let series = [];
+  for (let i=0;i<days;i++){
+    try{
+      const rev = Number(await records.revenueOf(releaseId));
+      const wd = Number(await records.withdrawalsOf(releaseId));
+      const artist = Number(await records.artistEarningsOf(releaseId));
+      series.push({timestamp: now - ((days-i)*daySec), revenue: rev, withdrawals: wd, artistEarnings: artist});
+    }catch(e){
+      series.push({timestamp: now - ((days-i)*daySec), revenue:0, withdrawals:0, artistEarnings:0});
+    }
+  }
+  return series;
+}
+
+async function createTimeSeriesChart(release, containerId, days){
+  const data = await getReleaseTimeSeries(release.id, days);
+  const labels = data.map(r=>new Date(r.timestamp*1000).toLocaleDateString());
+  const revenueData = data.map(r=>r.revenue);
+  const withdrawalsData = data.map(r=>r.withdrawals);
+  const artistData = data.map(r=>r.artistEarnings);
+
+  const ctx = document.getElementById(containerId).getContext('2d');
+  return new Chart(ctx, {
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Revenue', data:revenueData, borderColor:'#facc15', backgroundColor:'#facc1555', fill:true, tension:0.3},
+        {label:'Withdrawals', data:withdrawalsData, borderColor:'#f97316', backgroundColor:'#f9731655', fill:true, tension:0.3},
+        {label:'Artist Earnings', data:artistData, borderColor:'#eab308', backgroundColor:'#eab30855', fill:true, tension:0.3}
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{ title:{display:true, text:`${release.artist} - ${release.name}`, font:{size:16}}, tooltip:{mode:'index', intersect:false} },
+      interaction:{mode:'nearest', intersect:false},
+      scales:{ x:{display:true, title:{display:true, text:'Date'}}, y:{display:true, title:{display:true, text:'Amount (TKFM)'}, beginAtZero:true} }
+    }
+  });
+}
+
+async function renderCharts(){
+  const container = document.getElementById('chartsContainer');
+  container.innerHTML='';
+  const artistFilter = document.getElementById('artistSelect').value;
+  const releaseFilter = document.getElementById('releaseSelect').value;
+  const days = parseInt(document.getElementById('timeRange').value);
+  const releases = await getAllReleases();
+
+  const filtered = releases.filter(r => (artistFilter==='all'||r.artist===artistFilter) && (releaseFilter==='all'||r.id==releaseFilter));
+
+  filtered.forEach(async (release)=>{
+    const canvas = document.createElement('canvas');
+    canvas.id = `releaseChart-${release.id}`;
+    canvas.style.maxWidth='1000px';
+    canvas.style.margin='20px auto';
+    container.appendChild(canvas);
+    await createTimeSeriesChart(release, canvas.id, days);
+  });
+}
+
+// populate filters
+(async ()=>{
+  const releases = await getAllReleases();
+  const artistSelect = document.getElementById('artistSelect');
+  const releaseSelect = document.getElementById('releaseSelect');
+  const artists = [...new Set(releases.map(r=>r.artist))];
+  artists.forEach(a=>artistSelect.innerHTML+=`<option value="${a}">${a}</option>`);
+  releases.forEach(r=>releaseSelect.innerHTML+=`<option value="${r.id}">${r.name}</option>`);
+  await renderCharts();
+})();
+
+document.getElementById('refreshBtn').addEventListener('click', renderCharts);
+</script>
+
+</body>
+</html>

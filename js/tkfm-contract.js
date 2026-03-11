@@ -1,25 +1,49 @@
-window.TKFM_CONTRACT = (function() {
-  async function submitContract(email, accept) {
-    const res = await fetch('/.netlify/functions/enforce-contract', {
-      method: 'POST',
-      body: JSON.stringify({ email, accept })
-    });
-    return res.json();
-  }
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.10.0/+esm";
 
-  async function requireContract(email) {
-    const res = await fetch(`/.netlify/functions/enforce-contract?email=${encodeURIComponent(email)}`);
-    const data = await res.json();
-    return data.accepted;
-  }
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
-  async function takedownTrack(email, trackIdx) {
-    // Lock track from distribution
-    if (!window.TKFM_DISTRIBUTION.lockedTracks) window.TKFM_DISTRIBUTION.lockedTracks = {};
-    if (!window.TKFM_DISTRIBUTION.lockedTracks[email]) window.TKFM_DISTRIBUTION.lockedTracks[email] = [];
-    window.TKFM_DISTRIBUTION.lockedTracks[email].push(trackIdx);
-    alert(`Track ${trackIdx + 1} for ${email} has been taken down / locked.`);
-  }
+const abi = [
+ "function transfer(address to, uint amount) public returns (bool)",
+ "function balanceOf(address owner) view returns (uint256)"
+];
 
-  return { submitContract, requireContract, takedownTrack };
-})();
+let provider;
+let signer;
+let contract;
+
+export async function connectContract(){
+
+ if(!window.ethereum){
+  alert("Install Metamask");
+  return;
+ }
+
+ provider = new ethers.BrowserProvider(window.ethereum);
+
+ await provider.send("eth_requestAccounts", []);
+
+ signer = await provider.getSigner();
+
+ contract = new ethers.Contract(contractAddress, abi, signer);
+
+ return contract;
+
+}
+
+export async function sendTokens(to, amount){
+
+ const tx = await contract.transfer(to, amount);
+
+ await tx.wait();
+
+ return tx;
+
+}
+
+export async function getBalance(address){
+
+ const balance = await contract.balanceOf(address);
+
+ return ethers.formatUnits(balance,18);
+
+}

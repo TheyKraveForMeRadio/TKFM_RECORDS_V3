@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Artist Dashboard</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Artist Dashboard</h1>
+
+<pre id="catalogs"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/catalog-ai-valuation');
+
+ const data = await res.json();
+
+ document.getElementById("catalogs")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Royalty Split Setup</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Royalty Split Setup</h1>
+
+<input id="catalog" placeholder="Catalog ID"><br><br>
+<input id="artist" placeholder="Artist Wallet"><br><br>
+<input id="percent" placeholder="Percentage"><br><br>
+
+<button onclick="save()">Save Split</button>
+
+<script>
+
+async function save(){
+
+ const catalog =
+ document.getElementById("catalog").value;
+
+ const artist =
+ document.getElementById("artist").value;
+
+ const percent =
+ document.getElementById("percent").value;
+
+ await fetch(
+ '/.netlify/functions/royalty-split-engine',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   catalog,
+   artist,
+   percent
+  })
+ }
+ );
+
+ alert("Split saved");
+
+}
+
+</script>
+
+</body>
+</html>

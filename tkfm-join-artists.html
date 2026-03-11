@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Join TKFM</title>
+
+<style>
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+input,button{
+padding:10px;
+margin-top:10px;
+display:block;
+}
+
+button{
+background:#22d3ee;
+border:none;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Join TKFM Records</h1>
+
+<p>Upload music and let fans invest in your songs.</p>
+
+<input id="artist_name" placeholder="Artist Name">
+
+<button onclick="join()">Join TKFM</button>
+
+<p id="status"></p>
+
+<script>
+
+async function join(){
+
+const name=document.getElementById("artist_name").value
+
+document.getElementById("status").innerText="Creating artist account..."
+
+await fetch("/.netlify/functions/onboard-artist",{
+method:"POST",
+body:JSON.stringify({name})
+})
+
+document.getElementById("status").innerText="Artist account created."
+
+}
+
+</script>
+
+</body>
+</html>

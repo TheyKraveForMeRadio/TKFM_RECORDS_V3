@@ -1,107 +1,228 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TKFM Records V3 — Owner Dashboard</title>
-<link rel="stylesheet" href="/css/tkfm-records.css">
-<script src="/js/tkfm-ai-engines.js" defer></script>
-<script src="/js/tkfm-owner-credit-panel.js" defer></script>
-<script src="/js/tkfm-distribution.js" defer></script>
-<script src="/js/tkfm-radio-rotation.js" defer></script>
-<script src="/js/tkfm-royalties.js" defer></script>
-<script src="/js/tkfm-owner-mix.js" defer></script>
+<title>TKFM Risk Command Center</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+h1 { color:#facc15; }
+h2 { color:#eab308; margin-top:30px; }
+
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.metric-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+
+.metric-box {
+  background:rgba(250,204,21,0.12);
+  padding:12px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.heatmap {
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.heatbox {
+  height:26px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+button {
+  background:#facc15;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
+}
+
+button:hover { background:#eab308; }
+
+canvas {
+  background:#0f172a;
+  border-radius:8px;
+  padding:10px;
+}
+</style>
 </head>
 <body>
-<h1>TKFM Records — Owner Dashboard</h1>
 
-<!-- Owner Credit Injection Panel -->
-<h2>Inject Credits to Artist</h2>
-<div id="ownerCreditPanel"></div>
+<h1>TKFM — Risk Command Center</h1>
 
-<!-- Global Analytics -->
-<h2>Global Analytics</h2>
-<div id="analyticsOverview"></div>
+<h2>Live Risk Overview</h2>
+<div class="card">
+  <div id="metrics" class="metric-grid"></div>
+</div>
 
-<!-- Artist Management -->
-<h2>Artists</h2>
-<div id="artistList"></div>
+<h2>Entity Risk Heatmap</h2>
+<div class="card">
+  <div id="heatmap" class="heatmap"></div>
+</div>
 
-<!-- Global Node Management -->
-<h2>Global Nodes</h2>
-<div id="globalNodes"></div>
+<h2>Entity Timeline Risk Graph</h2>
+<div class="card">
+  <canvas id="riskChart" height="120"></canvas>
+</div>
 
-<!-- Finance Streams -->
-<h2>Finance Streams</h2>
-<div id="financeStreams"></div>
+<h2>Freeze / Unfreeze Event Timeline</h2>
+<div class="card">
+  <canvas id="eventChart" height="120"></canvas>
+</div>
+
+<h2>Risk Audit Export</h2>
+<div class="card">
+  <button onclick="downloadPDF()">Download Risk Audit PDF</button>
+</div>
 
 <script>
-window.TKFM_OWNER_EMAIL = "owner@tkfm-records.com";
 
-// Render Owner Credit Panel
-TKFM_OWNER_CREDIT_PANEL.init("#ownerCreditPanel");
+let selectedEntity = null;
+let riskChart = null;
+let eventChart = null;
 
-// Fetch and render all artists
-async function renderArtists() {
-  const res = await fetch('/.netlify/functions/get-artists');
+async function loadOverview() {
+  const res = await fetch('/.netlify/functions/risk-dashboard');
   const data = await res.json();
-  const div = document.getElementById('artistList');
-  div.innerHTML = data.map(a => `
-    <div>
-      ${a.email} — Plan: ${a.label_plan} — Active: ${a.subscription_active}
-      <button onclick="TKFM_OWNER_CREDIT_PANEL.addCredit('${a.email}','ai_drops_25',5)">+AI Drop 25</button>
-      <button onclick="TKFM_OWNER_CREDIT_PANEL.addCredit('${a.email}','sponsor_read_20pack',5)">+Sponsor Read 20</button>
-    </div>
-  `).join('');
+
+  const metrics = document.getElementById("metrics");
+  metrics.innerHTML = `
+    <div class="metric-box">Total Entities<br><strong>${data.total_entities}</strong></div>
+    <div class="metric-box">Frozen<br><strong>${data.frozen_entities}</strong></div>
+    <div class="metric-box">Average Risk<br><strong>${Math.round(data.average_risk)}</strong></div>
+    <div class="metric-box">High Risk<br><strong>${data.highRiskEntities.length}</strong></div>
+  `;
+
+  renderHeatmap(data.highRiskEntities, data.total_entities);
 }
 
-// Global Nodes
-async function renderGlobalNodes() {
-  const res = await fetch('/.netlify/functions/get-global-nodes');
-  const nodes = await res.json();
-  document.getElementById('globalNodes').innerHTML = nodes.map(n => `
-    <div>
-      ${n.city}, ${n.country} — Email: ${n.node_email} — Active: ${n.active}
-      <button onclick="toggleNode('${n.id}',${!n.active})">${!n.active?'Activate':'Deactivate'}</button>
-    </div>
-  `).join('');
+function renderHeatmap(highRiskList,total) {
+
+  const container = document.getElementById("heatmap");
+  container.innerHTML = "";
+
+  fetch('/.netlify/functions/risk-dashboard')
+    .then(res=>res.json())
+    .then(data=>{
+
+      data.highRiskEntities.forEach(e=>{
+        const box = document.createElement("div");
+        box.className="heatbox";
+
+        const intensity = e.risk_score || 0;
+        box.style.background =
+          `rgba(255,0,0,${intensity/100})`;
+
+        box.title = e.entity_id+" ("+intensity+")";
+
+        box.onclick = () => {
+          selectedEntity = e.entity_id;
+          loadTimeline(e.entity_id);
+        };
+
+        container.appendChild(box);
+      });
+    });
 }
 
-async function toggleNode(nodeId, state) {
-  await fetch('/.netlify/functions/toggle-node', {
-    method:'POST',
-    body: JSON.stringify({ nodeId, active: state })
+async function loadTimeline(entity_id) {
+
+  const riskRes = await fetch(
+    '/.netlify/functions/risk-timeseries?entity_id='+entity_id
+  );
+  const riskData = await riskRes.json();
+
+  const labels = riskData.map(d =>
+    new Date(d.created_at).toLocaleDateString()
+  );
+
+  const scores = riskData.map(d => d.risk_score);
+
+  const ctx = document.getElementById('riskChart').getContext('2d');
+
+  if (riskChart) riskChart.destroy();
+
+  riskChart = new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Risk Score',
+        data:scores,
+        borderColor:'#facc15',
+        backgroundColor:'rgba(250,204,21,0.3)',
+        tension:0.3
+      }]
+    },
+    options:{
+      scales:{ y:{ min:0, max:100 } }
+    }
   });
-  renderGlobalNodes();
+
+  loadEventTimeline(entity_id);
 }
 
-// Finance Streams
-async function renderFinanceStreams() {
-  const res = await fetch('/.netlify/functions/get-finance-streams');
-  const streams = await res.json();
-  document.getElementById('financeStreams').innerHTML = streams.map(s => `
-    <div>
-      Node: ${s.node_id} — Source: ${s.revenue_source} — Amount: ${s.amount} ${s.currency} — Recorded: ${s.recorded_at}
-    </div>
-  `).join('');
+async function loadEventTimeline(entity_id) {
+
+  const res = await fetch(
+    '/.netlify/functions/risk-event-timeline?entity_id='+entity_id
+  );
+  const events = await res.json();
+
+  const labels = events.map(e =>
+    new Date(e.created_at).toLocaleDateString()
+  );
+
+  const values = events.map(e =>
+    e.event_type.includes("FREEZE") ? 100 : 0
+  );
+
+  const ctx = document.getElementById('eventChart').getContext('2d');
+
+  if (eventChart) eventChart.destroy();
+
+  eventChart = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Freeze Events',
+        data:values,
+        backgroundColor:'#ef4444'
+      }]
+    },
+    options:{
+      scales:{ y:{ min:0, max:100 } }
+    }
+  });
 }
 
-// Global Analytics Overview
-async function renderAnalytics() {
-  const res = await fetch('/.netlify/functions/global-analytics');
-  const stats = await res.json();
-  document.getElementById('analyticsOverview').innerHTML = `<pre>${JSON.stringify(stats,null,2)}</pre>`;
+function downloadPDF() {
+  if (!selectedEntity) {
+    alert("Select entity from heatmap first.");
+    return;
+  }
+  window.location =
+    '/.netlify/functions/risk-audit-pdf?entity_id='+selectedEntity;
 }
 
-// Auto-refresh
-async function refreshDashboard() {
-  await renderArtists();
-  await renderGlobalNodes();
-  await renderFinanceStreams();
-  await renderAnalytics();
-}
-refreshDashboard();
-setInterval(refreshDashboard, 30000); // refresh every 30s
+loadOverview();
+setInterval(loadOverview,30000);
+
 </script>
+
 </body>
 </html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>TKFM Leaderboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:system-ui;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+margin-bottom:20px;
+}
+
+.section{
+margin-top:40px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+background:#0f172a;
+padding:12px;
+margin-bottom:8px;
+border-radius:6px;
+}
+
+.rank{
+color:#22d3ee;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Leaderboard</h1>
+
+<div class="section">
+
+<h2>Top Song Market Caps</h2>
+<div id="songs"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Top Artists</h2>
+<div id="artists"></div>
+
+</div>
+
+<div class="section">
+
+<h2>Most Investors</h2>
+<div id="investors"></div>
+
+</div>
+
+<script>
+
+async function loadLeaderboard(){
+
+const res = await fetch("/.netlify/functions/leaderboard-data")
+const data = await res.json()
+
+const songContainer=document.getElementById("songs")
+songContainer.innerHTML=""
+
+data.topSongs.forEach((s,i)=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span class='rank'>#"+(i+1)+"</span><span>"+s.title+"</span><span>$"+s.market_cap+"</span>"
+
+songContainer.appendChild(row)
+
+})
+
+const artistContainer=document.getElementById("artists")
+artistContainer.innerHTML=""
+
+data.topArtists.forEach((a,i)=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span class='rank'>#"+(i+1)+"</span><span>"+a.name+"</span><span>$"+a.total_market_cap+"</span>"
+
+artistContainer.appendChild(row)
+
+})
+
+const investorContainer=document.getElementById("investors")
+investorContainer.innerHTML=""
+
+data.topInvestors.forEach((f,i)=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerHTML="<span class='rank'>#"+(i+1)+"</span><span>"+f.name+"</span><span>"+f.investments+"</span>"
+
+investorContainer.appendChild(row)
+
+})
+
+}
+
+loadLeaderboard()
+setInterval(loadLeaderboard,5000)
+
+</script>
+
+</body>
+</html>

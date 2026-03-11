@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Executive Dashboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Platform Intelligence</h1>
+
+<button onclick="load()">Load Platform Metrics</button>
+
+<div id="metrics"></div>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/platform-economy-metrics"
+)
+
+const data = await res.json()
+
+document.getElementById("metrics").innerHTML =
+"<div class='card'>Artists: "+data.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.catalogs+"</div>"+
+"<div class='card'>Investors: "+data.investors+"</div>"+
+"<div class='card'>Royalties Generated: $"+data.total_royalties+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

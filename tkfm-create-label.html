@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Create Your Label</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+input{
+padding:12px;
+margin:10px;
+width:260px;
+}
+
+button{
+padding:12px 24px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Launch Your Own Record Label</h1>
+
+<p>Create a label and invite artists to build your catalog network.</p>
+
+<input id="label" placeholder="Label Name">
+<input id="owner" placeholder="Owner Name">
+
+<button onclick="create()">Create Label</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function create(){
+
+const name=document.getElementById("label").value
+const owner=document.getElementById("owner").value
+
+const res = await fetch(
+"/.netlify/functions/create-label",
+{
+method:"POST",
+body:JSON.stringify({
+name,
+owner
+})
+}
+)
+
+const data = await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Viral Distribution</title>
+</head>
+
+<body>
+
+<h1>Viral Distribution Engine</h1>
+
+<button onclick="load()">Run Distribution</button>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/viral-distribution-engine"
+)
+
+const data = await res.json()
+
+document.getElementById("data").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

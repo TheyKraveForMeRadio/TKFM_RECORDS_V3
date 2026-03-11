@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Activation Dashboard</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.card{
+background:#111827;
+padding:20px;
+margin:20px 0;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Activation Progress</h1>
+
+<button onclick="load()">Load Metrics</button>
+
+<div id="metrics"></div>
+
+<h2>Architecture Overview</h2>
+
+<pre>
+
+           ┌───────────────────────────┐
+           │     TKFM Creator Layer    │
+           │ Artists • Fans • Labels  │
+           └─────────────┬─────────────┘
+                         │
+             ┌───────────▼───────────┐
+             │   Creator Economy     │
+             │ Catalog IPO Markets   │
+             │ Fan Investment        │
+             │ Catalog Trading       │
+             └───────────┬───────────┘
+                         │
+           ┌─────────────▼─────────────┐
+           │ Financial Infrastructure  │
+           │ Liquidity Pools           │
+           │ Market Maker AI           │
+           │ Royalty Yield Engine      │
+           └─────────────┬─────────────┘
+                         │
+           ┌─────────────▼─────────────┐
+           │ Music Infrastructure      │
+           │ Global Distribution       │
+           │ Catalog Registry          │
+           │ Licensing Marketplace     │
+           └─────────────┬─────────────┘
+                         │
+           ┌─────────────▼─────────────┐
+           │ Data + Intelligence Layer │
+           │ AI Discovery              │
+           │ Music Data Oracle         │
+           │ Market Analytics          │
+           └─────────────┬─────────────┘
+                         │
+           ┌─────────────▼─────────────┐
+           │   Platform Infrastructure │
+           │ Netlify Functions         │
+           │ Supabase Database         │
+           │ Stripe Payments           │
+           └───────────────────────────┘
+
+</pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/activation-progress"
+)
+
+const data = await res.json()
+
+document.getElementById("metrics").innerHTML=
+"<div class='card'>Artists: "+data.artists+" / "+data.target.artists+"</div>"+
+"<div class='card'>Catalogs: "+data.catalogs+" / "+data.target.catalogs+"</div>"+
+"<div class='card'>Catalog IPOs: "+data.ipos+" / "+data.target.ipos+"</div>"
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Liquidity Pools</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+input{
+padding:12px;
+margin:10px;
+width:240px;
+}
+
+button{
+padding:12px 24px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Provide Liquidity To Catalog Markets</h1>
+
+<input id="provider" placeholder="Investor Name">
+<input id="catalog" placeholder="Catalog ID">
+<input id="amount" placeholder="Liquidity Amount">
+
+<button onclick="add()">Add Liquidity</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function add(){
+
+const provider=document.getElementById("provider").value
+const catalog=document.getElementById("catalog").value
+const amount=document.getElementById("amount").value
+
+const res=await fetch(
+"/.netlify/functions/add-liquidity",
+{
+method:"POST",
+body:JSON.stringify({
+provider,
+catalog,
+amount
+})
+}
+)
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

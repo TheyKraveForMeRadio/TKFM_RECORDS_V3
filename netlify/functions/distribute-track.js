@@ -1,23 +1,23 @@
-exports.handler = async (event) => {
+import { supabase } from './supabase.js';
+import { success, failure } from './_response.js';
+
+export async function handler(event) {
+  const email = event.queryStringParameters?.email;
+
+  if (!email) return failure('Email required');
+
   try {
-    const { email, trackIndex } = JSON.parse(event.body || "{}");
-    const dbTracks = global.artistTracks || {};
-    if (!dbTracks[email]?.[trackIndex]) return { statusCode: 404, body: "Track not found" };
+    const { data, error } = await supabase
+      .from('submissions')
+      .update({ status: 'distributed' })
+      .eq('email', email)
+      .select();
 
-    const track = dbTracks[email][trackIndex];
+    if (error) return failure(error.message);
 
-    // Simulate distribution to streaming platforms
-    track.status = "distributed";
-    track.distributedAt = new Date().toISOString();
-    track.platformUrls = {
-      spotify: `https://spotify.com/track/${Date.now()}`,
-      apple: `https://music.apple.com/track/${Date.now()}`,
-      tiktok: `https://www.tiktok.com/music/${Date.now()}`
-    };
+    return success({ updated: data });
 
-    return { statusCode: 200, body: JSON.stringify({ success: true, track }) };
   } catch (err) {
-    console.error(err);
-    return { statusCode: 500, body: "Server error" };
+    return failure(err.message, 500);
   }
-};
+}

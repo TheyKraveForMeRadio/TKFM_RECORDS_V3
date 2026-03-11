@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Creator Apps</title>
+</head>
+
+<body>
+
+<h1>TKFM Creator Apps Marketplace</h1>
+
+<pre id="apps"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/creator-apps-api")
+
+ const data = await res.json()
+
+ document.getElementById("apps").innerText =
+  JSON.stringify(data,null,2)
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

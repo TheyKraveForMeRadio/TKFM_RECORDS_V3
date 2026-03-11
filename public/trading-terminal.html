@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Trading Terminal</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>TKFM Trading Terminal</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="amount" placeholder="Amount">
+
+<button onclick="trade()">Trade</button>
+
+<script>
+
+async function trade(){
+
+ const catalog =
+ document.getElementById("catalog").value;
+
+ const amount =
+ document.getElementById("amount").value;
+
+ await fetch(
+ '/.netlify/functions/execute-trade',
+ {
+  method:"POST",
+  body:JSON.stringify({
+
+   catalog,
+   amount
+
+  })
+ }
+ );
+
+ alert("Trade submitted");
+
+}
+
+</script>
+
+</body>
+</html>

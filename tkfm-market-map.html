@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Global Music Market Map</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:system-ui;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.grid{
+
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:12px;
+margin-top:30px;
+
+}
+
+.tile{
+
+padding:20px;
+border-radius:8px;
+text-align:center;
+font-size:14px;
+
+}
+
+.green{
+background:#22c55e33;
+border:1px solid #22c55e;
+}
+
+.red{
+background:#ef444433;
+border:1px solid #ef4444;
+}
+
+.gold{
+background:#facc1533;
+border:1px solid #facc15;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Global Music Market Map</h1>
+
+<p>Live map of songs trading on TKFM</p>
+
+<div id="map" class="grid"></div>
+
+<script>
+
+async function loadMarketMap(){
+
+const res = await fetch("/.netlify/functions/catalog-market-data")
+const data = await res.json()
+
+const container=document.getElementById("map")
+container.innerHTML=""
+
+(data.market||[]).forEach(song=>{
+
+const tile=document.createElement("div")
+
+let color="green"
+
+if(song.change<0){
+color="red"
+}
+
+if(song.volume>1000){
+color="gold"
+}
+
+tile.className="tile "+color
+
+tile.innerHTML="<strong>"+song.catalog_id+"</strong><br>$"+song.price
+
+container.appendChild(tile)
+
+})
+
+}
+
+loadMarketMap()
+setInterval(loadMarketMap,5000)
+
+</script>
+
+</body>
+</html>

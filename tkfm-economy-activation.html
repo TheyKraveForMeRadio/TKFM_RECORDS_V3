@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Economy Activation</title>
+</head>
+
+<body>
+
+<h1>TKFM Music Economy Launch</h1>
+
+<button onclick="load()">Check Progress</button>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+ "/.netlify/functions/economy-status"
+ )
+
+ const data = await res.json()
+
+ document.getElementById("data").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

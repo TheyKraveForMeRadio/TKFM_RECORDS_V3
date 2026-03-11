@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Analytics</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Platform Analytics</h1>
+
+<pre id="analytics"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+ '/.netlify/functions/analytics-data'
+ );
+
+ const data = await res.json();
+
+ document.getElementById("analytics")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

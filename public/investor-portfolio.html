@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Investor Portfolio</title>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Your Royalty Portfolio</h1>
+
+<pre id="portfolio"></pre>
+
+<script>
+
+async function loadPortfolio(){
+
+ const res = await fetch(
+ '/.netlify/functions/portfolio'
+ );
+
+ const data = await res.json();
+
+ document.getElementById("portfolio")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+loadPortfolio();
+
+</script>
+
+</body>
+</html>

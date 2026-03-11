@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Catalog Revenue</h1>
+
+<input id="track" placeholder="Track Name">
+
+<button onclick="load()">Load Chart</button>
+
+<canvas id="chart"></canvas>
+
+<script>
+
+async function load(){
+
+ const track =
+ document.getElementById("track").value;
+
+ const res =
+ await fetch(
+ '/.netlify/functions/revenue-timeseries?track='+track
+ );
+
+ const data =
+ await res.json();
+
+ const labels =
+ data.map(x => x.created_at);
+
+ const values =
+ data.map(x => x.revenue);
+
+ new Chart(
+ document.getElementById("chart"),
+ {
+  type:"line",
+  data:{
+   labels:labels,
+   datasets:[{
+    label:"Revenue",
+    data:values
+   }]
+  }
+ });
+
+}
+
+</script>
+
+</body>
+</html>

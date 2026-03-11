@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Royalty Yield Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>Royalty Yield Dashboard</h1>
+
+<canvas id="yieldChart"></canvas>
+
+<script>
+
+async function loadData(){
+
+const res = await fetch("http://localhost:4000",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+query:`{ investors { id deposited } }`
+})
+});
+
+const data = await res.json();
+
+const deposits = data.data.investors.map(i=>i.deposited);
+
+new Chart(
+document.getElementById("yieldChart"),
+{
+type:"bar",
+data:{
+labels:data.data.investors.map(i=>i.id),
+datasets:[{
+label:"Deposits",
+data:deposits
+}]
+}
+}
+);
+
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>

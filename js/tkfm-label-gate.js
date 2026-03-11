@@ -1,5 +1,6 @@
 // tkfm-label-gate.js — enforce monthly label subscription
 window.TKFM_LABEL_GATE = (function() {
+
   async function checkSubscription(email) {
     try {
       const res = await fetch('/.netlify/functions/check-subscription?email=' + encodeURIComponent(email));
@@ -20,4 +21,5 @@ window.TKFM_LABEL_GATE = (function() {
   }
 
   return { checkSubscription, enforce };
+
 })();

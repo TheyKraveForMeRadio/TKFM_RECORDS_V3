@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Music Reserve Bank</h1>
+
+<pre id="reserve"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/reserve-audit');
+
+ const data = await res.json();
+
+ document.getElementById("reserve")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

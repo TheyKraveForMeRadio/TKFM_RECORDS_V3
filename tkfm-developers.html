@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Developer Platform</title>
+</head>
+
+<body>
+
+<h1>TKFM Developer API</h1>
+
+<p>Create API Key</p>
+
+<input id="name" placeholder="Developer Name"/>
+
+<button onclick="create()">Create Key</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function create(){
+
+const name=document.getElementById("name").value
+
+const res=await fetch(
+"/.netlify/functions/create-api-key",
+{
+method:"POST",
+body:JSON.stringify({
+developer:name
+})
+})
+
+const data=await res.json()
+
+document.getElementById("result").innerText=
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

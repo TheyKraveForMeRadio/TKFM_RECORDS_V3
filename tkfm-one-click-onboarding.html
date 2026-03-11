@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Upload Song — Launch Your Music Economy</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+input,button{
+padding:10px;
+margin-top:10px;
+display:block;
+}
+
+button{
+background:#22d3ee;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Upload Song — Launch Your Music Economy</h1>
+
+<input id="artist" placeholder="Artist Name">
+<input id="song" placeholder="Song Title">
+<input type="file" id="audio">
+
+<button onclick="launch()">Launch Song Economy</button>
+
+<p id="status"></p>
+
+<script>
+
+async function launch(){
+
+const artist = document.getElementById("artist").value
+const song = document.getElementById("song").value
+
+document.getElementById("status").innerText="Launching..."
+
+await fetch("/.netlify/functions/one-click-onboarding",{
+method:"POST",
+body:JSON.stringify({artist,song})
+})
+
+document.getElementById("status").innerText="Song economy launched."
+
+}
+
+</script>
+
+</body>
+</html>

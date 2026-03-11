@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Global Catalog Stock Exchange</h1>
+
+<pre id="stocks"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/catalog-stock-market'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("stocks")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

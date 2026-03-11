@@ -1,21 +1,19 @@
-// Auto-Boost & KPI Engine
-async function runAutoBoost() {
-  await fetch('/.netlify/functions/auto-boost');
-  await fetch('/.netlify/functions/auto-radio');
-  renderCreditPanel();
-}
+window.TKFM_OWNER_CREDIT_PANEL = (function() {
 
-// Owner Credit Panel Render
-async function renderCreditPanel() {
-  const res = await fetch('/.netlify/functions/use-credit', {
-    method: 'POST',
-    body: JSON.stringify({ email: window.TKFM_EMAIL })
-  });
-  const data = await res.json();
-  document.getElementById('ownerCreditPanel').innerHTML =
-    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-}
+  async function render(email) {
+    const res = await fetch('/.netlify/functions/get-credits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
 
-// Run every 10 min
-setInterval(runAutoBoost, 600000);
-runAutoBoost();
+    const data = await res.json();
+    const el = document.getElementById('ownerCreditPanel');
+    if (el) {
+      el.innerHTML = `<pre style="color:#facc15;">${JSON.stringify(data, null, 2)}</pre>`;
+    }
+  }
+
+  return { render };
+
+})();

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Sync Deal Engine</title>
+</head>
+
+<body>
+
+<h1>TKFM Sync Licensing</h1>
+
+<button onclick="load()">Find Matches</button>
+
+<pre id="results"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch(
+ "/.netlify/functions/ai-sync-match"
+ )
+
+ const data = await res.json()
+
+ document.getElementById("results").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

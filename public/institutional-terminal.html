@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>TKFM Institutional Trading Terminal</h1>
+
+<h3>Market Feed</h3>
+
+<pre id="feed"></pre>
+
+<h3>AI Catalog Pricing</h3>
+
+<pre id="pricing"></pre>
+
+<script>
+
+async function load(){
+
+ const market =
+ await fetch(
+ '/.netlify/functions/institutional-market-feed'
+ );
+
+ const marketData =
+ await market.json();
+
+ document.getElementById("feed")
+ .textContent =
+ JSON.stringify(marketData,null,2);
+
+ const pricing =
+ await fetch(
+ '/.netlify/functions/ai-pricing-engine'
+ );
+
+ const priceData =
+ await pricing.json();
+
+ document.getElementById("pricing")
+ .textContent =
+ JSON.stringify(priceData,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

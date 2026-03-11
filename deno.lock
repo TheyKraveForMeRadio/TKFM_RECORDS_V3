@@ -11,13 +11,16 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@supabase/supabase-js@^2.95.3",
+        "npm:@ethereumjs/wallet@10",
+        "npm:@nomicfoundation/hardhat-toolbox@5",
+        "npm:@openzeppelin/contracts@^4.9.3",
+        "npm:@supabase/supabase-js@^2.97.0",
         "npm:busboy@^1.6.0",
         "npm:cloudinary@^2.9.0",
-        "npm:form-data@^4.0.5",
-        "npm:jsonwebtoken@^9.0.3",
-        "npm:node-fetch@^2.7.0",
-        "npm:stripe@^20.3.1"
+        "npm:dotenv@^17.3.1",
+        "npm:hardhat@^2.28.6",
+        "npm:node-fetch@^3.3.2",
+        "npm:resend@^6.9.2"
       ]
     }
   }

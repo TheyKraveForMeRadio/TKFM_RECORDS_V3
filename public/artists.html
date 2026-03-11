@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Artists</h1>
+
+<pre id="artists"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch('/.netlify/functions/artists-list');
+
+ const data =
+ await res.json();
+
+ document.getElementById("artists")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

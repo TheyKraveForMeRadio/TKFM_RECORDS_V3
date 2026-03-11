@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Investor Data Room</title>
+
+<style>
+
+body{
+ background:#020617;
+ color:white;
+ font-family:Arial;
+ padding:20px;
+}
+
+.card{
+ background:#111827;
+ padding:20px;
+ margin-bottom:20px;
+ border-radius:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Investor Data Room</h1>
+
+<div class="card">
+
+<h2>Executive Metrics</h2>
+
+<pre id="metrics"></pre>
+
+</div>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/executive-metrics")
+
+ const data = await res.json()
+
+ document.getElementById("metrics").innerText =
+ JSON.stringify(data,null,2)
+
+}
+
+load()
+
+</script>
+
+</body>
+
+</html>

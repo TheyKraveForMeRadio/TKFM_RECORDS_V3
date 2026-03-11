@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Open Music Network</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Open Music Network</h1>
+
+<p>
+Tracks are open, remixable, and programmable.
+</p>
+
+<button onclick="load()">View Track Graph</button>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/music-collaboration-graph"
+)
+
+const data = await res.json()
+
+document.getElementById("data").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Social Investing</h1>
+
+<input id="follower" placeholder="Your Wallet">
+<input id="target" placeholder="Investor to Copy">
+
+<button onclick="copy()">Copy Portfolio</button>
+
+<script>
+
+async function copy(){
+
+ await fetch(
+ '/.netlify/functions/copy-portfolio',
+ {
+  method:"POST",
+  body:JSON.stringify({
+
+   follower:
+   document.getElementById("follower").value,
+
+   target:
+   document.getElementById("target").value
+
+  })
+ });
+
+ alert("Portfolio copied");
+
+}
+
+</script>
+
+</body>
+</html>

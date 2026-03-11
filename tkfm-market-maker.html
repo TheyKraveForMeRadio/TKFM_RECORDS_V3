@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Market Maker</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+button{
+padding:12px 24px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM AI Market Maker</h1>
+
+<button onclick="run()">Generate Orders</button>
+
+<pre id="result"></pre>
+
+<script>
+
+async function run(){
+
+const res = await fetch(
+"/.netlify/functions/market-maker-ai"
+)
+
+const data = await res.json()
+
+document.getElementById("result").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+</body>
+
+</html>

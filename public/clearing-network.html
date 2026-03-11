@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body style="background:#020617;color:white;font-family:system-ui;padding:30px">
+
+<h1>Inter-Label Clearing Network</h1>
+
+<pre id="clearing"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/label-clearing-engine'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("clearing")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

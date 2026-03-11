@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Investor Portal</title>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+}
+button {
+  background:#facc15;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Investor Portfolio Dashboard</h1>
+
+<div class="card">
+  <button onclick="loadReport()">Load Institutional Report</button>
+</div>
+
+<div class="card">
+  <pre id="output"></pre>
+</div>
+
+<script>
+async function loadReport() {
+
+  const report = await fetch(
+    "/.netlify/functions/institutional-reporting-pack"
+  );
+
+  const ratings = await fetch(
+    "/.netlify/functions/credit-rating-engine"
+  );
+
+  const stress = await fetch(
+    "/.netlify/functions/stress-simulation-engine"
+  );
+
+  const data = {
+    reporting: await report.json(),
+    ratings: await ratings.json(),
+    stress: await stress.json()
+  };
+
+  document.getElementById("output").textContent =
+    JSON.stringify(data,null,2);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Invite Artists</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+text-align:center;
+}
+
+h1{
+color:#facc15;
+}
+
+input{
+width:80%;
+padding:12px;
+margin-top:20px;
+}
+
+button{
+background:#22d3ee;
+border:none;
+padding:12px 24px;
+margin-top:20px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Invite Artists to TKFM</h1>
+
+<p>Earn rewards when artists join using your link.</p>
+
+<input id="referralLink" value="https://tkfm.com/join?ref=artist123">
+
+<br>
+
+<button onclick="copy()">Copy Link</button>
+
+<script>
+
+function copy(){
+
+const input=document.getElementById("referralLink")
+input.select()
+document.execCommand("copy")
+
+alert("Referral link copied!")
+
+}
+
+</script>
+
+</body>
+</html>
