@@ -66,7 +66,7 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY */
+  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY + NETWORK */
 
   if(minute === 0){
 
@@ -83,6 +83,10 @@ export default async () => {
     /* GLOBAL LIQUIDITY ROUTER */
 
     await call("tkfm-global-liquidity-router")
+
+    /* NODE NETWORK ENGINE */
+
+    await call("tkfm-node-network-engine")
 
   }
 
