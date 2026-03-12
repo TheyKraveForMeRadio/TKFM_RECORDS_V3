@@ -31,6 +31,10 @@ export default async () => {
 
   await call("market-surveillance-engine")
 
+  /* CLEARINGHOUSE SETTLEMENT */
+
+  await call("global-clearinghouse-engine")
+
   /* EVERY 5 MINUTES — PRICE + GROWTH */
 
   if(minute % 5 === 0){
@@ -69,6 +73,7 @@ export default async () => {
     await call("music-index-engine")
     await call("trending-index-engine")
     await call("music-economy-simulator-engine")
+    await call("music-central-bank-engine")
 
   }
 
