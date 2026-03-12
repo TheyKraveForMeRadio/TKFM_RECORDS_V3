@@ -1,20 +1,33 @@
-const rateLimitStore = {};
+import { cacheGet, cacheSet } from "./redis-cache.js";
 
-export function rateLimit(ip, limit = 60, windowMs = 60000) {
+const LIMIT = 60;        // requests
+const WINDOW = 60;       // seconds
 
-  const now = Date.now();
+export default async (request, context) => {
 
-  if(!rateLimitStore[ip]) {
-    rateLimitStore[ip] = [];
+  const ip =
+    request.headers.get("x-nf-client-connection-ip") ||
+    request.headers.get("x-forwarded-for") ||
+    "unknown";
+
+  const key = "rate:" + ip;
+
+  let count = await cacheGet(key);
+
+  if (!count) {
+    await cacheSet(key, 1, WINDOW);
+    return;
   }
 
-  rateLimitStore[ip] =
-    rateLimitStore[ip].filter(t => now - t < windowMs);
-
-  if(rateLimitStore[ip].length >= limit) {
-    return false;
+  if (count >= LIMIT) {
+    return new Response(
+      JSON.stringify({ error: "Rate limit exceeded" }),
+      {
+        status: 429,
+        headers: { "content-type": "application/json" }
+      }
+    );
   }
 
-  rateLimitStore[ip].push(now);
-  return true;
-}
+  await cacheSet(key, count + 1, WINDOW);
+};

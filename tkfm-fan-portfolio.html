@@ -1,34 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
-<title>My Music Portfolio</title>
+<meta charset="UTF-8" />
+<title>TKFM — Fan Portfolio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 
+:root{
+--bg:#020617;
+--gold:#facc15;
+--panel:#0f172a;
+--text:#e5e7eb;
+--green:#22c55e;
+--red:#ef4444;
+}
+
 body{
-background:#020617;
-color:white;
-font-family:Arial;
-padding:40px;
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.wrapper{
+max-width:1100px;
+margin:auto;
+padding:40px 20px;
 }
 
 h1{
-color:#facc15;
+color:var(--gold);
+margin-bottom:30px;
 }
 
-.portfolio-row{
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-bottom:40px;
+}
+
+.stat{
+background:var(--panel);
+padding:20px;
+border-radius:8px;
+text-align:center;
+}
+
+.stat-value{
+font-size:26px;
+color:var(--gold);
+margin-top:6px;
+}
+
+.portfolio-table{
+background:var(--panel);
+border-radius:8px;
+overflow:hidden;
+}
+
+.row{
 display:flex;
 justify-content:space-between;
-background:#0f172a;
-padding:15px;
-margin-bottom:8px;
-border-radius:6px;
+padding:14px 18px;
+border-bottom:1px solid rgba(255,255,255,.05);
 }
 
-.value{
-color:#22d3ee;
+.row.header{
+font-weight:700;
+color:var(--gold);
 }
+
+.row:last-child{
+border-bottom:none;
+}
+
+.green{color:var(--green);}
+.red{color:var(--red);}
 
 </style>
 
@@ -36,11 +86,45 @@ color:#22d3ee;
 
 <body>
 
-<h1>My Music Portfolio</h1>
+<div class="wrapper">
 
-<p>Assets you own</p>
+<h1>Your Music Portfolio</h1>
+
+<div class="stats">
+
+<div class="stat">
+Total Value
+<div class="stat-value" id="total">$0</div>
+</div>
+
+<div class="stat">
+Songs Owned
+<div class="stat-value" id="songs">0</div>
+</div>
+
+<div class="stat">
+Royalty Earnings
+<div class="stat-value" id="earnings">$0</div>
+</div>
+
+</div>
+
+
+<div class="portfolio-table">
+
+<div class="row header">
+<span>Song</span>
+<span>Shares</span>
+<span>Price</span>
+<span>Value</span>
+</div>
 
 <div id="portfolio"></div>
+
+</div>
+
+</div>
+
 
 <script>
 
@@ -49,27 +133,42 @@ async function loadPortfolio(){
 const res = await fetch("/.netlify/functions/fan-portfolio")
 const data = await res.json()
 
-const container=document.getElementById("portfolio")
+const container = document.getElementById("portfolio")
+
 container.innerHTML=""
 
-data.assets.forEach(asset=>{
+let total=0
+
+(data.portfolio||[]).forEach(p=>{
+
+const value = p.shares * p.price
+
+total += value
 
 const row=document.createElement("div")
-row.className="portfolio-row"
 
-row.innerHTML=
-"<span>"+asset.song+"</span>"+
-"<span>"+asset.shares+" shares</span>"+
-"<span class='value'>$"+asset.value+"</span>"
+row.className="row"
+
+row.innerHTML = `
+<span>${p.catalog_id}</span>
+<span>${p.shares}</span>
+<span>$${p.price.toFixed(2)}</span>
+<span>$${value.toFixed(2)}</span>
+`
 
 container.appendChild(row)
 
 })
 
+document.getElementById("total").innerText="$"+total.toFixed(2)
+document.getElementById("songs").innerText=(data.portfolio||[]).length
+document.getElementById("earnings").innerText="$"+(data.royalties||0)
+
 }
 
 loadPortfolio()
-setInterval(loadPortfolio,5000)
+
+setInterval(loadPortfolio,8000)
 
 </script>
 
