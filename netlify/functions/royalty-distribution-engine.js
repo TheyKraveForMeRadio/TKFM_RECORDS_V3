@@ -1,83 +1,65 @@
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js"
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabase = createClient(
+process.env.SUPABASE_URL,
+process.env.SUPABASE_SERVICE_ROLE_KEY
+)
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+export const handler = async () => {
 
-async function processCatalog(catalog) {
+try{
 
-  const { data: holders, error } = await supabase
-    .from("token_holders")
-    .select("*")
-    .eq("catalog_id", catalog.catalog_id);
+/* LOAD STREAM EVENTS */
 
-  if (error) throw error;
+const { data:events } = await supabase
+.from("streaming_revenue_events")
+.select("*")
 
-  let payouts = [];
+for(const event of events || []){
 
-  for (const holder of holders) {
+/* LOAD TOKEN HOLDERS */
 
-    const share = holder.token_balance / catalog.total_tokens;
-    const payout = catalog.total_revenue * share;
+const { data:holders } = await supabase
+.from("token_holders")
+.select("*")
+.eq("token_id",event.track_id)
 
-    payouts.push({
-      catalog_id: catalog.catalog_id,
-      holder_id: holder.holder_id,
-      amount_usd: payout,
-      created_at: new Date().toISOString()
-    });
+for(const holder of holders || []){
 
-    await supabase
-      .from("investor_balances")
-      .upsert({
-        investor_id: holder.holder_id,
-        balance_usd: payout
-      }, { onConflict: "investor_id" });
+const payout =
+Number(event.amount)*
+(Number(holder.share_percent)/100)
 
-  }
+await supabase
+.from("royalty_distributions")
+.insert({
 
-  if (payouts.length > 0) {
-    await supabase.from("royalty_payouts").insert(payouts);
-  }
+track_id:event.track_id,
+holder_id:holder.user_id,
+amount:payout
 
-  return payouts.length;
+})
+
 }
 
-exports.handler = async function () {
+}
 
-  try {
+return{
 
-    const { data: catalogs, error } = await supabase
-      .from("catalog_revenue_totals")
-      .select("*");
+statusCode:200,
+body:JSON.stringify({success:true})
 
-    if (error) throw error;
+}
 
-    let processed = 0;
+}catch(err){
 
-    for (const catalog of catalogs) {
-      const count = await processCatalog(catalog);
-      processed += count;
-    }
+return{
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        status: "royalty_distribution_complete",
-        payouts_processed: processed
-      })
-    };
+statusCode:500,
+body:JSON.stringify({error:err.message})
 
-  } catch (err) {
+}
 
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: err.message
-      })
-    };
+}
 
-  }
-
-};
+}
