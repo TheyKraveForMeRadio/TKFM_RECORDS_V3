@@ -70,7 +70,7 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY + NETWORK */
+  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
 
   if(minute === 0){
 
@@ -78,6 +78,10 @@ export default async () => {
     await call("trending-index-engine")
     await call("music-economy-simulator-engine")
     await call("music-central-bank-engine")
+
+    /* AI GOVERNOR */
+
+    await call("tkfm-ai-governor-engine")
 
     /* REGULATORY SYSTEM */
 
