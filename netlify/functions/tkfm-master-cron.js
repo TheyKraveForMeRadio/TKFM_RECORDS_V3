@@ -31,6 +31,10 @@ export default async () => {
 
   await call("market-surveillance-engine")
 
+  /* TRADE RISK ENGINE */
+
+  await call("trade-risk-engine")
+
   /* CLEARINGHOUSE SETTLEMENT */
 
   await call("global-clearinghouse-engine")
