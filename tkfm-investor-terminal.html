@@ -5,22 +5,54 @@
 
 <title>TKFM Investor Terminal</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 
 body{
- background:#020617;
- color:white;
- font-family:Arial;
- padding:20px;
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+padding:40px;
 }
 
-.card{
- background:#111827;
- padding:20px;
- margin-bottom:20px;
- border-radius:10px;
+h1{
+color:#facc15;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+}
+
+input{
+padding:10px;
+margin-top:10px;
+width:100%;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #1e293b;
 }
 
 </style>
@@ -29,45 +61,174 @@ body{
 
 <body>
 
-<h1>TKFM Investor Terminal</h1>
+<h1>TKFM TRADING TERMINAL</h1>
 
-<div class="card">
-<h2>Platform Metrics</h2>
-<pre id="metrics"></pre>
+<div class="grid">
+
+<div class="panel">
+
+<h3>Order Book</h3>
+
+<table id="orderbook">
+
+<thead>
+<tr>
+<th>Side</th>
+<th>Price</th>
+<th>Qty</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
 </div>
 
-<div class="card">
-<h2>Royalty Yield Chart</h2>
-<canvas id="yieldChart"></canvas>
+<div class="panel">
+
+<h3>Place Order</h3>
+
+<input id="token" placeholder="Token ID">
+
+<input id="price" placeholder="Price">
+
+<input id="qty" placeholder="Quantity">
+
+<button onclick="buy()">BUY</button>
+<button onclick="sell()">SELL</button>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Live Trades</h3>
+
+<table id="trades">
+
+<thead>
+<tr>
+<th>Price</th>
+<th>Qty</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
 </div>
 
 <script>
 
-async function load(){
+/* -------------------------
+ORDER BOOK
+------------------------- */
 
- const res = await fetch("/.netlify/functions/investor-terminal")
+async function loadOrderbook(){
 
- const data = await res.json()
+const res = await fetch("/.netlify/functions/orderbook-view")
 
- document.getElementById("metrics").innerText =
- JSON.stringify(data,null,2)
+const data = await res.json()
 
- const ctx = document.getElementById("yieldChart")
+const table = document.querySelector("#orderbook tbody")
 
- new Chart(ctx,{
-  type:"line",
-  data:{
-   labels:["Jan","Feb","Mar","Apr","May","Jun"],
-   datasets:[{
-    label:"Royalty Yield",
-    data:[3,5,7,6,8,10]
-   }]
-  }
- })
+table.innerHTML=""
+
+for(const o of data.orders || []){
+
+const row=document.createElement("tr")
+
+row.innerHTML=`
+<td>${o.side}</td>
+<td>${o.price}</td>
+<td>${o.quantity}</td>
+`
+
+table.appendChild(row)
 
 }
 
-load()
+}
+
+loadOrderbook()
+
+/* -------------------------
+TRADE FEED
+------------------------- */
+
+const source = new EventSource("/.netlify/functions/trade-feed")
+
+source.onmessage = function(event){
+
+const trade = JSON.parse(event.data)
+
+const table=document.querySelector("#trades tbody")
+
+const row=document.createElement("tr")
+
+row.innerHTML=`
+<td>${trade.price}</td>
+<td>${trade.quantity}</td>
+`
+
+table.prepend(row)
+
+}
+
+/* -------------------------
+BUY ORDER
+------------------------- */
+
+async function buy(){
+
+await fetch("/.netlify/functions/create-buy-order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+token_id:document.getElementById("token").value,
+price:document.getElementById("price").value,
+quantity:document.getElementById("qty").value
+
+})
+
+})
+
+}
+
+/* -------------------------
+SELL ORDER
+------------------------- */
+
+async function sell(){
+
+await fetch("/.netlify/functions/create-sell-order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+token_id:document.getElementById("token").value,
+price:document.getElementById("price").value,
+quantity:document.getElementById("qty").value
+
+})
+
+})
+
+}
 
 </script>
 
