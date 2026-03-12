@@ -66,7 +66,7 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ECONOMY MODEL */
+  /* HOURLY — INDEX + ECONOMY + REGULATION */
 
   if(minute === 0){
 
@@ -74,6 +74,11 @@ export default async () => {
     await call("trending-index-engine")
     await call("music-economy-simulator-engine")
     await call("music-central-bank-engine")
+
+    /* REGULATORY SYSTEM */
+
+    await call("regulatory-compliance-engine")
+    await call("global-regulatory-engine")
 
   }
 
