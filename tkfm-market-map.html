@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Global Music Market Map</title>
+<title>TKFM Market Map</title>
 
 <style>
 
 body{
 background:#020617;
-color:white;
-font-family:system-ui;
+color:#e5e7eb;
+font-family:Arial;
 padding:40px;
 }
 
@@ -18,36 +19,30 @@ color:#facc15;
 }
 
 .grid{
-
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-gap:12px;
-margin-top:30px;
-
+grid-template-columns:repeat(auto-fill,200px);
+gap:20px;
+margin-top:40px;
 }
 
 .tile{
 
 padding:20px;
 border-radius:8px;
-text-align:center;
-font-size:14px;
-
+background:#0f172a;
 }
 
-.green{
-background:#22c55e33;
-border:1px solid #22c55e;
+.name{
+font-weight:bold;
+margin-bottom:10px;
 }
 
-.red{
-background:#ef444433;
-border:1px solid #ef4444;
+.marketcap{
+color:#22c55e;
 }
 
-.gold{
-background:#facc1533;
-border:1px solid #facc15;
+.volume{
+color:#3b82f6;
 }
 
 </style>
@@ -56,50 +51,45 @@ border:1px solid #facc15;
 
 <body>
 
-<h1>Global Music Market Map</h1>
-
-<p>Live map of songs trading on TKFM</p>
+<h1>TKFM MUSIC MARKET HEATMAP</h1>
 
 <div id="map" class="grid"></div>
 
 <script>
 
-async function loadMarketMap(){
+async function loadHeatmap(){
 
-const res = await fetch("/.netlify/functions/catalog-market-data")
-const data = await res.json()
+const res=await fetch("/.netlify/functions/tkfm-market-map-engine")
 
-const container=document.getElementById("map")
-container.innerHTML=""
+const data=await res.json()
 
-(data.market||[]).forEach(song=>{
+const map=document.getElementById("map")
+
+map.innerHTML=""
+
+for(const asset of data.assets){
 
 const tile=document.createElement("div")
 
-let color="green"
+tile.className="tile"
 
-if(song.change<0){
-color="red"
-}
+tile.innerHTML=`
+<div class="name">${asset.name}</div>
+<div>Price: $${asset.price}</div>
+<div class="marketcap">Market Cap: $${asset.market_cap.toLocaleString()}</div>
+<div class="volume">Volume: $${asset.volume.toLocaleString()}</div>
+`
 
-if(song.volume>1000){
-color="gold"
-}
-
-tile.className="tile "+color
-
-tile.innerHTML="<strong>"+song.catalog_id+"</strong><br>$"+song.price
-
-container.appendChild(tile)
-
-})
+map.appendChild(tile)
 
 }
 
-loadMarketMap()
-setInterval(loadMarketMap,5000)
+}
+
+loadHeatmap()
 
 </script>
 
 </body>
+
 </html>
