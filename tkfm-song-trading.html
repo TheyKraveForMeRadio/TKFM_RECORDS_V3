@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Song Trading</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>TKFM Song Trading</title>
 
 <style>
 
 body{
 background:#020617;
-color:white;
-font-family:system-ui;
+color:#e5e7eb;
+font-family:Arial;
 padding:40px;
 }
 
@@ -19,51 +16,15 @@ h1{
 color:#facc15;
 }
 
-.container{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:30px;
-max-width:1200px;
-margin:auto;
-}
-
-.panel{
-background:#0f172a;
-padding:20px;
-border-radius:8px;
-}
-
-.order-row{
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-font-size:14px;
-}
-
-.buy{
-color:#22c55e;
-}
-
-.sell{
-color:#ef4444;
-}
-
-button{
+table{
 width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-cursor:pointer;
+border-collapse:collapse;
+margin-top:20px;
 }
 
-.buy-btn{
-background:#22c55e;
-color:white;
-}
-
-.sell-btn{
-background:#ef4444;
-color:white;
+th,td{
+padding:10px;
+border-bottom:1px solid #1e293b;
 }
 
 </style>
@@ -72,92 +33,51 @@ color:white;
 
 <body>
 
-<h1 id="songTitle">Song Market</h1>
+<h1>SONG MARKET</h1>
 
-<div class="container">
+<table>
 
-<div class="panel">
+<thead>
+<tr>
+<th>Song</th>
+<th>Price</th>
+<th>Supply</th>
+</tr>
+</thead>
 
-<canvas id="chart"></canvas>
+<tbody id="tokenTable">
 
-</div>
+</tbody>
 
-<div>
-
-<div class="panel">
-
-<h3>Order Book</h3>
-
-<div id="orders"></div>
-
-</div>
-
-<div class="panel">
-
-<h3>Trade</h3>
-
-<input id="amount" placeholder="Amount $" style="width:100%;padding:8px">
-
-<button class="buy-btn" onclick="buy()">Buy Shares</button>
-<button class="sell-btn" onclick="sell()">Sell Shares</button>
-
-<p id="status"></p>
-
-</div>
-
-</div>
-
-</div>
+</table>
 
 <script>
 
-async function loadOrders(){
+const source = new EventSource("/.netlify/functions/tkfm-market-terminal-engine")
 
-const res = await fetch("/.netlify/functions/orderbook-engine")
-const data = await res.json()
+source.onmessage = function(event){
 
-const container=document.getElementById("orders")
-container.innerHTML=""
+const data = JSON.parse(event.data)
 
-(data.orders||[]).forEach(o=>{
+const table = document.getElementById("tokenTable")
 
-const row=document.createElement("div")
-row.className="order-row"
+table.innerHTML=""
 
-row.innerHTML="<span>"+o.side+"</span><span>$"+o.price+"</span>"
+for(const token of data.tokens){
 
-container.appendChild(row)
+const row=document.createElement("tr")
 
-})
+row.innerHTML=`
+<td>${token.name}</td>
+<td>${token.price}</td>
+<td>${token.total_supply}</td>
+`
 
-}
-
-async function buy(){
-
-document.getElementById("status").innerText="Buying..."
-
-await fetch("/.netlify/functions/create-buy-order",{
-method:"POST"
-})
-
-document.getElementById("status").innerText="Order placed."
+table.appendChild(row)
 
 }
 
-async function sell(){
-
-document.getElementById("status").innerText="Selling..."
-
-await fetch("/.netlify/functions/create-sell-order",{
-method:"POST"
-})
-
-document.getElementById("status").innerText="Order placed."
-
 }
-
-loadOrders()
-setInterval(loadOrders,4000)
 
 </script>
 

@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>TKFM Music Market TV</title>
+<title>TKFM Market TV</title>
 
 <style>
-
 body{
 background:#020617;
-color:white;
+color:#e5e7eb;
 font-family:Arial;
 padding:40px;
 }
@@ -17,60 +15,58 @@ h1{
 color:#facc15;
 }
 
-.feed{
-margin-top:30px;
-}
-
-.event{
+.panel{
 background:#0f172a;
-padding:14px;
-margin-bottom:10px;
-border-radius:6px;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
 }
 
-.time{
-color:#22d3ee;
-font-size:12px;
+.trade{
+padding:8px;
+border-bottom:1px solid #1e293b;
 }
-
 </style>
 
 </head>
 
 <body>
 
-<h1>Music Market TV</h1>
+<h1>TKFM MARKET TV</h1>
 
-<p>Live feed of the TKFM music economy</p>
+<div class="panel">
 
-<div id="feed" class="feed"></div>
+<h3>Live Trades</h3>
+
+<div id="trades"></div>
+
+</div>
 
 <script>
 
-async function loadFeed(){
+const source = new EventSource("/.netlify/functions/tkfm-market-terminal-engine")
 
-const res = await fetch("/.netlify/functions/market-tv-feed")
-const data = await res.json()
+source.onmessage = function(event){
 
-const feed=document.getElementById("feed")
-feed.innerHTML=""
+const data = JSON.parse(event.data)
 
-(data.events || []).forEach(e=>{
+const container = document.getElementById("trades")
+
+container.innerHTML=""
+
+for(const trade of data.recent_trades){
 
 const div=document.createElement("div")
-div.className="event"
 
-div.innerHTML="<div>"+e.message+"</div>"+
-"<div class='time'>"+e.time+"</div>"
+div.className="trade"
 
-feed.appendChild(div)
+div.innerText=`Trade ${trade.id} | Price ${trade.price} | Qty ${trade.quantity}`
 
-})
+container.appendChild(div)
 
 }
 
-loadFeed()
-setInterval(loadFeed,4000)
+}
 
 </script>
 
