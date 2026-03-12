@@ -19,9 +19,17 @@ export default async () => {
   await call("market-maker-ai")
   await call("market-maker-orders")
 
-  /* PRICE ORACLE — SONG PRICE DISCOVERY */
+  /* PRICE DISCOVERY */
 
   await call("catalog-price-oracle")
+
+  /* AI MARKET MAKER */
+
+  await call("ai-market-maker-engine")
+
+  /* MARKET SURVEILLANCE */
+
+  await call("market-surveillance-engine")
 
   /* EVERY 5 MINUTES — PRICE + GROWTH */
 
@@ -54,12 +62,13 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + MARKET ANALYTICS */
+  /* HOURLY — INDEX + ECONOMY MODEL */
 
   if(minute === 0){
 
     await call("music-index-engine")
     await call("trending-index-engine")
+    await call("music-economy-simulator-engine")
 
   }
 
