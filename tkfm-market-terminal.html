@@ -6,6 +6,8 @@
 <title>TKFM Market Terminal</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 
 body{
@@ -41,78 +43,128 @@ color:#22c55e;
 color:#ef4444;
 }
 
+canvas{
+background:#020617;
+border-radius:8px;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h1>TKFM Order Book</h1>
+<h1>TKFM Market Terminal</h1>
 
 <div class="panel">
-
-<h3>Bids</h3>
-<div id="bids"></div>
-
+<h3>Price Chart</h3>
+<canvas id="chart" height="120"></canvas>
 </div>
 
 <div class="panel">
+<h3>Bids</h3>
+<div id="bids"></div>
+</div>
 
+<div class="panel">
 <h3>Asks</h3>
 <div id="asks"></div>
-
 </div>
 
 <script>
 
-/* ORDER BOOK DEPTH VIEW */
+/* CHART SETUP */
+
+const ctx=document.getElementById("chart")
+
+const chart=new Chart(ctx,{
+type:"line",
+data:{
+labels:[],
+datasets:[{
+label:"Song Price",
+data:[],
+borderColor:"#22d3ee",
+backgroundColor:"rgba(34,211,238,0.15)",
+tension:.2
+}]
+},
+options:{
+scales:{
+y:{ticks:{color:"#e5e7eb"}},
+x:{ticks:{color:"#e5e7eb"}}
+},
+plugins:{
+legend:{labels:{color:"#e5e7eb"}}
+}
+}
+})
+
+/* LOAD PRICE DATA */
+
+async function loadPrice(){
+
+const res=await fetch("/.netlify/functions/live-catalog-price")
+const data=await res.json()
+
+if(!data.price) return
+
+const time=new Date().toLocaleTimeString()
+
+chart.data.labels.push(time)
+chart.data.datasets[0].data.push(Number(data.price))
+
+if(chart.data.labels.length>30){
+chart.data.labels.shift()
+chart.data.datasets[0].data.shift()
+}
+
+chart.update()
+
+}
+
+/* ORDER BOOK DEPTH */
 
 async function loadDepth(id){
 
-try{
+const res=await fetch("/.netlify/functions/orderbook-view?catalog_id="+id)
+const book=await res.json()
 
-const res = await fetch("/.netlify/functions/orderbook-view?catalog_id="+id)
-const book = await res.json()
-
-const bids = document.getElementById("bids")
-const asks = document.getElementById("asks")
+const bids=document.getElementById("bids")
+const asks=document.getElementById("asks")
 
 bids.innerHTML=""
 asks.innerHTML=""
 
-(book.bids || []).slice(0,10).forEach(o=>{
+(book.bids||[]).slice(0,10).forEach(o=>{
 
 const row=document.createElement("div")
 row.className="row bid"
 row.innerText=o.price+" ("+o.shares+")"
+
 bids.appendChild(row)
 
 })
 
-(book.asks || []).slice(0,10).forEach(o=>{
+(book.asks||[]).slice(0,10).forEach(o=>{
 
 const row=document.createElement("div")
 row.className="row ask"
 row.innerText=o.price+" ("+o.shares+")"
+
 asks.appendChild(row)
 
 })
 
-}catch(e){
-
-console.log("depth error",e)
-
 }
 
-}
-
-/* AUTO REFRESH DEPTH */
+/* AUTO UPDATE */
 
 setInterval(()=>loadDepth("song123"),3000)
-
-/* INITIAL LOAD */
+setInterval(loadPrice,3000)
 
 loadDepth("song123")
+loadPrice()
 
 </script>
 
