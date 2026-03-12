@@ -1,36 +1,93 @@
 /*
-TKFM Client Functions
-Shared helpers for V3 Sponsor Read Engine, credits wallet, and Stripe checkout
+TKFM FUNCTIONS CLIENT
+Universal client for calling Netlify Functions
+Used by frontend to interact with backend engines
 */
-async function fetchJSON(url, options={}) {
-    const res = await fetch(url, options);
-    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-    return res.json();
+
+const TKFM_FUNCTION_BASE = "/.netlify/functions"
+
+/* ---------------------------------------------------
+GENERIC FUNCTION CALL
+--------------------------------------------------- */
+
+export async function tkfmFunction(name, payload = {}) {
+
+const res = await fetch(`${TKFM_FUNCTION_BASE}/${name}`, {
+method: "POST",
+headers: {
+"Content-Type": "application/json"
+},
+body: JSON.stringify(payload)
+})
+
+if (!res.ok) {
+throw new Error(`Function ${name} failed`)
 }
 
-async function getCustomerCredits() {
-    try {
-        const data = await fetchJSON('/.netlify/functions/sponsor-credits-get');
-        return data.credits || 0;
-    } catch(e) {
-        console.error(e);
-        return 0;
-    }
+return res.json()
 }
 
-async function addCredits(packKey) {
-    return fetchJSON(`/api/add-credits?pack=${packKey}`);
+/* ---------------------------------------------------
+CATALOG SHARE PURCHASE
+--------------------------------------------------- */
+
+export async function buyCatalogShares(data) {
+
+return tkfmFunction("create-song-investment-checkout", data)
+
 }
 
-async function useCredit() {
-    return fetchJSON(`/api/use-credit`);
+/* ---------------------------------------------------
+ROYALTY DISTRIBUTION
+--------------------------------------------------- */
+
+export async function distributeRoyalties(data) {
+
+return tkfmFunction("distribute-royalties", data)
+
 }
 
-function showMessage(msg, type='info') {
-    const el = document.getElementById('msg');
-    if (!el) return;
-    el.style.display = 'block';
-    el.textContent = msg;
-    el.style.borderColor = type==='warn'? 'rgba(250,204,21,0.22)' : 'rgba(34,211,238,0.22)';
-    el.style.backgroundColor = type==='warn'? 'rgba(250,204,21,0.08)' : 'rgba(34,211,238,0.08)';
+/* ---------------------------------------------------
+TRADE EXECUTION
+--------------------------------------------------- */
+
+export async function executeTrade(data) {
+
+return tkfmFunction("execute-trade", data)
+
 }
+
+/* ---------------------------------------------------
+LEDGER VIEW
+--------------------------------------------------- */
+
+export async function getLedger(entityId) {
+
+return tkfmFunction("payment-ledger", {
+entity_id: entityId
+})
+
+}
+
+/* ---------------------------------------------------
+INVESTOR PORTFOLIO
+--------------------------------------------------- */
+
+export async function getInvestorPortfolio(investorId) {
+
+return tkfmFunction("investor-portfolio-engine", {
+investor_id: investorId
+})
+
+}
+
+/* ---------------------------------------------------
+CATALOG MARKET DATA
+--------------------------------------------------- */
+
+export async function getCatalogMarket() {
+
+return tkfmFunction("catalog-market-data")
+
+}
+

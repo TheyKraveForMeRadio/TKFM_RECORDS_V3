@@ -1,42 +1,68 @@
-<div style="max-width:1000px;margin:auto;padding:40px 20px;text-align:center;">
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Live Economy</title>
 
-<h2 style="color:#facc15;">Live Music Economy</h2>
+<style>
 
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:20px;">
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+padding:40px;
+}
 
-<div style="background:#0f172a;padding:20px;border-radius:8px;">
-<div style="font-size:14px;color:#94a3b8;">Invested Today</div>
-<div id="invested" style="font-size:28px;color:#22d3ee;">$0</div>
+h1{
+color:#facc15;
+}
+
+.stat{
+background:#0f172a;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+}
+
+.value{
+font-size:26px;
+color:#22c55e;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>LIVE MUSIC ECONOMY</h1>
+
+<div class="stat">
+Market Cap
+<div id="marketCap" class="value">Loading...</div>
 </div>
 
-<div style="background:#0f172a;padding:20px;border-radius:8px;">
-<div style="font-size:14px;color:#94a3b8;">Songs Trading</div>
-<div id="songs" style="font-size:28px;color:#22d3ee;">0</div>
-</div>
-
-<div style="background:#0f172a;padding:20px;border-radius:8px;">
-<div style="font-size:14px;color:#94a3b8;">Fan Investors</div>
-<div id="fans" style="font-size:28px;color:#22d3ee;">0</div>
-</div>
-
-</div>
-
+<div class="stat">
+Catalog Count
+<div id="catalogCount" class="value">Loading...</div>
 </div>
 
 <script>
 
-async function loadEconomy(){
+const source = new EventSource("/.netlify/functions/tkfm-market-terminal-engine")
 
-const res = await fetch("/.netlify/functions/music-economy-metrics")
-const data = await res.json()
+source.onmessage = function(event){
 
-document.getElementById("invested").innerText="$"+data.invested
-document.getElementById("songs").innerText=data.songs
-document.getElementById("fans").innerText=data.fans
+const data = JSON.parse(event.data)
+
+document.getElementById("marketCap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
+
+document.getElementById("catalogCount").innerText =
+data.catalog_count
 
 }
 
-loadEconomy()
-setInterval(loadEconomy,5000)
-
 </script>
+
+</body>
+</html>
