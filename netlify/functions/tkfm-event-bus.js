@@ -1,125 +1,70 @@
-import { createClient } from '@supabase/supabase-js'
+import { cacheSet } from "./redis-cache.js"
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+const BASE = process.env.SELF_BASE_URL || "https://tkfmrecords.com"
 
-/*
-TKFM EVENT BUS
+async function dispatch(event){
 
-Central event system for the entire platform.
+const targets = {
 
-All engines emit events here instead of calling each other.
+trade_executed:[
+"record-catalog-price",
+"catalog-price-history",
+"fan-portfolio-engine",
+"market-tv-feed"
+],
 
-Example events:
+song_uploaded:[
+"catalog-upload-tracker",
+"artist-leaderboard",
+"trending-catalogs"
+],
 
-TRACK_UPLOADED
-CATALOG_CREATED
-STREAM_RECORDED
-ROYALTY_GENERATED
-IPO_LAUNCHED
-CATALOG_TRADE_EXECUTED
-*/
+royalty_generated:[
+"royalty-payout-processor",
+"fan-portfolio-engine",
+"investor-dashboard"
+],
 
-async function emitEvent(type, payload){
+artist_joined:[
+"artist-leaderboard",
+"platform-growth-engine"
+]
 
-const { data, error } = await supabase
-.from('tkfm_events')
-.insert({
-event_type:type,
-payload,
-created_at:new Date().toISOString()
-})
-
-if(error){
-throw new Error(error.message)
 }
 
-return data
-}
+const handlers = targets[event.type] || []
 
-async function getEvents(type){
-
-let query = supabase
-.from('tkfm_events')
-.select('*')
-.order('created_at',{ascending:false})
-.limit(50)
-
-if(type){
-query = query.eq('event_type',type)
-}
-
-const { data, error } = await query
-
-if(error){
-throw new Error(error.message)
-}
-
-return data
-}
-
-export async function handler(event){
+for(const fn of handlers){
 
 try{
 
-const method = event.httpMethod
+await fetch(BASE + "/.netlify/functions/" + fn,{
+method:"POST",
+headers:{ "content-type":"application/json" },
+body:JSON.stringify(event)
+})
 
-if(method === "POST"){
-
-const body = JSON.parse(event.body || "{}")
-
-const type = body.type
-const payload = body.payload || {}
-
-if(!type){
-return {
-statusCode:400,
-body:JSON.stringify({error:"event type required"})
-}
+}catch(e){
+console.log("event dispatch error",fn)
 }
 
-const result = await emitEvent(type,payload)
+}
+
+}
+
+export default async (req) => {
+
+const event = JSON.parse(req.body || "{}")
+
+event.timestamp = Date.now()
+
+await cacheSet("event:"+event.timestamp,event,300)
+
+await dispatch(event)
 
 return {
 statusCode:200,
-body:JSON.stringify({
-success:true,
-event:type,
-result
-})
-}
-
-}
-
-if(method === "GET"){
-
-const type = event.queryStringParameters?.type
-
-const events = await getEvents(type)
-
-return {
-statusCode:200,
-body:JSON.stringify({
-events
-})
-}
-
-}
-
-return {
-statusCode:405,
-body:"method not allowed"
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
+body:JSON.stringify({status:"event processed"})
 }
 
 }
