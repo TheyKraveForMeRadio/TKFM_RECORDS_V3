@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Control Room</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+margin-top:30px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+}
+
+.value{
+font-size:28px;
+color:#22c55e;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM GLOBAL CONTROL ROOM</h1>
+
+<div class="grid">
+
+<div class="panel">
+Market Cap
+<div id="marketcap" class="value">...</div>
+</div>
+
+<div class="panel">
+Trade Volume
+<div id="volume" class="value">...</div>
+</div>
+
+<div class="panel">
+Catalog Size
+<div id="catalog" class="value">...</div>
+</div>
+
+<div class="panel">
+Network Nodes
+<div id="nodes" class="value">...</div>
+</div>
+
+<div class="panel">
+Active Nodes
+<div id="active" class="value">...</div>
+</div>
+
+<div class="panel">
+Risk Alerts
+<div id="alerts" class="value">...</div>
+</div>
+
+</div>
+
+<script>
+
+async function loadSystem(){
+
+const res = await fetch("/.netlify/functions/tkfm-system-monitor")
+const data = await res.json()
+
+document.getElementById("marketcap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
+
+document.getElementById("volume").innerText =
+"$"+Number(data.trade_volume).toLocaleString()
+
+document.getElementById("catalog").innerText =
+data.catalog_size
+
+document.getElementById("nodes").innerText =
+data.network_nodes
+
+document.getElementById("active").innerText =
+data.active_nodes
+
+document.getElementById("alerts").innerText =
+data.risk_alerts
+
+}
+
+loadSystem()
+
+setInterval(loadSystem,10000)
+
+</script>
+
+</body>
+
+</html>
