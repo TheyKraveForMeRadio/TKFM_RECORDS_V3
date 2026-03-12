@@ -1,166 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8" />
-<title>TKFM — Music Market</title>
+<title>TKFM — Music Market Terminal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<meta name="description" content="TKFM Records — The Music Market. Turn songs into assets." />
 
 <style>
 
 :root{
 --bg:#020617;
 --gold:#facc15;
---gold2:#eab308;
---orange:#f97316;
 --text:#e5e7eb;
 --panel:#0f172a;
 --green:#22c55e;
 --red:#ef4444;
+--blue:#22d3ee;
 }
-
-*{box-sizing:border-box;}
 
 body{
 margin:0;
 background:var(--bg);
 color:var(--text);
-font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+font-family:system-ui;
 }
 
-.hero{
-text-align:center;
-padding:90px 20px 70px 20px;
+header{
+padding:20px;
+background:#000;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .logo{
-width:160px;
-margin-bottom:20px;
+height:40px;
 }
 
-h1{
+.marketcap{
 color:var(--gold);
-font-size:3rem;
-margin-bottom:10px;
-}
-
-.tagline{
-color:#cbd5f5;
-font-size:1.2rem;
-margin-bottom:30px;
-}
-
-.cta{
-background:var(--orange);
-border:none;
-padding:16px 40px;
-font-size:20px;
-cursor:pointer;
-border-radius:8px;
-color:white;
+font-weight:bold;
 }
 
 .ticker{
 background:#000;
-overflow:hidden;
 white-space:nowrap;
-padding:10px 0;
+overflow:hidden;
+padding:10px;
 border-top:1px solid #111;
 border-bottom:1px solid #111;
 }
 
 .ticker span{
-display:inline-block;
-padding:0 40px;
-color:#22d3ee;
-}
-
-.stats{
-max-width:1000px;
-margin:auto;
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-padding:40px 20px;
-}
-
-.stat{
-background:var(--panel);
-padding:20px;
-border-radius:8px;
-text-align:center;
-}
-
-.stat-value{
-font-size:28px;
-color:var(--gold);
-margin-top:5px;
-}
-
-.market{
-max-width:1000px;
-margin:auto;
-padding:20px;
-}
-
-.section-title{
-color:var(--gold);
-font-size:1.5rem;
-margin-bottom:20px;
-}
-
-.market-row{
-display:flex;
-justify-content:space-between;
-background:var(--panel);
-padding:14px;
-margin-bottom:8px;
-border-radius:6px;
-}
-
-.price{
-color:#22d3ee;
-font-weight:600;
-}
-
-.activity{
-max-width:1000px;
-margin:auto;
-padding:20px;
-}
-
-.activity-row{
-background:var(--panel);
-padding:12px;
-margin-bottom:8px;
-border-radius:6px;
+padding:0 30px;
+color:var(--blue);
 }
 
 .grid{
-max-width:1000px;
-margin:auto;
-padding:40px 20px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:18px;
+grid-template-columns:2fr 1fr;
+gap:20px;
+padding:20px;
+max-width:1200px;
+margin:auto;
 }
 
-.card{
+.panel{
 background:var(--panel);
-padding:20px;
 border-radius:8px;
-border:1px solid rgba(250,204,21,0.15);
+padding:20px;
+}
+
+.section{
+font-weight:bold;
 color:var(--gold);
-font-weight:600;
+margin-bottom:10px;
+}
+
+.trade{
+border-bottom:1px solid #1e293b;
+padding:8px 0;
+font-size:14px;
+}
+
+.heatmap{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:6px;
+}
+
+.tile{
+padding:10px;
+border-radius:4px;
 text-align:center;
+font-size:12px;
+}
+
+.chart{
+height:220px;
+background:#000;
+border-radius:6px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#64748b;
 }
 
 footer{
 text-align:center;
-padding:40px;
-font-size:.85rem;
+padding:30px;
+font-size:.8rem;
 color:#64748b;
 }
 
@@ -170,111 +120,99 @@ color:#64748b;
 
 <body>
 
-<div class="hero">
+<header>
 
-<img src="/tkfm-records-logo.png" class="logo"/>
+<img src="/tkfm-records-logo.png" class="logo">
 
-<h1>TKFM Music Market</h1>
-
-<div class="tagline">
-Turn Songs Into Assets · Fans Own Music
+<div class="marketcap">
+Market Cap: <span id="marketcap">$0</span>
 </div>
 
-<button class="cta" onclick="window.location='/tkfm-one-click-onboarding.html'">
-Upload Your Song
-</button>
-
-</div>
+</header>
 
 <div class="ticker" id="ticker"></div>
 
-<div class="stats">
+<div class="grid">
 
-<div class="stat">
-Total Market Cap
-<div class="stat-value" id="marketcap">$0</div>
-</div>
+<div class="panel">
 
-<div class="stat">
-Songs Trading
-<div class="stat-value" id="songs">0</div>
-</div>
+<div class="section">Market Chart</div>
 
-<div class="stat">
-Artists
-<div class="stat-value" id="artists">0</div>
+<div class="chart" id="chart">
+Live Chart
 </div>
 
 </div>
 
-<div class="market">
+<div class="panel">
 
-<div class="section-title">Trending Songs</div>
+<div class="section">Live Trades</div>
+
+<div id="trades"></div>
+
+</div>
+
+<div class="panel">
+
+<div class="section">Trending Songs</div>
 
 <div id="market"></div>
 
 </div>
 
-<div class="activity">
+<div class="panel">
 
-<div class="section-title">Live Activity</div>
+<div class="section">Market Heatmap</div>
 
-<div id="activity"></div>
-
-</div>
-
-<div class="activity">
-
-<div class="section-title">Live Trades</div>
-
-<div id="trade-feed"></div>
+<div class="heatmap" id="heatmap"></div>
 
 </div>
-
-<div class="activity">
-
-<div class="section-title">Liquidity Pool</div>
-
-<div id="liquidity"></div>
-
-</div>
-
-<div class="grid">
-
-<a href="/label-home.html"><div class="card">Label Home</div></a>
-<a href="/label-hub.html"><div class="card">Label Hub</div></a>
-<a href="/artist-dashboard.html"><div class="card">Artist Dashboard</div></a>
-<a href="/owner-dashboard.html"><div class="card">Owner Dashboard</div></a>
-<a href="/tkfm-sponsor-read-engine.html"><div class="card">Sponsor Engine</div></a>
-<a href="/tkfm-mixtape-spotlight.html"><div class="card">Mixtape Spotlight</div></a>
-<a href="/tkfm-market-terminal.html"><div class="card">Music Market</div></a>
-<a href="/tkfm-artist-leaderboard.html"><div class="card">Artist Leaderboard</div></a>
-<a href="/tkfm-fan-portfolio.html"><div class="card">Fan Portfolio</div></a>
 
 </div>
 
 <footer>
-© TKFM · DJ KRAVE · Music Economy Active
+TKFM Music Economy · DJ KRAVE
 </footer>
 
 <script>
 
-/* MARKET */
+/* MARKET STREAM */
 
-async function loadMarket(){
+const source =
+new EventSource("/.netlify/functions/tkfm-market-stream-engine")
 
-const res = await fetch("/.netlify/functions/catalog-market-data")
-const data = await res.json()
+source.onmessage = function(event){
 
-const container=document.getElementById("market")
+const data = JSON.parse(event.data)
+
+console.log("stream",data)
+
+/* market cap */
+
+if(data.market_cap){
+
+document.getElementById("marketcap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
+
+}
+
+/* trades */
+
+if(data.recent_trades){
+
+const container=document.getElementById("trades")
+
 container.innerHTML=""
 
-(data.market||[]).slice(0,5).forEach(s=>{
+data.recent_trades.forEach(t=>{
 
 const row=document.createElement("div")
-row.className="market-row"
+row.className="trade"
 
-row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
+row.innerText=
+t.token_id+
+" "+t.quantity+
+" @ $"+t.price
 
 container.appendChild(row)
 
@@ -282,12 +220,18 @@ container.appendChild(row)
 
 }
 
-/* TICKER */
+}
 
-async function loadTicker(){
+/* MARKET DATA */
 
-const res = await fetch("/.netlify/functions/catalog-market-data")
-const data = await res.json()
+async function loadMarket(){
+
+const res =
+await fetch("/.netlify/functions/catalog-market-data")
+
+const data=await res.json()
+
+/* ticker */
 
 const ticker=document.getElementById("ticker")
 ticker.innerHTML=""
@@ -301,119 +245,47 @@ ticker.appendChild(span)
 
 })
 
-}
+/* trending */
 
-/* ACTIVITY */
+const market=document.getElementById("market")
+market.innerHTML=""
 
-function loadActivity(){
-
-const events=[
-"🔥 Fan bought shares",
-"📈 Song price increased",
-"🎧 Artist uploaded a new song",
-"💰 Royalty payout sent"
-]
-
-const container=document.getElementById("activity")
-container.innerHTML=""
-
-events.forEach(e=>{
+(data.market||[]).slice(0,6).forEach(s=>{
 
 const row=document.createElement("div")
-row.className="activity-row"
-row.innerText=e
 
-container.appendChild(row)
+row.innerText=s.catalog_id+" — $"+s.price
+
+market.appendChild(row)
+
+})
+
+/* heatmap */
+
+const heat=document.getElementById("heatmap")
+heat.innerHTML=""
+
+(data.market||[]).slice(0,20).forEach(s=>{
+
+const tile=document.createElement("div")
+tile.className="tile"
+
+tile.style.background =
+Math.random()>.5
+? "rgba(34,197,94,.3)"
+: "rgba(239,68,68,.3)"
+
+tile.innerText=s.catalog_id
+
+heat.appendChild(tile)
 
 })
 
 }
-
-/* LIVE TRADE FEED */
-
-async function loadTrades(){
-
-const res = await fetch("/.netlify/functions/trade-feed")
-const data = await res.json()
-
-const container = document.getElementById("trade-feed")
-container.innerHTML=""
-
-(data.trades || []).forEach(t=>{
-
-const row=document.createElement("div")
-row.className="activity-row"
-
-row.innerText =
-t.catalog_id +
-" traded " +
-t.shares +
-" shares @ $" +
-t.price
-
-container.appendChild(row)
-
-})
-
-}
-
-/* LIQUIDITY POOL */
-
-async function loadLiquidity(id){
-
-const res = await fetch("/.netlify/functions/liquidity-view?catalog_id="+id)
-const pool = await res.json()
-
-const el=document.getElementById("liquidity")
-
-el.innerHTML=
-"Cash: $"+Math.round(pool.cash)+
-"<br>Shares: "+Math.round(pool.shares)+
-"<br>Price: $"+pool.price.toFixed(2)
-
-}
-
-/* MARKET STREAM */
-
-const source =
-new EventSource("/.netlify/functions/tkfm-market-stream-engine")
-
-source.onmessage = function(event){
-
-const data = JSON.parse(event.data)
-
-console.log("Market Stream",data)
-
-/* update market cap live */
-
-if(data.market_cap){
-
-document.getElementById("marketcap").innerText =
-"$"+Number(data.market_cap).toLocaleString()
-
-}
-
-if(data.catalog_size){
-
-document.getElementById("songs").innerText =
-data.catalog_size
-
-}
-
-}
-
-setInterval(()=>loadTrades(),3000)
-setInterval(()=>loadLiquidity("song123"),5000)
-
-loadTrades()
-loadLiquidity("song123")
 
 loadMarket()
-loadTicker()
-loadActivity()
 
 setInterval(loadMarket,5000)
-setInterval(loadTicker,7000)
 
 </script>
 
