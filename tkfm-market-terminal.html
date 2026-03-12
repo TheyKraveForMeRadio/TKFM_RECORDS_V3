@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <title>TKFM Market Terminal</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 body{
 background:#020617;
 color:#e5e7eb;
-font-family:system-ui;
+font-family:Arial;
 margin:0;
 padding:40px;
 }
@@ -25,27 +21,24 @@ color:#facc15;
 .panel{
 background:#0f172a;
 padding:20px;
+margin-top:20px;
 border-radius:8px;
-margin-bottom:20px;
 }
 
-.row{
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-}
-
-.bid{
+.value{
+font-size:24px;
 color:#22c55e;
 }
 
-.ask{
-color:#ef4444;
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
 }
 
-canvas{
-background:#020617;
-border-radius:8px;
+td,th{
+padding:10px;
+border-bottom:1px solid #1e293b;
 }
 
 </style>
@@ -54,117 +47,91 @@ border-radius:8px;
 
 <body>
 
-<h1>TKFM Market Terminal</h1>
+<h1>TKFM MARKET TERMINAL</h1>
 
 <div class="panel">
-<h3>Price Chart</h3>
-<canvas id="chart" height="120"></canvas>
+
+<h3>Market Cap</h3>
+<div id="marketCap" class="value">Loading...</div>
+
 </div>
 
 <div class="panel">
-<h3>Bids</h3>
-<div id="bids"></div>
+
+<h3>Catalog Count</h3>
+<div id="catalogCount" class="value">Loading...</div>
+
 </div>
 
 <div class="panel">
-<h3>Asks</h3>
-<div id="asks"></div>
+
+<h3>Recent Trades</h3>
+
+<table id="tradeTable">
+
+<thead>
+<tr>
+<th>Trade ID</th>
+<th>Price</th>
+<th>Quantity</th>
+</tr>
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
 </div>
 
 <script>
 
-/* CHART SETUP */
+/* -----------------------------
+LIVE MARKET FEED
+----------------------------- */
 
-const ctx=document.getElementById("chart")
+const source = new EventSource("/.netlify/functions/tkfm-market-terminal-engine")
 
-const chart=new Chart(ctx,{
-type:"line",
-data:{
-labels:[],
-datasets:[{
-label:"Song Price",
-data:[],
-borderColor:"#22d3ee",
-backgroundColor:"rgba(34,211,238,0.15)",
-tension:.2
-}]
-},
-options:{
-scales:{
-y:{ticks:{color:"#e5e7eb"}},
-x:{ticks:{color:"#e5e7eb"}}
-},
-plugins:{
-legend:{labels:{color:"#e5e7eb"}}
-}
-}
-})
+source.onmessage = function(event){
 
-/* LOAD PRICE DATA */
+const data = JSON.parse(event.data)
 
-async function loadPrice(){
+console.log("Market Data",data)
 
-const res=await fetch("/.netlify/functions/live-catalog-price")
-const data=await res.json()
+/* -----------------------------
+UPDATE MARKET CAP
+----------------------------- */
 
-if(!data.price) return
+document.getElementById("marketCap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
 
-const time=new Date().toLocaleTimeString()
+document.getElementById("catalogCount").innerText =
+data.catalog_count
 
-chart.data.labels.push(time)
-chart.data.datasets[0].data.push(Number(data.price))
+/* -----------------------------
+UPDATE TRADES
+----------------------------- */
 
-if(chart.data.labels.length>30){
-chart.data.labels.shift()
-chart.data.datasets[0].data.shift()
-}
+const tbody = document.querySelector("#tradeTable tbody")
 
-chart.update()
+tbody.innerHTML=""
+
+for(const trade of data.recent_trades){
+
+const row = document.createElement("tr")
+
+row.innerHTML=`
+<td>${trade.id}</td>
+<td>${trade.price}</td>
+<td>${trade.quantity}</td>
+`
+
+tbody.appendChild(row)
 
 }
 
-/* ORDER BOOK DEPTH */
-
-async function loadDepth(id){
-
-const res=await fetch("/.netlify/functions/orderbook-view?catalog_id="+id)
-const book=await res.json()
-
-const bids=document.getElementById("bids")
-const asks=document.getElementById("asks")
-
-bids.innerHTML=""
-asks.innerHTML=""
-
-(book.bids||[]).slice(0,10).forEach(o=>{
-
-const row=document.createElement("div")
-row.className="row bid"
-row.innerText=o.price+" ("+o.shares+")"
-
-bids.appendChild(row)
-
-})
-
-(book.asks||[]).slice(0,10).forEach(o=>{
-
-const row=document.createElement("div")
-row.className="row ask"
-row.innerText=o.price+" ("+o.shares+")"
-
-asks.appendChild(row)
-
-})
-
 }
-
-/* AUTO UPDATE */
-
-setInterval(()=>loadDepth("song123"),3000)
-setInterval(loadPrice,3000)
-
-loadDepth("song123")
-loadPrice()
 
 </script>
 
