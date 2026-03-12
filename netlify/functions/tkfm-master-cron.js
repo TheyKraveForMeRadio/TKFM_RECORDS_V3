@@ -66,7 +66,7 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ECONOMY + REGULATION */
+  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY */
 
   if(minute === 0){
 
@@ -79,6 +79,10 @@ export default async () => {
 
     await call("regulatory-compliance-engine")
     await call("global-regulatory-engine")
+
+    /* GLOBAL LIQUIDITY ROUTER */
+
+    await call("tkfm-global-liquidity-router")
 
   }
 
