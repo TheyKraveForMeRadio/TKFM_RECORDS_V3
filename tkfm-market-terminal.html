@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
-<title>TKFM Music Market Terminal</title>
+<meta charset="UTF-8">
+<title>TKFM Market Terminal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
 
 body{
 background:#020617;
-color:white;
-font-family:Arial;
+color:#e5e7eb;
+font-family:system-ui;
+margin:0;
 padding:40px;
 }
 
@@ -17,21 +20,25 @@ h1{
 color:#facc15;
 }
 
-.section{
-margin-top:40px;
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+margin-bottom:20px;
 }
 
-.market-row{
+.row{
 display:flex;
 justify-content:space-between;
-background:#0f172a;
-padding:15px;
-margin-bottom:8px;
-border-radius:6px;
+padding:6px 0;
 }
 
-.price{
-color:#22d3ee;
+.bid{
+color:#22c55e;
+}
+
+.ask{
+color:#ef4444;
 }
 
 </style>
@@ -40,109 +47,72 @@ color:#22d3ee;
 
 <body>
 
-<h1>TKFM Music Market</h1>
+<h1>TKFM Order Book</h1>
 
-<p>Live trading market for music assets</p>
+<div class="panel">
 
-<div class="section">
-
-<h2>Top Gainers</h2>
-<div id="gainers"></div>
+<h3>Bids</h3>
+<div id="bids"></div>
 
 </div>
 
-<div class="section">
+<div class="panel">
 
-<h2>Top Losers</h2>
-<div id="losers"></div>
-
-</div>
-
-<div class="section">
-
-<h2>Highest Market Cap</h2>
-<div id="marketcap"></div>
-
-</div>
-
-<div class="section">
-
-<h2>Live Trades</h2>
-<div id="trades"></div>
+<h3>Asks</h3>
+<div id="asks"></div>
 
 </div>
 
 <script>
 
-async function loadMarket(){
+/* ORDER BOOK DEPTH VIEW */
 
-const res = await fetch("/.netlify/functions/catalog-market-data")
-const data = await res.json()
+async function loadDepth(id){
 
-renderMarket(data.market || [])
+try{
+
+const res = await fetch("/.netlify/functions/orderbook-view?catalog_id="+id)
+const book = await res.json()
+
+const bids = document.getElementById("bids")
+const asks = document.getElementById("asks")
+
+bids.innerHTML=""
+asks.innerHTML=""
+
+(book.bids || []).slice(0,10).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="row bid"
+row.innerText=o.price+" ("+o.shares+")"
+bids.appendChild(row)
+
+})
+
+(book.asks || []).slice(0,10).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="row ask"
+row.innerText=o.price+" ("+o.shares+")"
+asks.appendChild(row)
+
+})
+
+}catch(e){
+
+console.log("depth error",e)
 
 }
 
-function renderMarket(list){
-
-const gainers=document.getElementById("gainers")
-const losers=document.getElementById("losers")
-const marketcap=document.getElementById("marketcap")
-const trades=document.getElementById("trades")
-
-gainers.innerHTML=""
-losers.innerHTML=""
-marketcap.innerHTML=""
-trades.innerHTML=""
-
-list.slice(0,5).forEach(s=>{
-
-const row=document.createElement("div")
-row.className="market-row"
-
-row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
-
-gainers.appendChild(row)
-
-})
-
-list.slice(5,10).forEach(s=>{
-
-const row=document.createElement("div")
-row.className="market-row"
-
-row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
-
-losers.appendChild(row)
-
-})
-
-list.slice(10,15).forEach(s=>{
-
-const row=document.createElement("div")
-row.className="market-row"
-
-row.innerHTML="<span>"+s.catalog_id+"</span><span class='price'>$"+s.price+"</span>"
-
-marketcap.appendChild(row)
-
-})
-
-list.slice(0,5).forEach(s=>{
-
-const row=document.createElement("div")
-row.className="market-row"
-
-row.innerHTML="<span>Trade</span><span>"+s.catalog_id+" $"+s.price+"</span>"
-
-trades.appendChild(row)
-
-})
-
 }
 
-loadMarket()
-setInterval(loadMarket,5000)
+/* AUTO REFRESH DEPTH */
+
+setInterval(()=>loadDepth("song123"),3000)
+
+/* INITIAL LOAD */
+
+loadDepth("song123")
 
 </script>
 
