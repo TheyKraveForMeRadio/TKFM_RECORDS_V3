@@ -223,8 +223,6 @@ Artists
 
 </div>
 
-<!-- LIVE TRADE FEED -->
-
 <div class="activity">
 
 <div class="section-title">Live Trades</div>
@@ -232,8 +230,6 @@ Artists
 <div id="trade-feed"></div>
 
 </div>
-
-<!-- LIQUIDITY POOL PANEL -->
 
 <div class="activity">
 
@@ -374,6 +370,35 @@ el.innerHTML=
 "Cash: $"+Math.round(pool.cash)+
 "<br>Shares: "+Math.round(pool.shares)+
 "<br>Price: $"+pool.price.toFixed(2)
+
+}
+
+/* MARKET STREAM */
+
+const source =
+new EventSource("/.netlify/functions/tkfm-market-stream-engine")
+
+source.onmessage = function(event){
+
+const data = JSON.parse(event.data)
+
+console.log("Market Stream",data)
+
+/* update market cap live */
+
+if(data.market_cap){
+
+document.getElementById("marketcap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
+
+}
+
+if(data.catalog_size){
+
+document.getElementById("songs").innerText =
+data.catalog_size
+
+}
 
 }
 
