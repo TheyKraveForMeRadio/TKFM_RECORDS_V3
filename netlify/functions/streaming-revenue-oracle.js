@@ -1,80 +1,80 @@
-import { createClient } from "@supabase/supabase-js";
-import { ethers } from "ethers";
+import { createClient } from "@supabase/supabase-js"
 
 const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+process.env.SUPABASE_URL,
+process.env.SUPABASE_SERVICE_ROLE_KEY
+)
 
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+export const handler = async (event) => {
 
-const wallet = new ethers.Wallet(
- process.env.DEPLOYER_PRIVATE_KEY,
- provider
-);
+try{
 
-const distributorABI = [
- "function depositRevenue() payable"
-];
+const body = JSON.parse(event.body || "{}")
 
-const distributor = new ethers.Contract(
- process.env.ROYALTY_DISTRIBUTOR_ADDRESS,
- distributorABI,
- wallet
-);
+const {
+platform,
+track_id,
+streams,
+revenue
+} = body
 
-export const handler = async () => {
+/* ---------------------------------
+CALCULATE ESTIMATED ROYALTY
+--------------------------------- */
 
- try {
+let estimatedRevenue = revenue
 
-  const { data: revenue } = await supabase
-  .from("streaming_revenue_events")
-  .select("*")
-  .eq("processed", false);
+if(!estimatedRevenue && streams){
 
-  let totalRevenue = 0;
+if(platform==="spotify") estimatedRevenue = streams * 0.0035
+if(platform==="apple") estimatedRevenue = streams * 0.007
+if(platform==="youtube") estimatedRevenue = streams * 0.0008
 
-  for (const event of revenue) {
+}
 
-   totalRevenue += event.revenue_usd;
+/* ---------------------------------
+INSERT STREAM EVENT
+--------------------------------- */
 
-   await supabase
-   .from("streaming_revenue_events")
-   .update({ processed:true })
-   .eq("id",event.id);
+const { data,error } = await supabase
+.from("streaming_revenue_events")
+.insert({
 
-  }
+platform,
+track_id,
+streams,
+amount: estimatedRevenue,
+created_at:new Date()
 
-  if(totalRevenue === 0){
+})
 
-   return {
-    statusCode:200,
-    body:JSON.stringify({status:"no revenue"})
-   };
+if(error) throw error
 
-  }
+return{
 
-  const tx = await distributor.depositRevenue({
-   value: ethers.parseEther(totalRevenue.toString())
-  });
+statusCode:200,
 
-  await tx.wait();
+body:JSON.stringify({
 
-  return {
-   statusCode:200,
-   body:JSON.stringify({
-    status:"revenue_distributed",
-    amount:totalRevenue
-   })
-  };
+success:true,
+platform,
+track_id,
+streams,
+revenue:estimatedRevenue
 
- } catch(err){
+})
 
-  return{
-   statusCode:500,
-   body:JSON.stringify({error:err.message})
-  };
+}
 
- }
+}catch(err){
 
-};
+return{
+
+statusCode:500,
+body:JSON.stringify({error:err.message})
+
+}
+
+}
+
+}
