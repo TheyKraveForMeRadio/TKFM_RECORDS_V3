@@ -186,9 +186,7 @@ Upload Your Song
 
 </div>
 
-
 <div class="ticker" id="ticker"></div>
-
 
 <div class="stats">
 
@@ -209,7 +207,6 @@ Artists
 
 </div>
 
-
 <div class="market">
 
 <div class="section-title">Trending Songs</div>
@@ -217,7 +214,6 @@ Artists
 <div id="market"></div>
 
 </div>
-
 
 <div class="activity">
 
@@ -227,8 +223,7 @@ Artists
 
 </div>
 
-
-<!-- NEW LIVE TRADE FEED -->
+<!-- LIVE TRADE FEED -->
 
 <div class="activity">
 
@@ -238,6 +233,15 @@ Artists
 
 </div>
 
+<!-- LIQUIDITY POOL PANEL -->
+
+<div class="activity">
+
+<div class="section-title">Liquidity Pool</div>
+
+<div id="liquidity"></div>
+
+</div>
 
 <div class="grid">
 
@@ -257,10 +261,9 @@ Artists
 © TKFM · DJ KRAVE · Music Economy Active
 </footer>
 
-
 <script>
 
-/* LOAD MARKET */
+/* MARKET */
 
 async function loadMarket(){
 
@@ -291,7 +294,6 @@ const res = await fetch("/.netlify/functions/catalog-market-data")
 const data = await res.json()
 
 const ticker=document.getElementById("ticker")
-
 ticker.innerHTML=""
 
 (data.market||[]).forEach(s=>{
@@ -331,7 +333,6 @@ container.appendChild(row)
 
 }
 
-
 /* LIVE TRADE FEED */
 
 async function loadTrades(){
@@ -340,7 +341,6 @@ const res = await fetch("/.netlify/functions/trade-feed")
 const data = await res.json()
 
 const container = document.getElementById("trade-feed")
-
 container.innerHTML=""
 
 (data.trades || []).forEach(t=>{
@@ -361,9 +361,27 @@ container.appendChild(row)
 
 }
 
-setInterval(loadTrades,3000)
-loadTrades()
+/* LIQUIDITY POOL */
 
+async function loadLiquidity(id){
+
+const res = await fetch("/.netlify/functions/liquidity-view?catalog_id="+id)
+const pool = await res.json()
+
+const el=document.getElementById("liquidity")
+
+el.innerHTML=
+"Cash: $"+Math.round(pool.cash)+
+"<br>Shares: "+Math.round(pool.shares)+
+"<br>Price: $"+pool.price.toFixed(2)
+
+}
+
+setInterval(()=>loadTrades(),3000)
+setInterval(()=>loadLiquidity("song123"),5000)
+
+loadTrades()
+loadLiquidity("song123")
 
 loadMarket()
 loadTicker()
