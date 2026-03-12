@@ -1,40 +1,35 @@
-import { createClient } from "@supabase/supabase-js"
+import { createClient } from "@supabase/supabase-js";
+import { cacheGet, cacheSet } from "./redis-cache.js";
 
 const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-export async function handler(){
+export default async function handler() {
 
-try{
+  const cacheKey = "market_data";
 
-const { data } = await supabase
-.from("catalogs")
-.select("id,title,price,volume,change")
-.limit(100)
+  const cached = await cacheGet(cacheKey);
+  if (cached) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cached)
+    };
+  }
 
-const market=(data||[]).map(c=>({
+  const { data } = await supabase
+    .from("catalogs")
+    .select("*")
+    .order("market_cap", { ascending: false })
+    .limit(50);
 
-catalog_id:c.title,
-price:c.price || 0,
-volume:c.volume || 0,
-change:c.change || 0
+  const response = { market: data || [] };
 
-}))
+  await cacheSet(cacheKey, response, 10);
 
-return{
-statusCode:200,
-body:JSON.stringify({market})
-}
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
-
+  return {
+    statusCode: 200,
+    body: JSON.stringify(response)
+  };
 }

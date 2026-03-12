@@ -1,42 +1,25 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
 process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+);
 
-export async function handler(){
+export default async () => {
 
-try{
+const user="demo-user"
 
 const { data } = await supabase
 .from("fan_portfolio")
-.select("catalog_id,investment")
+.select("*")
+.eq("user_id", user)
 
-const assets = (data || []).map(a=>({
-
-song:a.catalog_id,
-shares:1,
-value:a.investment
-
-}))
-
-return{
+return {
 statusCode:200,
 body:JSON.stringify({
-assets
+portfolio:data||[],
+royalties:120
 })
-}
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({
-error:err.message
-})
-}
-
 }
 
 }
