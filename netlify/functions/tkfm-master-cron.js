@@ -19,6 +19,10 @@ export default async () => {
   await call("market-maker-ai")
   await call("market-maker-orders")
 
+  /* PRICE ORACLE — SONG PRICE DISCOVERY */
+
+  await call("catalog-price-oracle")
+
   /* EVERY 5 MINUTES — PRICE + GROWTH */
 
   if(minute % 5 === 0){
