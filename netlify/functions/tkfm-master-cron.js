@@ -70,7 +70,7 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ETF + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
+  /* HOURLY — INDEX + ETF + DERIVATIVES + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
 
   if(minute === 0){
 
@@ -81,6 +81,10 @@ export default async () => {
     /* ETF ENGINE */
 
     await call("music-etf-engine")
+
+    /* DERIVATIVES ENGINE */
+
+    await call("music-derivatives-engine")
 
     await call("trending-index-engine")
 
