@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Music ETF</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+padding:40px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+.nav{
+font-size:32px;
+color:#facc15;
+}
+
+.row{
+border-bottom:1px solid #1e293b;
+padding:10px 0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>TKFM Top 20 Songs ETF</h1>
+
+<div class="panel">
+
+NAV
+<div class="nav" id="nav">$0</div>
+
+</div>
+
+<div class="panel">
+
+Holdings
+
+<div id="holdings"></div>
+
+</div>
+
+<script>
+
+async function loadETF(){
+
+const res =
+await fetch("/.netlify/functions/music-etf-engine")
+
+const data = await res.json()
+
+document.getElementById("nav").innerText =
+"$"+data.nav.toFixed(2)
+
+const container =
+document.getElementById("holdings")
+
+container.innerHTML=""
+
+data.holdings.forEach(h=>{
+
+const row=document.createElement("div")
+row.className="row"
+
+row.innerText =
+h.name+" $"+h.price
+
+container.appendChild(row)
+
+})
+
+}
+
+loadETF()
+
+setInterval(loadETF,10000)
+
+</script>
+
+</body>
+
+</html>
