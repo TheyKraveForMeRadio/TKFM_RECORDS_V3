@@ -1,0 +1,3866 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMArtistNFT.sol": {
+      "lastModificationDate": 1771363692088,
+      "contentHash": "49815460235cc11604f2e85551e8cf56",
+      "sourceName": "contracts/TKFMArtistNFT.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMArtistNFT"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1772053470605,
+      "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
+      "lastModificationDate": 1772053455777,
+      "contentHash": "95602b04f0b53f1139f4668d123ddeb7",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC721.sol",
+        "./IERC721Receiver.sol",
+        "./extensions/IERC721Metadata.sol",
+        "../../utils/Address.sol",
+        "../../utils/Context.sol",
+        "../../utils/Strings.sol",
+        "../../utils/introspection/ERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1772053440869,
+      "contentHash": "f07feb4a44b1a4872370da5aa70e8e46",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
+      "lastModificationDate": 1771196438637,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
+      "lastModificationDate": 1771196439296,
+      "contentHash": "48686fc32a22a3754b8e63321857dd2a",
+      "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./math/Math.sol",
+        "./math/SignedMath.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Strings"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
+      "lastModificationDate": 1771196439140,
+      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Receiver"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\extensions\\IERC721Metadata.sol": {
+      "lastModificationDate": 1771196439140,
+      "contentHash": "efbc0d15b80a74e34dbe8da0f3e879bb",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Metadata"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\ERC165.sol": {
+      "lastModificationDate": 1771196438746,
+      "contentHash": "0e7db055ce108f9da7bb6686a00287c0",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
+      "lastModificationDate": 1771196439109,
+      "contentHash": "48de4c9a3a4ae5ef66a2aa620843413f",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\math\\Math.sol": {
+      "lastModificationDate": 1771196439217,
+      "contentHash": "fe63409d8a06818b926cf89e0ea88b1b",
+      "sourceName": "@openzeppelin/contracts/utils/math/Math.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Math"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SignedMath.sol": {
+      "lastModificationDate": 1771196439286,
+      "contentHash": "9488ebd4daacfee8ad04811600d7d061",
+      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SignedMath"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\utils\\introspection\\IERC165.sol": {
+      "lastModificationDate": 1771196439015,
+      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRelease.sol": {
+      "lastModificationDate": 1771307661504,
+      "contentHash": "d41463ececddd88e18cdb60858953f63",
+      "sourceName": "contracts/TKFMRelease.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+        "./TKFMArtistNFT.sol",
+        "./TKFMToken.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "TKFMRelease"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMToken.sol": {
+      "lastModificationDate": 1771308905285,
+      "contentHash": "a566b12ef306a7d49f01ac9bca379f09",
+      "sourceName": "contracts/TKFMToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "TKFMToken"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\finance\\PaymentSplitter.sol": {
+      "lastModificationDate": 1772053470713,
+      "contentHash": "4aa680e9153bff0937dba5ff34fd693e",
+      "sourceName": "@openzeppelin/contracts/finance/PaymentSplitter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../token/ERC20/utils/SafeERC20.sol",
+        "../utils/Address.sol",
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PaymentSplitter"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol": {
+      "lastModificationDate": 1772053452694,
+      "contentHash": "3ae5166c6827a9cf1a7a462d1632b464",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol": {
+      "lastModificationDate": 1771196439050,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol": {
+      "lastModificationDate": 1771196439055,
+      "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\utils\\SafeERC20.sol": {
+      "lastModificationDate": 1772053471948,
+      "contentHash": "1b5d667d3740d866eca0352758e59827",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol",
+        "../extensions/IERC20Permit.sol",
+        "../../../utils/Address.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeERC20"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Permit.sol": {
+      "lastModificationDate": 1772053466980,
+      "contentHash": "525fcdad8d171312933f47baf01d1ed8",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Permit"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFM_ReleaseNFT.sol": {
+      "lastModificationDate": 1771777544624,
+      "contentHash": "eb473a152eaa3439eb0279c4894cef2b",
+      "sourceName": "contracts/TKFM_ReleaseNFT.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFM_ReleaseNFT"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMReleaseNFT.sol": {
+      "lastModificationDate": 1771370922360,
+      "contentHash": "2f95ab35fc0d17fbf3b222c50281d7ae",
+      "sourceName": "contracts/TKFMReleaseNFT.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMReleaseNFT"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMCatalog.sol": {
+      "lastModificationDate": 1771193829627,
+      "contentHash": "d41cfbc52962769d2e70e7ea691f19e5",
+      "sourceName": "contracts/TKFMCatalog.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMCatalog"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRoyaltySplitter.sol": {
+      "lastModificationDate": 1771196617577,
+      "contentHash": "46e2f87548b5f7b0eee52cab5d188465",
+      "sourceName": "contracts/TKFMRoyaltySplitter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/finance/PaymentSplitter.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRoyaltySplitter"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRecords.sol": {
+      "lastModificationDate": 1771447200878,
+      "contentHash": "2b7ad16d984b200f70356c1f3689cb07",
+      "sourceName": "contracts/TKFMRecords.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRecords"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRevenueVault.sol": {
+      "lastModificationDate": 1771406772288,
+      "contentHash": "2d941eb0bba982352a21f33d3de8842d",
+      "sourceName": "contracts/TKFMRevenueVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRevenueVault"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFM_Authority.sol": {
+      "lastModificationDate": 1771822063801,
+      "contentHash": "ee729363d0856ddeb7906a8fa6cf1f8c",
+      "sourceName": "contracts/TKFM_Authority.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IRoyalties",
+        "TKFM_Authority"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFM_Catalog.sol": {
+      "lastModificationDate": 1771535013063,
+      "contentHash": "b1de1a7d789f4229391bcb8a1e458892",
+      "sourceName": "contracts/TKFM_Catalog.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFM_Catalog"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFM_PayoutEscrow.sol": {
+      "lastModificationDate": 1771535071343,
+      "contentHash": "a0eff1f21c415cbdae7a571b801b0f80",
+      "sourceName": "contracts/TKFM_PayoutEscrow.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IRoyalties",
+        "TKFM_PayoutEscrow"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFM_Royalties.sol": {
+      "lastModificationDate": 1771901374131,
+      "contentHash": "d36430c8e915390792671fce628e68a1",
+      "sourceName": "contracts/TKFM_Royalties.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IReleaseNFT",
+        "TKFM_Royalties"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TrancheToken.sol": {
+      "lastModificationDate": 1772666000875,
+      "contentHash": "0c14b876185f778127748a861da3568d",
+      "sourceName": "contracts/TrancheToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TrancheToken"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\PoolRegistry.sol": {
+      "lastModificationDate": 1772661236063,
+      "contentHash": "5011e6179e479117324187b2f79e4a47",
+      "sourceName": "contracts/PoolRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PoolRegistry"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\WaterfallController.sol": {
+      "lastModificationDate": 1772661324627,
+      "contentHash": "3c4e75db4807cc365a9470e49a343297",
+      "sourceName": "contracts/WaterfallController.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20Mintable",
+        "WaterfallController"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\SettlementMirror.sol": {
+      "lastModificationDate": 1772662879578,
+      "contentHash": "702d2f0408767f014232429c340c7b2b",
+      "sourceName": "contracts/SettlementMirror.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SettlementMirror"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogRegistry.sol": {
+      "lastModificationDate": 1772665805596,
+      "contentHash": "dbec58b92fb01ac0116707927ab67b4e",
+      "sourceName": "contracts/CatalogRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogRegistry"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\DistributionEngine.sol": {
+      "lastModificationDate": 1772665956271,
+      "contentHash": "c3d898338a4e08dfbcc332f0321e642e",
+      "sourceName": "contracts/DistributionEngine.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "DistributionEngine",
+        "IRoyaltyPool"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyPool.sol": {
+      "lastModificationDate": 1772665863782,
+      "contentHash": "0882b8de56911cb802d6e0f18f664010",
+      "sourceName": "contracts/RoyaltyPool.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyPool"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyVault.sol": {
+      "lastModificationDate": 1772754089122,
+      "contentHash": "8c0678edbdd933f542bbfcd33da62b72",
+      "sourceName": "contracts/RoyaltyVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyVault"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogNFT.sol": {
+      "lastModificationDate": 1772754122111,
+      "contentHash": "57b372db0279652154ae6a784c9b6530",
+      "sourceName": "contracts/CatalogNFT.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogNFT"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyShareMarket.sol": {
+      "lastModificationDate": 1772667022906,
+      "contentHash": "21fe63ae487e218bcf7dafa0c58cbf7c",
+      "sourceName": "contracts/RoyaltyShareMarket.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyShareMarket"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\PoolDAO.sol": {
+      "lastModificationDate": 1772667122969,
+      "contentHash": "96b07fda59bb5390c2070c864ad2c9e9",
+      "sourceName": "contracts/PoolDAO.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "PoolDAO"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\LiquidityRouter.sol": {
+      "lastModificationDate": 1772667077469,
+      "contentHash": "1b56ffc49e5279032677f4bc314ed654",
+      "sourceName": "contracts/LiquidityRouter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IUniswapRouter",
+        "LiquidityRouter"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogETF.sol": {
+      "lastModificationDate": 1772669269735,
+      "contentHash": "3fdd4898df08f71320be569b28556bec",
+      "sourceName": "contracts/CatalogETF.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogETF"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyAMM.sol": {
+      "lastModificationDate": 1772755222434,
+      "contentHash": "410fb11e1f59dd58441f742f1350aee5",
+      "sourceName": "contracts/RoyaltyAMM.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "IERC20",
+        "RoyaltyAMM"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\LiquidityMining.sol": {
+      "lastModificationDate": 1772669186745,
+      "contentHash": "45042929824e2197a8a6b1b498e585a9",
+      "sourceName": "contracts/LiquidityMining.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "LiquidityMining"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogFarm.sol": {
+      "lastModificationDate": 1772669236256,
+      "contentHash": "94e6bc131a00aec851a8cb5406c13842",
+      "sourceName": "contracts/CatalogFarm.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogFarm"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogCreditMarket.sol": {
+      "lastModificationDate": 1772670000298,
+      "contentHash": "901e49639aba8cc557145d935768bb3d",
+      "sourceName": "contracts/CatalogCreditMarket.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogCreditMarket"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyOrderBook.sol": {
+      "lastModificationDate": 1772669908322,
+      "contentHash": "22fcb2492316dfb3c7b0d6936436338a",
+      "sourceName": "contracts/RoyaltyOrderBook.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyOrderBook"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CustodyVault.sol": {
+      "lastModificationDate": 1772670065423,
+      "contentHash": "69937de48ae9b14569a28a52857660c6",
+      "sourceName": "contracts/CustodyVault.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CustodyVault"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyFutures.sol": {
+      "lastModificationDate": 1772669939777,
+      "contentHash": "ad22ab5fd6c18c291cd3d464fc024404",
+      "sourceName": "contracts/RoyaltyFutures.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyFutures"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CrossChainRoyaltyBridge.sol": {
+      "lastModificationDate": 1772670779063,
+      "contentHash": "5ef25ceb3f3f9fd1316d6b0f3ec14a5e",
+      "sourceName": "contracts/CrossChainRoyaltyBridge.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CrossChainRoyaltyBridge"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\InvestorKYCRegistry.sol": {
+      "lastModificationDate": 1772670731720,
+      "contentHash": "d93f6effd5aab4130b065267d5df20f5",
+      "sourceName": "contracts/InvestorKYCRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "InvestorKYCRegistry"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicClearinghouse.sol": {
+      "lastModificationDate": 1772670856077,
+      "contentHash": "efd765eb713677b8d74d4b07b55b5f38",
+      "sourceName": "contracts/MusicClearinghouse.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicClearinghouse"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyIndexFund.sol": {
+      "lastModificationDate": 1772671708765,
+      "contentHash": "cda8d3403fa1c219b987eb45d2eee119",
+      "sourceName": "contracts/RoyaltyIndexFund.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyIndexFund"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyDerivativesExchange.sol": {
+      "lastModificationDate": 1772671735597,
+      "contentHash": "85b512969dcb838ef0be96cfe95478bd",
+      "sourceName": "contracts/RoyaltyDerivativesExchange.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyDerivativesExchange"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogMarketplace.sol": {
+      "lastModificationDate": 1772672610412,
+      "contentHash": "1bb77bb26cf1ee52e0adb4af960d7f51",
+      "sourceName": "contracts/CatalogMarketplace.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogMarketplace"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CrossChainOrderRouter.sol": {
+      "lastModificationDate": 1772672654824,
+      "contentHash": "37fb628858295dc21e8b0fcc7b7549b8",
+      "sourceName": "contracts/CrossChainOrderRouter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CrossChainOrderRouter"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicStablecoin.sol": {
+      "lastModificationDate": 1772674747129,
+      "contentHash": "4a0237dad522bf80dead55d31a66bad3",
+      "sourceName": "contracts/MusicStablecoin.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicStablecoin"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltySettlement.sol": {
+      "lastModificationDate": 1772673827688,
+      "contentHash": "b1601f063acff5e52115e0e7e195a13f",
+      "sourceName": "contracts/RoyaltySettlement.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltySettlement"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicCreditRating.sol": {
+      "lastModificationDate": 1772673894427,
+      "contentHash": "bc5c0223ec7304d367020e7cf93bf920",
+      "sourceName": "contracts/MusicCreditRating.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicCreditRating"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\SovereignInvestmentRail.sol": {
+      "lastModificationDate": 1772673985256,
+      "contentHash": "c0eb458d5d25a75df02826650240d7fb",
+      "sourceName": "contracts/SovereignInvestmentRail.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SovereignInvestmentRail"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\StreamingOracle.sol": {
+      "lastModificationDate": 1772673707453,
+      "contentHash": "68b90aa7bf1a9b809819969903e0a9e0",
+      "sourceName": "contracts/StreamingOracle.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "StreamingOracle"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\DerivativesClearinghouse.sol": {
+      "lastModificationDate": 1772677115157,
+      "contentHash": "5de6ea67674de795f19c0753459da881",
+      "sourceName": "contracts/DerivativesClearinghouse.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "DerivativesClearinghouse"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltySettlementNetwork.sol": {
+      "lastModificationDate": 1772677128951,
+      "contentHash": "ba35583a671e38d22d3de846c16e39bd",
+      "sourceName": "contracts/RoyaltySettlementNetwork.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltySettlementNetwork"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\StreamingRevenueBond.sol": {
+      "lastModificationDate": 1772676047288,
+      "contentHash": "f0f8b7813bbabbdc1d52af9b1cac3416",
+      "sourceName": "contracts/StreamingRevenueBond.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "StreamingRevenueBond"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicReserveTreasury.sol": {
+      "lastModificationDate": 1772677949907,
+      "contentHash": "cba87bb3cb5b9a078ad04aaccaeb31c6",
+      "sourceName": "contracts/MusicReserveTreasury.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicReserveTreasury"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogLendingMarket.sol": {
+      "lastModificationDate": 1772678057767,
+      "contentHash": "22c4a2ac64f2f3164014f37c0cf55fb7",
+      "sourceName": "contracts/CatalogLendingMarket.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogLendingMarket"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicLiquidityNetwork.sol": {
+      "lastModificationDate": 1772678104751,
+      "contentHash": "564708edfbaf4d7b869769bedd1d6de0",
+      "sourceName": "contracts/MusicLiquidityNetwork.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicLiquidityNetwork"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicYieldCurve.sol": {
+      "lastModificationDate": 1772678007897,
+      "contentHash": "f402821bc3786b064d5752eaf7d93a05",
+      "sourceName": "contracts/MusicYieldCurve.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicYieldCurve"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicReserveCurrency.sol": {
+      "lastModificationDate": 1772679324594,
+      "contentHash": "765003ff7793f581ae0a422640bcf99c",
+      "sourceName": "contracts/MusicReserveCurrency.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicReserveCurrency"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\LabelClearingNetwork.sol": {
+      "lastModificationDate": 1772762046328,
+      "contentHash": "51407867fb4cf99bd73d94aeac171088",
+      "sourceName": "contracts/LabelClearingNetwork.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "LabelClearingNetwork"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicSettlementRails.sol": {
+      "lastModificationDate": 1772679486476,
+      "contentHash": "425c8c9bfc1f5467d5d9aaff1c0334b1",
+      "sourceName": "contracts/MusicSettlementRails.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicSettlementRails"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RevenueSwapMarket.sol": {
+      "lastModificationDate": 1772679436718,
+      "contentHash": "102d5c12c3c416b53111650245547fd4",
+      "sourceName": "contracts/RevenueSwapMarket.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RevenueSwapMarket"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\AutonomousRoyaltyAI.sol": {
+      "lastModificationDate": 1772743890404,
+      "contentHash": "b448c53b4a408642f0a4f4d174041b29",
+      "sourceName": "contracts/AutonomousRoyaltyAI.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "AutonomousRoyaltyAI"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CrossChainLiquidityRouter.sol": {
+      "lastModificationDate": 1772743730763,
+      "contentHash": "747a7eaf34e7e2e14047ba36bd889a23",
+      "sourceName": "contracts/CrossChainLiquidityRouter.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CrossChainLiquidityRouter"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicCentralBankDAO.sol": {
+      "lastModificationDate": 1772743683607,
+      "contentHash": "9573158162d438891347c53c9fd383d2",
+      "sourceName": "contracts/MusicCentralBankDAO.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicCentralBankDAO"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\StreamingOracleNetwork.sol": {
+      "lastModificationDate": 1772743647688,
+      "contentHash": "1aecd88c190bcaad2cf4f3e5ba44e316",
+      "sourceName": "contracts/StreamingOracleNetwork.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "StreamingOracleNetwork"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMCatalogToken.sol": {
+      "lastModificationDate": 1772904772084,
+      "contentHash": "eb9b71db56fae3d3ca8d95b82a5a720b",
+      "sourceName": "contracts/TKFMCatalogToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMCatalogToken"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyToken.sol": {
+      "lastModificationDate": 1772755095532,
+      "contentHash": "6594ab7e61212303ad6a39a8433f1e3c",
+      "sourceName": "contracts/RoyaltyToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyToken"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyFractionalizer.sol": {
+      "lastModificationDate": 1772755162285,
+      "contentHash": "64cb2e9b3fb297fe159a5de45bcba309",
+      "sourceName": "contracts/RoyaltyFractionalizer.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./RoyaltyToken.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyFractionalizer"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicUSD.sol": {
+      "lastModificationDate": 1772761952093,
+      "contentHash": "ec270099bc849a561dbbf1a403e85820",
+      "sourceName": "contracts/MusicUSD.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicUSD"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicIndexFund.sol": {
+      "lastModificationDate": 1772756444030,
+      "contentHash": "a6f324e60e2b64686b8eeb6ffc08be6c",
+      "sourceName": "contracts/MusicIndexFund.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicIndexFund"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogFutures.sol": {
+      "lastModificationDate": 1772759099827,
+      "contentHash": "e69f3f54e95ff04356f1cad3ef49a73d",
+      "sourceName": "contracts/CatalogFutures.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogFutures"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CatalogStockExchange.sol": {
+      "lastModificationDate": 1772764893169,
+      "contentHash": "53e716be74a4bc8f4779906ee55642e2",
+      "sourceName": "contracts/CatalogStockExchange.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CatalogStockExchange"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\Clearinghouse.sol": {
+      "lastModificationDate": 1772759316209,
+      "contentHash": "4e4fc3fb9cf2a3c92aa9e8ccc20c8c81",
+      "sourceName": "contracts/Clearinghouse.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Clearinghouse"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\CrossChainBridge.sol": {
+      "lastModificationDate": 1772756297654,
+      "contentHash": "3f0564e27a0ebd3190358ab58ce6a198",
+      "sourceName": "contracts/CrossChainBridge.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "CrossChainBridge"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\GlobalRoyaltyNetwork.sol": {
+      "lastModificationDate": 1772765050265,
+      "contentHash": "f871e9a62c87a2c0a41b38fcfa067631",
+      "sourceName": "contracts/GlobalRoyaltyNetwork.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "GlobalRoyaltyNetwork"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicReserveBank.sol": {
+      "lastModificationDate": 1772761832904,
+      "contentHash": "58eedce2813b731b17a7fc06c0737abf",
+      "sourceName": "contracts/MusicReserveBank.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicReserveBank"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicSovereignFund.sol": {
+      "lastModificationDate": 1772764868618,
+      "contentHash": "df16c8d62fcd2e6e3ba07bcbdd8a6e5b",
+      "sourceName": "contracts/MusicSovereignFund.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicSovereignFund"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\MusicVIX.sol": {
+      "lastModificationDate": 1772759243685,
+      "contentHash": "6f4ad26b7baf2dd9b3a72398f628ccf2",
+      "sourceName": "contracts/MusicVIX.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "MusicVIX"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltyDerivatives.sol": {
+      "lastModificationDate": 1772759012421,
+      "contentHash": "9dced6fa5f5f278b253638ef7000162b",
+      "sourceName": "contracts/RoyaltyDerivatives.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltyDerivatives"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\RoyaltySettlementRail.sol": {
+      "lastModificationDate": 1772762137091,
+      "contentHash": "b551704cac885bbb7633023421b621a2",
+      "sourceName": "contracts/RoyaltySettlementRail.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "RoyaltySettlementRail"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\StreamingDerivatives.sol": {
+      "lastModificationDate": 1772764960967,
+      "contentHash": "9fa85a129a1ee02861a64226dcb2fffc",
+      "sourceName": "contracts/StreamingDerivatives.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "StreamingDerivatives"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMCatalogNFT.sol": {
+      "lastModificationDate": 1772918752801,
+      "contentHash": "7b8e8fc898237110640ec8d018f024f3",
+      "sourceName": "contracts/TKFMCatalogNFT.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMCatalogNFT"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRoyaltyDistributor.sol": {
+      "lastModificationDate": 1772905343442,
+      "contentHash": "accc7608897cb2e7f94e4bb9021ad59a",
+      "sourceName": "contracts/TKFMRoyaltyDistributor.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRoyaltyDistributor"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMStablecoin.sol": {
+      "lastModificationDate": 1772910802759,
+      "contentHash": "585552b76ddd3cee91f9904d41319e61",
+      "sourceName": "contracts/TKFMStablecoin.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMStablecoin"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMIndexETF.sol": {
+      "lastModificationDate": 1772906210743,
+      "contentHash": "60cb4fc91fe60533e40e0b4c69bcacdf",
+      "sourceName": "contracts/TKFMIndexETF.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/access/Ownable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMIndexETF"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRoyaltyToken.sol": {
+      "lastModificationDate": 1772918119891,
+      "contentHash": "de070695fd20c0c17ad6f2c0abe86e75",
+      "sourceName": "contracts/TKFMRoyaltyToken.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRoyaltyToken"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMArtistIdentity.sol": {
+      "lastModificationDate": 1772914495127,
+      "contentHash": "bb260c011bbb8a4f487bc2f2d54f8359",
+      "sourceName": "contracts/TKFMArtistIdentity.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMArtistIdentity"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMLicensing.sol": {
+      "lastModificationDate": 1772918228618,
+      "contentHash": "7f023f080625778b1670024599ae9dff",
+      "sourceName": "contracts/TKFMLicensing.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMLicensing"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMRightsRegistry.sol": {
+      "lastModificationDate": 1772914531896,
+      "contentHash": "2ca6894b254eb7cbb4b8f1fce3943cf7",
+      "sourceName": "contracts/TKFMRightsRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMRightsRegistry"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMStreamingOracle.sol": {
+      "lastModificationDate": 1772918859846,
+      "contentHash": "8121c1205793cbfd2ff1eb7b6573d3e1",
+      "sourceName": "contracts/TKFMStreamingOracle.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMStreamingOracle"
+      ]
+    },
+    "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\contracts\\TKFMBridge.sol": {
+      "lastModificationDate": 1772919288075,
+      "contentHash": "178a7e75bb0b2d7ee56275d03776b7b9",
+      "sourceName": "contracts/TKFMBridge.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "TKFMBridge"
+      ]
+    }
+  }
+}

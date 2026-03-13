@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/get-royalty-statements.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-xr5kCV7r6doX",
-  "sourcesContent": ["exports.handler = async (event) => {\n  const email = event.queryStringParameters?.email;\n  if (!email) return { statusCode: 400, body: \"Email required\" };\n\n  // Simulated royalty data\n  // Replace with actual DB or Stripe payout records\n  const statements = [\n    { track: \"My First Single\", streams: 1200, revenue: 60.00 },\n    { track: \"EP Drop\", streams: 3400, revenue: 170.00 },\n    { track: \"Mixtape Vol 1\", streams: 2200, revenue: 110.00 },\n  ];\n\n  // Total revenue\n  const totalRevenue = statements.reduce((sum, s) => sum + s.revenue, 0);\n\n  return {\n    statusCode: 200,\n    body: JSON.stringify({ statements, totalRevenue }),\n  };\n};\n"],
-  "mappings": ";AAAA,QAAQ,UAAU,OAAO,UAAU;AACjC,QAAM,QAAQ,MAAM,uBAAuB;AAC3C,MAAI,CAAC,MAAO,QAAO,EAAE,YAAY,KAAK,MAAM,iBAAiB;AAI7D,QAAM,aAAa;AAAA,IACjB,EAAE,OAAO,mBAAmB,SAAS,MAAM,SAAS,GAAM;AAAA,IAC1D,EAAE,OAAO,WAAW,SAAS,MAAM,SAAS,IAAO;AAAA,IACnD,EAAE,OAAO,iBAAiB,SAAS,MAAM,SAAS,IAAO;AAAA,EAC3D;AAGA,QAAM,eAAe,WAAW,OAAO,CAAC,KAAK,MAAM,MAAM,EAAE,SAAS,CAAC;AAErE,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU,EAAE,YAAY,aAAa,CAAC;AAAA,EACnD;AACF;",
-  "names": []
-}

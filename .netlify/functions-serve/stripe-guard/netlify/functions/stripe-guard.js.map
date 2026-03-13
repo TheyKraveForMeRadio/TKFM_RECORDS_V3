@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/stripe-guard.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-cHF7tC7oVtQN",
-  "sourcesContent": ["\uFEFFexports.handler = async (event) => {\n  const headers = event.headers || {};\n  const isOwner =\n    headers['x-tkfm-owner'] === 'true' ||\n    event.queryStringParameters?.owner === 'true';\n\n  if (isOwner) {\n    return {\n      statusCode: 200,\n      body: JSON.stringify({\n        stripe: 'BYPASSED',\n        charge: 0,\n        access: 'GRANTED'\n      })\n    };\n  }\n\n  return {\n    statusCode: 401,\n    body: JSON.stringify({ error: 'PAYMENT REQUIRED' })\n  };\n};\n"],
-  "mappings": ";AAAC,QAAQ,UAAU,OAAO,UAAU;AAClC,QAAM,UAAU,MAAM,WAAW,CAAC;AAClC,QAAM,UACJ,QAAQ,cAAc,MAAM,UAC5B,MAAM,uBAAuB,UAAU;AAEzC,MAAI,SAAS;AACX,WAAO;AAAA,MACL,YAAY;AAAA,MACZ,MAAM,KAAK,UAAU;AAAA,QACnB,QAAQ;AAAA,QACR,QAAQ;AAAA,QACR,QAAQ;AAAA,MACV,CAAC;AAAA,IACH;AAAA,EACF;AAEA,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU,EAAE,OAAO,mBAAmB,CAAC;AAAA,EACpD;AACF;",
-  "names": []
-}
