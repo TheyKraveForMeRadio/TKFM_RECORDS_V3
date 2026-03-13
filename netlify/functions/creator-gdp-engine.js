@@ -1,16 +1,24 @@
 export const handler = async () => {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   metric:"CREATOR_GDP",
-   sectors:[
-    "music",
-    "video",
-    "podcasts",
-    "streaming",
-    "creator_apps"
-   ],
-   value_estimate:"$250B+"
-  })
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        engine: "creator-gdp-engine",
+        status: "running"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

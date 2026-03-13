@@ -1,16 +1,24 @@
 export const handler = async () => {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   engine:"CREATOR_CAPITAL_MARKETS",
-   instruments:[
-    "royalty_stocks",
-    "catalog_etfs",
-    "creator_bonds",
-    "music_derivatives",
-    "royalty_futures"
-   ],
-   timestamp:new Date().toISOString()
-  })
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        engine: "capital-markets-engine",
+        status: "running"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

@@ -20,7 +20,7 @@
     "@aws-sdk/client-s3": "^3.100.0",
     "@ethereumjs/wallet": "^10.0.0",
     "@openzeppelin/contracts": "^4.9.6",
-    "@supabase/supabase-js": "^2.97.0",
+    "@supabase/supabase-js": "^2.99.1",
     "bcryptjs": "^2.4.3",
     "busboy": "^1.6.0",
     "cloudinary": "^2.9.0",
@@ -30,8 +30,8 @@
     "ioredis": "^5.10.0",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "^3.3.2",
+    "pdf-lib": "^1.17.1",
     "pdfkit": "^0.17.2",
-    "resend": "^6.9.2",
-    "stripe": "^14.0.0"
+    "stripe": "^15.0.0"
   }
 }

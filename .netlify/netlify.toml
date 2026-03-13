@@ -1,8 +1,8 @@
 functionsDirectory = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\functions"
 functionsDirectoryOrigin = "config-v1"
+headersOrigin = "config"
+redirectsOrigin = "config"
 plugins = []
-headers = []
-redirects = []
 
 [build]
 edge_functions = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\edge-functions"
@@ -11,6 +11,9 @@ publishOrigin = "config"
 functions = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\functions"
 
 [build.environment]
+NODE_VERSION = "22"
+NODE_ENV = "production"
+DEBUG_MODE = "false"
 
 [build.processing]
 
@@ -23,6 +26,10 @@ functions = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\functions"
 [build.processing.js]
 
 [build.services]
+
+[[scheduled]]
+path = "/.netlify/functions/tkfm-master-cron"
+schedule = "*/1 * * * *"
 
 [[edge_functions]]
 function = "lockdown"
@@ -46,4 +53,30 @@ path = "/.netlify/*"
 
 [functions]
 
+[functions.timeout]
+seconds = 26.0
+
 [functions."*"]
+included_files = ["netlify/functions/_middleware-secret-guard.js"]
+external_node_modules = ["stripe", "jsonwebtoken", "bcryptjs", "@supabase/supabase-js", "ethers", "ioredis", "cloudinary", "pdfkit", "@aws-sdk/client-s3", "@apollo/server"]
+node_bundler = "esbuild"
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+from = "/stripe-webhook"
+to = "/.netlify/functions/stripe-webhook-ledger"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
