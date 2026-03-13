@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>TKFM Song Trading</title>
+
+<title>TKFM Song Market</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
 
 <style>
 
 body{
 background:#020617;
 color:#e5e7eb;
-font-family:Arial;
-padding:40px;
+font-family:system-ui;
+margin:0;
+padding:20px;
 }
 
-h1{
-color:#facc15;
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+margin-bottom:20px;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+.price{
+font-size:28px;
+color:#22d3ee;
 }
 
-th,td{
-padding:10px;
+button{
+background:#f97316;
+border:none;
+padding:12px 20px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.orderbook{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.row{
+padding:6px 0;
 border-bottom:1px solid #1e293b;
 }
 
@@ -33,53 +58,126 @@ border-bottom:1px solid #1e293b;
 
 <body>
 
-<h1>SONG MARKET</h1>
+<h1 id="song">Song</h1>
 
-<table>
+<div class="panel">
 
-<thead>
-<tr>
-<th>Song</th>
-<th>Price</th>
-<th>Supply</th>
-</tr>
-</thead>
+Price
+<div class="price" id="price">$0</div>
 
-<tbody id="tokenTable">
+</div>
 
-</tbody>
+<div class="panel">
 
-</table>
+<canvas id="chart" height="200"></canvas>
+
+</div>
+
+<div class="panel">
+
+<div class="orderbook">
+
+<div>
+<h3>Buy Orders</h3>
+<div id="buy"></div>
+</div>
+
+<div>
+<h3>Sell Orders</h3>
+<div id="sell"></div>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Trade</h3>
+
+<input id="shares" placeholder="shares"/>
+
+<button onclick="buy()">Buy</button>
+<button onclick="sell()">Sell</button>
+
+</div>
 
 <script>
 
-const source = new EventSource("/.netlify/functions/tkfm-market-terminal-engine")
+const url = new URLSearchParams(window.location.search)
+const token = url.get("token_id")
 
-source.onmessage = function(event){
+document.getElementById("song").innerText = token
 
-const data = JSON.parse(event.data)
+async function loadBook(){
 
-const table = document.getElementById("tokenTable")
+const res =
+await fetch("/.netlify/functions/orderbook-view?token_id="+token)
 
-table.innerHTML=""
+const data = await res.json()
 
-for(const token of data.tokens){
+const buy = document.getElementById("buy")
+const sell = document.getElementById("sell")
 
-const row=document.createElement("tr")
+buy.innerHTML=""
+sell.innerHTML=""
 
-row.innerHTML=`
-<td>${token.name}</td>
-<td>${token.price}</td>
-<td>${token.total_supply}</td>
-`
+(data.buys||[]).forEach(o=>{
 
-table.appendChild(row)
+const row=document.createElement("div")
+row.className="row"
+row.innerText=o.price+" ("+o.quantity+")"
+
+buy.appendChild(row)
+
+})
+
+(data.sells||[]).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="row"
+row.innerText=o.price+" ("+o.quantity+")"
+
+sell.appendChild(row)
+
+})
 
 }
 
+async function buy(){
+
+const shares = document.getElementById("shares").value
+
+await fetch("/.netlify/functions/create-buy-order",{
+method:"POST",
+body:JSON.stringify({
+token_id:token,
+shares
+})
+})
+
 }
+
+async function sell(){
+
+const shares = document.getElementById("shares").value
+
+await fetch("/.netlify/functions/create-sell-order",{
+method:"POST",
+body:JSON.stringify({
+token_id:token,
+shares
+})
+})
+
+}
+
+loadBook()
+
+setInterval(loadBook,3000)
 
 </script>
 
 </body>
+
 </html>
