@@ -70,12 +70,22 @@ export default async () => {
 
   }
 
-  /* HOURLY — INDEX + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
+  /* HOURLY — INDEX + ETF + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
 
   if(minute === 0){
 
+    /* MARKET INDEX */
+
     await call("music-index-engine")
+
+    /* ETF ENGINE */
+
+    await call("music-etf-engine")
+
     await call("trending-index-engine")
+
+    /* ECONOMY */
+
     await call("music-economy-simulator-engine")
     await call("music-central-bank-engine")
 
@@ -83,16 +93,16 @@ export default async () => {
 
     await call("tkfm-ai-governor-engine")
 
-    /* REGULATORY SYSTEM */
+    /* REGULATORY */
 
     await call("regulatory-compliance-engine")
     await call("global-regulatory-engine")
 
-    /* GLOBAL LIQUIDITY ROUTER */
+    /* LIQUIDITY */
 
     await call("tkfm-global-liquidity-router")
 
-    /* NODE NETWORK ENGINE */
+    /* NODE NETWORK */
 
     await call("tkfm-node-network-engine")
 
