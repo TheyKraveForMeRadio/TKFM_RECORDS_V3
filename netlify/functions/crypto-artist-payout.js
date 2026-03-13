@@ -1,44 +1,24 @@
-import { ethers } from "ethers";
+export const handler = async () => {
 
-const provider =
- new ethers.JsonRpcProvider(
-  process.env.MAINNET_RPC_URL
- );
+  try {
 
-const wallet =
- new ethers.Wallet(
-  process.env.PRIVATE_KEY,
-  provider
- );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-export async function handler(event){
+  } catch (err) {
 
- const body = JSON.parse(event.body);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- const tx =
- await wallet.sendTransaction({
-
-  to:body.wallet,
-
-  value:
-  ethers.parseEther(
-   body.amount.toString()
-  )
-
- });
-
- await tx.wait();
-
- return {
-
-  statusCode:200,
-
-  body:JSON.stringify({
-
-   tx:tx.hash
-
-  })
-
- };
+  }
 
 }

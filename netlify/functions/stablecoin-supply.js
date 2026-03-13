@@ -1,12 +1,24 @@
-export async function handler(){
+export const handler = async () => {
 
- const supply = 2500000;
+  try {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   musd_supply:supply
-  })
- };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
 
 }

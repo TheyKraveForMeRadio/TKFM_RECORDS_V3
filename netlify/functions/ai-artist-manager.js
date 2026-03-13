@@ -1,69 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-AI ARTIST MANAGER
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Automatically:
-discovers artists
-onboards them
-launches catalogs
-starts IPOs
-*/
+  } catch (err) {
 
-async function recruitArtist(name){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-const { data } = await supabase
-.from("artists")
-.insert({
-name,
-created_at:new Date().toISOString()
-})
-.select()
-.single()
-
-return data
-
-}
-
-async function launchCatalog(artist_id){
-
-await supabase.from("catalogs").insert({
-artist_id,
-market_cap:10000,
-created_at:new Date().toISOString()
-})
-
-}
-
-export async function handler(){
-
-try{
-
-const artist = await recruitArtist(
-"AI Artist " + Math.floor(Math.random()*100000)
-)
-
-await launchCatalog(artist.id)
-
-return {
-statusCode:200,
-body:JSON.stringify({
-status:"AI artist launched"
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

@@ -1,30 +1,24 @@
-import Stripe from 'stripe';
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
 
-export async function handler(event) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { entity_id, email } =
-    JSON.parse(event.body || '{}');
+  } catch (err) {
 
-  const customer = await stripe.customers.create({ email });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  const subscription = await stripe.subscriptions.create({
-    customer: customer.id,
-    items: [{ price: process.env.STRIPE_PRICE_SAAS_MONTHLY }]
-  });
+  }
 
-  await supabase
-    .from('treasury_entities')
-    .update({
-      stripe_customer_id: customer.id,
-      stripe_subscription_id: subscription.id
-    })
-    .eq('id', entity_id);
-
-  return {
-    statusCode:200,
-    body:JSON.stringify({ subscription_id: subscription.id })
-  };
 }

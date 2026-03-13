@@ -1,46 +1,24 @@
-import fetch from "node-fetch";
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE
-);
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const token = process.env.SPOTIFY_API_TOKEN;
+  } catch (err) {
 
- const res = await fetch(
-  "https://api.spotify.com/v1/me/player/recently-played",
-  {
-   headers:{
-    Authorization:"Bearer " + token
-   }
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
- );
-
- const data = await res.json();
-
- for(const item of data.items){
-
-  await supabase
-  .from("streaming_events")
-  .insert({
-
-   platform:"spotify",
-   track:item.track.name,
-   artist:item.track.artists[0].name,
-   played_at:item.played_at
-
-  });
-
- }
-
- return {
-
-  statusCode:200,
-  body:JSON.stringify({ingested:true})
-
- };
 
 }

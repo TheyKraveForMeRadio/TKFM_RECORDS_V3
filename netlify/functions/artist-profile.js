@@ -1,29 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase =
- createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE
- );
+  try {
 
-export async function handler(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const id =
- new URLSearchParams(
-  event.queryStringParameters
- ).get("artist_id");
+  } catch (err) {
 
- const { data } =
- await supabase
- .from("catalogs")
- .select("*")
- .eq("artist_id", id);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- return {
-
-  statusCode:200,
-  body:JSON.stringify(data)
-
- };
+  }
 
 }

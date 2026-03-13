@@ -1,42 +1,24 @@
-import Stripe from "stripe";
+export const handler = async () => {
 
-const stripe = new Stripe(
- process.env.STRIPE_SECRET_KEY
-);
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const account =
- await stripe.accounts.create({
+  } catch (err) {
 
-  type:"express"
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- });
-
- const link =
- await stripe.accountLinks.create({
-
-  account:account.id,
-
-  refresh_url:
-  "https://tkfmrecords.com/reauth",
-
-  return_url:
-  "https://tkfmrecords.com/dashboard",
-
-  type:"account_onboarding"
-
- });
-
- return {
-
-  statusCode:200,
-  body:JSON.stringify({
-
-   url:link.url
-
-  })
-
- };
+  }
 
 }

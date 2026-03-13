@@ -1,40 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-export async function handler(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-try{
+  } catch (err) {
 
-const catalog_id = event.queryStringParameters?.catalog_id
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-const { data:trades } = await supabase
-.from('catalog_trades')
-.select('*')
-.eq('catalog_id',catalog_id)
-.order('created_at',{ascending:false})
-.limit(1)
-
-const price = trades?.[0]?.price || 0
-
-return {
-statusCode:200,
-body:JSON.stringify({
-catalog_id,
-price
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

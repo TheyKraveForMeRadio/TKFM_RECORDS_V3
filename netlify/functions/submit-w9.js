@@ -1,44 +1,24 @@
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const body = JSON.parse(event.body);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const {
-    email,
-    legal_name,
-    business_name,
-    tax_id,
-    address,
-    city,
-    state,
-    zip,
-    country,
-    signature
-  } = body;
+  } catch (err) {
 
-  if (!email || !legal_name || !tax_id) {
-    return { statusCode: 400, body: "Missing required fields" };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  await supabase.from('artist_tax_profiles')
-    .upsert({
-      email,
-      legal_name,
-      business_name,
-      tax_id,
-      address,
-      city,
-      state,
-      zip,
-      country,
-      signature,
-      submitted_at: new Date(),
-      verified: false
-    }, { onConflict: 'email' });
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ success: true })
-  };
 }

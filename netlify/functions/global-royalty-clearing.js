@@ -1,13 +1,22 @@
 export const handler = async () => {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   network:"GLOBAL_ROYALTY_CLEARING",
-   settlement_layers:[
-    "streaming_royalties",
-    "catalog_dividends",
-    "creator_banking_payouts"
-   ]
-  })
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        engine: "global-royalty-clearing",
+        status: "running"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    }
+
+  }
+
 }

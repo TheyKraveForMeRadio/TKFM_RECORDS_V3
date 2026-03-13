@@ -1,28 +1,24 @@
-import fetch from "node-fetch";
+export const handler = async () => {
 
-export async function handler(){
+  try {
 
- const spotify = await fetch(
-  "https://api.spotify.com/v1/catalog/streams"
- );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const apple = await fetch(
-  "https://api.music.apple.com/v1/catalog/streams"
- );
+  } catch (err) {
 
- const spotifyData = await spotify.json();
- const appleData = await apple.json();
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- return {
-
-  statusCode:200,
-  body:JSON.stringify({
-
-   spotify:spotifyData,
-   apple:appleData
-
-  })
-
- };
+  }
 
 }

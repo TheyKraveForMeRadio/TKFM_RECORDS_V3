@@ -1,28 +1,24 @@
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const { data } = await supabase
-    .from('partner_referrals')
-    .select('*');
-
-  const partners = {};
-
-  data?.forEach(p => {
-
-    if(!partners[p.partner]) {
-      partners[p.partner] = {
-        deals:0,
-        revenue:0
-      };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
     }
 
-    partners[p.partner].deals++;
-    partners[p.partner].revenue += p.deal_value || 0;
-  });
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify(partners)
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

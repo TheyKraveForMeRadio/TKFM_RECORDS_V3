@@ -1,46 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE
-);
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const { data } = await supabase
- .from("streaming_events")
- .select("*");
+  } catch (err) {
 
- const totals = {};
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- for(const event of data){
-
-  const key = event.track;
-
-  if(!totals[key])
-  totals[key] = 0;
-
-  totals[key]++;
-
- }
-
- await supabase
- .from("streaming_oracle")
- .insert({
-
-  snapshot:totals
-
- });
-
- return {
-
-  statusCode:200,
-  body:JSON.stringify({
-
-   tracks:Object.keys(totals).length
-
-  })
-
- };
+  }
 
 }

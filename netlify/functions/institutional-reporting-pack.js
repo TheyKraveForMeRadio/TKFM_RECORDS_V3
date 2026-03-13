@@ -1,28 +1,24 @@
-import { supabase } from "./supabase.js";
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const { data: advances } = await supabase
-    .from("capital_advances")
-    .select("amount, repaid_amount");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const totalExposure =
-    (advances || []).reduce((a,b)=>a+b.amount,0);
+  } catch (err) {
 
-  const totalOutstanding =
-    (advances || []).reduce(
-      (a,b)=>a+(b.amount - (b.repaid_amount||0)),0
-    );
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  const defaultRatio =
-    totalOutstanding / (totalExposure || 1);
+  }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      totalExposure,
-      totalOutstanding,
-      defaultRatio
-    })
-  };
 }

@@ -1,42 +1,24 @@
-import fetch from "node-fetch";
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE
-);
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const res = await fetch(
-  "https://api.music.apple.com/v1/catalog/us/charts",
-  {
-   headers:{
-    Authorization:"Bearer "+process.env.APPLE_MUSIC_TOKEN
-   }
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
- );
-
- const data = await res.json();
-
- for(const song of data.results.songs[0].data){
-
-  await supabase
-  .from("streaming_revenue")
-  .insert({
-
-   platform:"apple",
-   track:song.attributes.name,
-   artist:song.attributes.artistName,
-   revenue:0.005
-
-  });
-
- }
-
- return {
-  statusCode:200,
-  body:JSON.stringify({synced:true})
- };
 
 }

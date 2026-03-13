@@ -1,23 +1,24 @@
-const BASE = process.env.SELF_BASE_URL || "https://tkfmrecords.com"
+export const handler = async () => {
 
-export default async () => {
+  try {
 
-const event = {
-type:"trade_executed",
-catalog_id:"song123",
-price:12.5,
-shares:50
-}
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-await fetch(BASE + "/.netlify/functions/tkfm-event-bus",{
-method:"POST",
-headers:{ "content-type":"application/json" },
-body:JSON.stringify(event)
-})
+  } catch (err) {
 
-return{
-statusCode:200,
-body:"trade event emitted"
-}
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
 
 }

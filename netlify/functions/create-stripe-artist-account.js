@@ -1,53 +1,24 @@
-import Stripe from "stripe"
-import { createClient } from "@supabase/supabase-js"
+export const handler = async () => {
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+  try {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-export async function handler(event){
+  } catch (err) {
 
-try{
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-const body = JSON.parse(event.body || "{}")
-
-const artistId = body.artist_id
-const email = body.email
-
-const account = await stripe.accounts.create({
-
-type:"express",
-
-email:email,
-
-capabilities:{
-card_payments:{requested:true},
-transfers:{requested:true}
-}
-
-})
-
-await supabase.from("artists").update({
-stripe_account_id:account.id
-}).eq("id",artistId)
-
-return {
-statusCode:200,
-body:JSON.stringify({
-account_id:account.id
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

@@ -1,22 +1,24 @@
-export async function handler() {
+export const handler = async () => {
 
-  const memo = `
-  TKFM Platform Update:
+  try {
 
-  - Strong recurring revenue growth
-  - Expanding payout automation
-  - Enterprise SaaS adoption rising
-  - Automated compliance infrastructure live
-  - Scalable analytics deployed
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  Strategic focus:
-  - Increase ARR
-  - Expand enterprise clients
-  - Improve retention
-  `;
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({ memo })
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

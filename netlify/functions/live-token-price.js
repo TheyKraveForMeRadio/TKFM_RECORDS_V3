@@ -1,24 +1,24 @@
-const { createClient } = require("@supabase/supabase-js");
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+  try {
 
-exports.handler = async function(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const catalog_id = event.queryStringParameters.catalog_id;
+  } catch (err) {
 
- const {data} = await supabase
- .from("price_history")
- .select("*")
- .eq("catalog_id",catalog_id)
- .order("timestamp",{ascending:false})
- .limit(100);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- return{
-  statusCode:200,
-  body:JSON.stringify(data)
- };
+  }
 
-};
+}

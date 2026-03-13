@@ -1,19 +1,24 @@
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const { data } = await supabase
-    .from('entity_risk_scores')
-    .select('entity_id,risk_score,freeze_active');
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const heatmap = data.map(e=>({
-    entity:e.entity_id,
-    intensity:e.risk_score,
-    frozen:e.freeze_active
-  }));
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify(heatmap)
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

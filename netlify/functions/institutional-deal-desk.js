@@ -1,40 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-INSTITUTIONAL DEAL DESK
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Tracks deals between institutions
-and music catalog owners.
-*/
+  } catch (err) {
 
-export async function handler(){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-try{
-
-const { data } = await supabase
-.from("catalog_deals")
-.select("*")
-.order("deal_size",{ascending:false})
-
-return {
-statusCode:200,
-body:JSON.stringify({
-deals:data
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

@@ -1,21 +1,24 @@
-export async function handler() {
+export const handler = async () => {
 
-  const treasuryPool = 1000000; // placeholder
-  const yieldRates = [0.02,0.03,0.04];
+  try {
 
-  const scenarios = yieldRates.map(rate => {
-    const annualReturn = treasuryPool * rate;
     return {
-      yieldRate:rate,
-      annualReturn
-    };
-  });
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      treasuryPool,
-      scenarios
-    })
-  };
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

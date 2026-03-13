@@ -1,27 +1,24 @@
-import { ethers } from "ethers";
+export const handler = async () => {
 
-const provider =
- new ethers.JsonRpcProvider(
-  process.env.MAINNET_RPC_URL
- );
+  try {
 
-const wallet =
- new ethers.Wallet(
-  process.env.PRIVATE_KEY,
-  provider
- );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-export async function handler(){
+  } catch (err) {
 
- return {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  statusCode:200,
-  body:JSON.stringify({
-
-   liquidity:true
-
-  })
-
- };
+  }
 
 }

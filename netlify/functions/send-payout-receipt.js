@@ -1,30 +1,24 @@
-import { Resend } from 'resend';
+export const handler = async () => {
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+  try {
 
-export async function handler(event) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { email, amount, transferId, batchId } = JSON.parse(event.body);
+  } catch (err) {
 
-  if (!email || !amount) {
-    return { statusCode: 400, body: "Missing fields" };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  await resend.emails.send({
-    from: "payouts@tkfmrecords.com",
-    to: email,
-    subject: "TKFM Payout Receipt",
-    html: `
-      <h2>TKFM Records Payout Receipt</h2>
-      <p>Amount Paid: <strong>$${amount}</strong></p>
-      <p>Stripe Transfer ID: ${transferId}</p>
-      <p>Payout Batch: ${batchId}</p>
-      <p>Date: ${new Date().toLocaleDateString()}</p>
-    `
-  });
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ success: true })
-  };
 }

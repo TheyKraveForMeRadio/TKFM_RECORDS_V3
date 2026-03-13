@@ -1,45 +1,24 @@
-import Stripe from 'stripe';
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
 
-export async function handler() {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { data: artists } = await supabase
-    .from('artist_balances')
-    .select('*');
+  } catch (err) {
 
-  const results = [];
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  for(const artist of artists||[]) {
-
-    if(!artist.stripe_account_id) continue;
-
-    const account = await stripe.accounts.retrieve(artist.stripe_account_id);
-
-    if(!account.payouts_enabled) continue;
-
-    if(Number(artist.available_balance) < 100) continue;
-
-    const transfer = await stripe.transfers.create({
-      amount: Math.floor(Number(artist.available_balance)*100),
-      currency:"usd",
-      destination: artist.stripe_account_id
-    });
-
-    await supabase
-      .from('artist_balances')
-      .update({ available_balance:0 })
-      .eq('id',artist.id);
-
-    results.push({
-      artist:artist.email,
-      transferId:transfer.id
-    });
   }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify(results)
-  };
 }

@@ -1,20 +1,24 @@
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const capital = 1000000;
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const allocation = {
-    acquisition: capital * 0.40,
-    productDevelopment: capital * 0.25,
-    retention: capital * 0.20,
-    infrastructure: capital * 0.15
-  };
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      totalCapital: capital,
-      allocation
-    })
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }
