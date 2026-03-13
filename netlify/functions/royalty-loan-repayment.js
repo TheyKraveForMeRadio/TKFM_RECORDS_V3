@@ -1,44 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-try{
+  } catch (err) {
 
-const { data:loans } = await supabase
-.from("music_credit_loans")
-.select("*")
-.eq("status","active")
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-for(const loan of loans){
-
-const payment = loan.amount * 0.02
-
-await supabase
-.from("music_credit_loans")
-.update({
-amount:loan.amount - payment
-})
-.eq("id",loan.id)
-
-}
-
-return {
-statusCode:200,
-body:JSON.stringify({status:"repayments processed"})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

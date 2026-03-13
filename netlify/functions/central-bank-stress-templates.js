@@ -1,25 +1,24 @@
-export async function handler() {
+export const handler = async () => {
 
-  const templates = [
-    {
-      name:"CCAR Severe",
-      GDP:-0.06,
-      Unemployment:+0.05,
-      MarketCrash:-0.4
-    },
-    {
-      name:"EBA Adverse",
-      GDP:-0.04,
-      InterestRate:+0.02,
-      CreditSpread:+0.03
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
     }
-  ];
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      templates,
-      description:"Regulatory macro stress templates"
-    })
-  };
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

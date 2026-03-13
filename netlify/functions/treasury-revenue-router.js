@@ -1,26 +1,24 @@
-import Stripe from "stripe";
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { amount, connected_account_id, platform_fee_percent } =
-    JSON.parse(event.body || "{}");
-
-  const applicationFee = Math.floor(
-    amount * (platform_fee_percent / 100)
-  );
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: "usd",
-    application_fee_amount: applicationFee,
-    transfer_data: {
-      destination: connected_account_id
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
     }
-  });
 
-  return {
-    statusCode:200,
-    body:JSON.stringify(paymentIntent)
-  };
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

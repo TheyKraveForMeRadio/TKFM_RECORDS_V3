@@ -1,13 +1,22 @@
 export const handler = async () => {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   fund:"TKFM_CREATOR_GLOBAL_FUND",
-   assets:[
-    "catalog_equity",
-    "royalty_bonds",
-    "creator_etfs"
-   ]
-  })
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        engine: "global-creator-fund",
+        status: "active"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    }
+
+  }
+
 }

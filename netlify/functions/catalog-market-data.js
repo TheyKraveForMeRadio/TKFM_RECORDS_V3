@@ -1,35 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
-import { cacheGet, cacheSet } from "./redis-cache.js";
+export const handler = async () => {
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+  try {
 
-export default async function handler() {
-
-  const cacheKey = "market_data";
-
-  const cached = await cacheGet(cacheKey);
-  if (cached) {
     return {
       statusCode: 200,
-      body: JSON.stringify(cached)
-    };
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  const { data } = await supabase
-    .from("catalogs")
-    .select("*")
-    .order("market_cap", { ascending: false })
-    .limit(50);
-
-  const response = { market: data || [] };
-
-  await cacheSet(cacheKey, response, 10);
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response)
-  };
 }

@@ -1,16 +1,24 @@
-import { cacheGet } from "./redis-cache.js";
+export const handler = async () => {
 
-export default async () => {
+  try {
 
-  const data = await cacheGet("market_data");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  return {
-    statusCode: 200,
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      "Connection": "keep-alive"
-    },
-    body: `data: ${JSON.stringify(data || {})}\n\n`
-  };
-};
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
+}

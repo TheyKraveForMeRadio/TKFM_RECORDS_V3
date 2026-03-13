@@ -1,16 +1,24 @@
-import { supabase } from "./supabase.js";
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { advance_id, principal, priority } =
-    JSON.parse(event.body || "{}");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  await supabase.from("capital_tranches").insert({
-    advance_id,
-    principal,
-    priority,
-    repaid: 0
-  });
+  } catch (err) {
 
-  return { statusCode:200, body:"Tranche created" };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

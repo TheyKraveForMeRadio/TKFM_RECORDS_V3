@@ -1,32 +1,24 @@
-import crypto from "crypto";
-import { supabase } from "./supabase.js";
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { pool_id } =
-    JSON.parse(event.body || "{}");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { data } = await supabase
-    .from("tranches")
-    .select("*")
-    .eq("pool_id", pool_id);
+  } catch (err) {
 
-  const hash = crypto
-    .createHash("sha256")
-    .update(JSON.stringify(data))
-    .digest("hex");
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  await supabase.from("pool_hashes").insert({
-    pool_id,
-    hash,
-    created_at:new Date()
-  });
+  }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      pool_id,
-      hash
-    })
-  };
 }

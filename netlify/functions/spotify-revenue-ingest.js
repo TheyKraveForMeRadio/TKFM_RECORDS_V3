@@ -1,52 +1,24 @@
-import fetch from 'node-fetch'
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-export async function handler(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const { artist, track, catalog_id } =
-  JSON.parse(event.body)
+  } catch (err) {
 
- const token = process.env.SPOTIFY_API_TOKEN
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- const search = await fetch(
-  `https://api.spotify.com/v1/search?q=${track}&type=track`,
-  {
-   headers:{
-    Authorization:`Bearer ${token}`
-   }
   }
- )
-
- const json = await search.json()
-
- const streams =
-  Math.floor(Math.random()*100000)
-
- const revenue = streams * 0.0035
-
- await supabase
-  .from('streaming_revenue_events')
-  .insert({
-   platform:'spotify',
-   artist_name:artist,
-   track_title:track,
-   catalog_id,
-   streams,
-   revenue_usd:revenue
-  })
-
- return{
-  statusCode:200,
-  body:JSON.stringify({
-   platform:'spotify',
-   streams,
-   revenue
-  })
- }
 
 }

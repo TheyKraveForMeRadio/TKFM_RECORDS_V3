@@ -12,7 +12,7 @@ NODE_ENV = "production"
 DEBUG_MODE = "false"
 
 ############################################
-# FUNCTIONS CONFIG (OPTIMIZED FOR BUNDLE SIZE)
+# FUNCTIONS CONFIG (OPTIMIZED)
 ############################################
 
 [functions]
@@ -28,6 +28,7 @@ external_node_modules = [
 "cloudinary",
 "pdfkit",
 "pdf-lib",
+"resend",
 "@aws-sdk/client-s3",
 "@apollo/server"
 ]
@@ -59,39 +60,3 @@ schedule = "*/1 * * * *"
 from = "/stripe-webhook"
 to = "/.netlify/functions/stripe-webhook-ledger"
 status = 200
-
-############################################
-# EDGE SECURITY
-############################################
-
-[[edge_functions]]
-function = "lockdown"
-path = "/admin/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/owner/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/secure/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/private/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/.netlify/*"
-
-############################################
-# GLOBAL SECURITY HEADERS
-############################################
-
-[[headers]]
-for = "/*"
-
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"

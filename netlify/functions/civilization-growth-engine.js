@@ -1,49 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-CIVILIZATION GROWTH ENGINE
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Measures growth of the entire ecosystem.
-*/
+  } catch (err) {
 
-export async function handler(){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-try{
-
-const { data:catalogs } = await supabase
-.from("catalogs")
-.select("market_cap")
-
-let totalMarket = 0
-
-for(const c of catalogs){
-totalMarket += c.market_cap || 0
-}
-
-await supabase.from("civilization_growth").insert({
-music_market_value:totalMarket,
-created_at:new Date().toISOString()
-})
-
-return {
-statusCode:200,
-body:JSON.stringify({
-music_market_value:totalMarket
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

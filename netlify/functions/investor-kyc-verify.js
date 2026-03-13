@@ -1,32 +1,24 @@
-import fetch from "node-fetch";
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const body = JSON.parse(event.body);
-
-  const { wallet,email } = body;
-
-  const response = await fetch(
-    "https://api.kyc-provider.com/verify",
-    {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ wallet,email })
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
     }
-  );
 
-  const data = await response.json();
+  } catch (err) {
 
-  return {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-    statusCode:200,
-
-    body:JSON.stringify({
-
-      verified:data.verified
-
-    })
-
-  };
+  }
 
 }

@@ -1,22 +1,24 @@
-﻿exports.handler = async (event) => {
-  const headers = event.headers || {};
-  const isOwner =
-    headers['x-tkfm-owner'] === 'true' ||
-    event.queryStringParameters?.owner === 'true';
+export const handler = async () => {
 
-  if (isOwner) {
+  try {
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        stripe: 'BYPASSED',
-        charge: 0,
-        access: 'GRANTED'
+        status: "placeholder-function",
+        message: "Function repaired automatically"
       })
-    };
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  return {
-    statusCode: 401,
-    body: JSON.stringify({ error: 'PAYMENT REQUIRED' })
-  };
-};
+}

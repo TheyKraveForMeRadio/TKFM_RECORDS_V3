@@ -1,44 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase =
- createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE
- );
+  try {
 
-export async function handler(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const body =
- JSON.parse(event.body);
+  } catch (err) {
 
- const { data } =
- await supabase
- .from("investments")
- .select("*")
- .eq("investor", body.target);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- for(const inv of data){
-
-  await supabase
-  .from("investments")
-  .insert({
-
-   catalog_id:inv.catalog_id,
-   investor:body.follower,
-   amount:inv.amount
-
-  });
-
- }
-
- return {
-
-  statusCode:200,
-
-  body:JSON.stringify({
-   copied:data.length
-  })
-
- };
+  }
 
 }

@@ -1,22 +1,24 @@
-import { redis } from "./redis-cache.js"
+export const handler = async () => {
 
-export default async (req) => {
+  try {
 
-const id = req.queryStringParameters.catalog_id
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-if(!id) return {statusCode:400,body:"missing catalog"}
+  } catch (err) {
 
-let book = await redis.get("orderbook:"+id)
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-if(!book){
-book={bids:[],asks:[]}
-}else{
-book=JSON.parse(book)
-}
-
-return{
-statusCode:200,
-body:JSON.stringify(book)
-}
+  }
 
 }

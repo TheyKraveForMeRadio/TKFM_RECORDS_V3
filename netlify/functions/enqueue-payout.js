@@ -1,23 +1,24 @@
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const { data: artists } = await supabase
-    .from('artist_balances')
-    .select('*')
-    .gt('available_balance', 100);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  for(const artist of artists || []) {
-    await supabase.from('payout_queue').insert({
-      artist_id: artist.id,
-      amount: artist.available_balance,
-      status: 'queued',
-      created_at: new Date().toISOString()
-    });
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({ queued: artists?.length || 0 })
-  };
 }

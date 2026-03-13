@@ -1,18 +1,24 @@
+export const handler = async () => {
 
-export async function handler() {
+  try {
 
-  const ARR = 1200000;
-  const totalCapitalRaised = 3000000;
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const capitalEfficiency =
-    ARR / totalCapitalRaised;
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      ARR,
-      totalCapitalRaised,
-      capitalEfficiencyRatio: capitalEfficiency
-    })
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

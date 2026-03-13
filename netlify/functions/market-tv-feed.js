@@ -1,54 +1,24 @@
-export async function handler(){
+export const handler = async () => {
 
-try{
+  try {
 
-const now=new Date().toLocaleTimeString()
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-const events=[
+  } catch (err) {
 
-{
-message:"🔥 Fan bought shares in Midnight Drive",
-time:now
-},
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-{
-message:"📈 Song price increased 12%",
-time:now
-},
-
-{
-message:"🎧 Artist uploaded a new track",
-time:now
-},
-
-{
-message:"💰 Royalty payout distributed",
-time:now
-},
-
-{
-message:"🏆 Artist entered Top 10 leaderboard",
-time:now
-}
-
-]
-
-return{
-statusCode:200,
-body:JSON.stringify({
-events
-})
-}
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({
-error:err.message
-})
-}
-
-}
+  }
 
 }

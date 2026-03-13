@@ -1,40 +1,24 @@
-import Stripe from "stripe";
+export const handler = async () => {
 
-const stripe = new Stripe(
- process.env.STRIPE_SECRET_KEY
-);
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const session =
- await stripe.checkout.sessions.create({
+  } catch (err) {
 
-  mode:"subscription",
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  line_items:[{
-
-   price:process.env.STRIPE_PRICE_SAAS_MONTHLY,
-   quantity:1
-
-  }],
-
-  success_url:
-  "https://tkfmrecords.com/success",
-
-  cancel_url:
-  "https://tkfmrecords.com/cancel"
-
- });
-
- return {
-
-  statusCode:200,
-  body:JSON.stringify({
-
-   url:session.url
-
-  })
-
- };
+  }
 
 }

@@ -1,30 +1,24 @@
-import Stripe from "stripe";
-import { supabase } from "./supabase.js";
+export const handler = async () => {
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
 
-export async function handler() {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { data: entities } = await supabase
-    .from("entities")
-    .select("stripe_account_id");
+  } catch (err) {
 
-  let total = 0;
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  for (const entity of entities || []) {
-
-    const balance = await stripe.balance.retrieve(
-      {},
-      { stripeAccount: entity.stripe_account_id }
-    );
-
-    total += (balance.available[0]?.amount || 0);
   }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      pooled_balance: total / 100
-    })
-  };
 }

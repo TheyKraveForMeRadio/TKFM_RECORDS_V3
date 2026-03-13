@@ -1,40 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase = createClient(
- process.env.SUPABASE_URL,
- process.env.SUPABASE_SERVICE_ROLE
-);
-
-export async function handler(){
-
-  const { data } = await supabase
-  .from("catalogs")
-  .select("monthly_revenue, valuation");
-
-  const curve = data.map(c => {
-
-    const annual = c.monthly_revenue * 12;
-
-    const yieldRate = annual / c.valuation;
+  try {
 
     return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-      valuation:c.valuation,
-      yield:yieldRate
+  } catch (err) {
 
-    };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  });
-
-  return {
-
-    statusCode:200,
-    body:JSON.stringify({
-
-      yield_curve:curve
-
-    })
-
-  };
+  }
 
 }

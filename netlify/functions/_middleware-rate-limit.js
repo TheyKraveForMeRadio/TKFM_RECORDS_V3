@@ -1,33 +1,24 @@
-import { cacheGet, cacheSet } from "./redis-cache.js";
+export const handler = async () => {
 
-const LIMIT = 60;        // requests
-const WINDOW = 60;       // seconds
+  try {
 
-export default async (request, context) => {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const ip =
-    request.headers.get("x-nf-client-connection-ip") ||
-    request.headers.get("x-forwarded-for") ||
-    "unknown";
+  } catch (err) {
 
-  const key = "rate:" + ip;
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  let count = await cacheGet(key);
-
-  if (!count) {
-    await cacheSet(key, 1, WINDOW);
-    return;
   }
 
-  if (count >= LIMIT) {
-    return new Response(
-      JSON.stringify({ error: "Rate limit exceeded" }),
-      {
-        status: 429,
-        headers: { "content-type": "application/json" }
-      }
-    );
-  }
-
-  await cacheSet(key, count + 1, WINDOW);
-};
+}

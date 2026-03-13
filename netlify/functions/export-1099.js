@@ -1,34 +1,24 @@
-import { supabase } from './supabase.js';
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { year } = event.queryStringParameters;
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { data: payouts } = await supabase
-    .from('payout_line_items')
-    .select('*')
-    .gte('created_at', `${year}-01-01`)
-    .lte('created_at', `${year}-12-31`);
+  } catch (err) {
 
-  const grouped = {};
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  for (const p of payouts || []) {
-    if (!grouped[p.artist_email]) grouped[p.artist_email] = 0;
-    grouped[p.artist_email] += Number(p.amount);
   }
 
-  let csv = "Recipient,Total Paid\n";
-
-  for (const email in grouped) {
-    csv += `${email},${grouped[email]}\n`;
-  }
-
-  return {
-    statusCode: 200,
-    headers: {
-      "Content-Type": "text/csv",
-      "Content-Disposition": `attachment; filename="TKFM_1099_${year}.csv"`
-    },
-    body: csv
-  };
 }

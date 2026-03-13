@@ -1,55 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase=createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-LIQUIDITY STABILIZER
-*/
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-export async function handler(){
+  } catch (err) {
 
-try{
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-const { data:catalogs } = await supabase
-.from("catalogs")
-.select("id")
-
-for(const catalog of catalogs){
-
-await supabase.from("catalog_orders").insert([
-{
-catalog_id:catalog.id,
-side:"buy",
-price:90,
-quantity:5,
-source:"liquidity_stabilizer"
-},
-{
-catalog_id:catalog.id,
-side:"sell",
-price:110,
-quantity:5,
-source:"liquidity_stabilizer"
-}
-])
-
-}
-
-return{
-statusCode:200,
-body:JSON.stringify({status:"liquidity injected"})
-}
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

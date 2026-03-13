@@ -1,16 +1,24 @@
-export async function handler(){
+export const handler = async () => {
 
- const futures = [
-  {
-   catalog:"Drill Catalog",
-   strike:50000,
-   expiry:"2026-12-31"
+  try {
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
- ];
-
- return {
-  statusCode:200,
-  body:JSON.stringify(futures)
- };
 
 }

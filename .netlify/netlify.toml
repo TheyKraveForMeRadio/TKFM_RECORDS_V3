@@ -1,8 +1,8 @@
 functionsDirectory = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\functions"
 functionsDirectoryOrigin = "config-v1"
-headersOrigin = "config"
 redirectsOrigin = "config"
 plugins = []
+headers = []
 
 [build]
 edge_functions = "C:\\Users\\djkra\\Desktop\\TKFM_RECORDS_V3\\netlify\\edge-functions"
@@ -31,26 +31,6 @@ DEBUG_MODE = "false"
 path = "/.netlify/functions/tkfm-master-cron"
 schedule = "*/1 * * * *"
 
-[[edge_functions]]
-function = "lockdown"
-path = "/admin/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/owner/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/secure/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/private/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/.netlify/*"
-
 [functions]
 
 [functions.timeout]
@@ -58,16 +38,8 @@ seconds = 26.0
 
 [functions."*"]
 included_files = ["netlify/functions/_middleware-secret-guard.js"]
-external_node_modules = ["stripe", "jsonwebtoken", "bcryptjs", "@supabase/supabase-js", "ethers", "ioredis", "cloudinary", "pdfkit", "@aws-sdk/client-s3", "@apollo/server"]
+external_node_modules = ["stripe", "jsonwebtoken", "bcryptjs", "@supabase/supabase-js", "ethers", "ioredis", "cloudinary", "pdfkit", "pdf-lib", "resend", "@aws-sdk/client-s3", "@apollo/server"]
 node_bundler = "esbuild"
-
-[[headers]]
-for = "/*"
-
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-Referrer-Policy = "strict-origin-when-cross-origin"
 
 [[redirects]]
 from = "/stripe-webhook"

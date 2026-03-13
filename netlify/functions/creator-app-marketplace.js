@@ -1,39 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-CREATOR APP MARKETPLACE
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Allows developers to build apps
-for creator economies.
-*/
+  } catch (err) {
 
-export async function handler(){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-try{
-
-const { data } = await supabase
-.from("creator_apps")
-.select("*")
-
-return {
-statusCode:200,
-body:JSON.stringify({
-apps:data
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

@@ -1,22 +1,24 @@
-import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { connected_account_id, cardholder_id } =
-    JSON.parse(event.body || '{}');
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const card = await stripe.issuing.cards.create(
-    {
-      cardholder: cardholder_id,
-      currency: 'usd',
-      type: 'virtual'
-    },
-    { stripeAccount: connected_account_id }
-  );
+  } catch (err) {
 
-  return {
-    statusCode:200,
-    body:JSON.stringify(card)
-  };
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

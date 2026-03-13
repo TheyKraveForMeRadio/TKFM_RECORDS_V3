@@ -1,19 +1,24 @@
-export async function handler(){
+export const handler = async () => {
 
- const listings = [
+  try {
 
-  {catalog:"Drill Catalog",price:45000},
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  {catalog:"Trap Catalog",price:32000}
+  } catch (err) {
 
- ];
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- return {
-
-  statusCode:200,
-
-  body:JSON.stringify(listings)
-
- };
+  }
 
 }

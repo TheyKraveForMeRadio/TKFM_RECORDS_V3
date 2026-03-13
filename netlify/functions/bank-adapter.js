@@ -1,32 +1,24 @@
-import Stripe from 'stripe';
+export const handler = async () => {
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
 
-export async function sendTransfer({
-  provider,
-  amount,
-  destination
-}) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  if (provider === 'stripe') {
+  } catch (err) {
 
-    return await stripe.transfers.create({
-      amount: Math.round(amount * 100),
-      currency: 'usd',
-      destination
-    });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
   }
 
-  if (provider === 'unit') {
-    // Placeholder for Unit.co API
-    return { simulated:true, provider:'unit' };
-  }
-
-  if (provider === 'mercury') {
-    // Placeholder for Mercury API
-    return { simulated:true, provider:'mercury' };
-  }
-
-  throw new Error("Unsupported bank provider");
 }

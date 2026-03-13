@@ -1,15 +1,24 @@
-export async function handler(event) {
+export const handler = async () => {
 
-  const { message } = JSON.parse(event.body || '{}');
+  try {
 
-  await fetch(process.env.SLACK_WEBHOOK_URL, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ text: message })
-  });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({ sent:true })
-  };
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
+
 }

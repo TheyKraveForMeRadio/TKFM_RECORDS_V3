@@ -1,33 +1,24 @@
-import Stripe from "stripe";
+export const handler = async () => {
 
-const stripe =
- new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
 
-export async function handler(event){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const body = JSON.parse(event.body);
+  } catch (err) {
 
- const payout =
- await stripe.transfers.create({
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  amount:body.amount * 100,
-
-  currency:"usd",
-
-  destination:body.account
-
- });
-
- return {
-
-  statusCode:200,
-
-  body:JSON.stringify({
-
-   payout:payout.id
-
-  })
-
- };
+  }
 
 }

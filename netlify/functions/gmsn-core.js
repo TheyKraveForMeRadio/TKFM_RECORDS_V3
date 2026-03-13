@@ -1,39 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-GLOBAL MUSIC SOVEREIGN NETWORK
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Core network coordination layer
-*/
+  } catch (err) {
 
-export async function handler(){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-try{
-
-const { data:nodes } = await supabase
-.from("sovereign_nodes")
-.select("*")
-
-return {
-statusCode:200,
-body:JSON.stringify({
-network_nodes:nodes?.length || 0,
-nodes
-})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

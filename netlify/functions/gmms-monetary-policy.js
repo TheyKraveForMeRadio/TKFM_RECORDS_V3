@@ -1,48 +1,24 @@
-import { createClient } from '@supabase/supabase-js'
+export const handler = async () => {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-/*
-GMMS MONETARY POLICY
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-Controls stablecoin supply and
-monetary expansion of the music economy.
-*/
+  } catch (err) {
 
-export async function handler(){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-try{
-
-const { data:ledger } = await supabase
-.from("stablecoin_ledger")
-.select("amount")
-
-let totalSupply = 0
-
-for(const entry of ledger){
-totalSupply += entry.amount
-}
-
-await supabase.from("gmms_metrics").insert({
-stablecoin_supply:totalSupply,
-created_at:new Date().toISOString()
-})
-
-return {
-statusCode:200,
-body:JSON.stringify({supply:totalSupply})
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
+  }
 
 }

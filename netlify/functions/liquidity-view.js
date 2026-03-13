@@ -1,28 +1,24 @@
-import { redis } from "./redis-cache.js"
+export const handler = async () => {
 
-export default async (req) => {
+  try {
 
-const id=req.queryStringParameters.catalog_id
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-let pool=await redis.get("liquidity:"+id)
+  } catch (err) {
 
-if(!pool){
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-pool={
-cash:10000,
-shares:1000,
-price:10
-}
-
-}else{
-
-pool=JSON.parse(pool)
-
-}
-
-return{
-statusCode:200,
-body:JSON.stringify(pool)
-}
+  }
 
 }

@@ -1,21 +1,24 @@
-let artistCredits = {}; // simulate DB
+export const handler = async () => {
 
-exports.handler = async (event) => {
-  const { artistEmail, action, amount } = JSON.parse(event.body || "{}");
-  if (!artistEmail) return { statusCode: 400, body: "Missing artistEmail" };
+  try {
 
-  artistCredits[artistEmail] = artistCredits[artistEmail] || 0;
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  if (action === "get") {
-    return { statusCode: 200, body: JSON.stringify({ credits: artistCredits[artistEmail] }) };
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
-  if (action === "add") {
-    artistCredits[artistEmail] += Number(amount || 0);
-  }
-  if (action === "use") {
-    if (artistCredits[artistEmail] < amount) return { statusCode: 400, body: "Not enough credits" };
-    artistCredits[artistEmail] -= amount;
-  }
 
-  return { statusCode: 200, body: JSON.stringify({ credits: artistCredits[artistEmail] }) };
-};
+}

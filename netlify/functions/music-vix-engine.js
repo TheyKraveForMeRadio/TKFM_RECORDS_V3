@@ -1,13 +1,24 @@
-export async function handler(){
+export const handler = async () => {
 
- const volatility =
- Math.floor(Math.random()*100);
+  try {
 
- return {
-  statusCode:200,
-  body:JSON.stringify({
-   music_vix:volatility
-  })
- };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
 
 }

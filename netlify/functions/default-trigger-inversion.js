@@ -1,38 +1,24 @@
-import { supabase } from "./supabase.js";
+export const handler = async () => {
 
-export async function handler(event) {
+  try {
 
-  const { pool_id, loss_amount } =
-    JSON.parse(event.body || "{}");
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-  const { data: tranches } = await supabase
-    .from("tranches")
-    .select("*")
-    .eq("pool_id", pool_id)
-    .order("priority", { ascending:false }); // reverse order
+  } catch (err) {
 
-  let remainingLoss = loss_amount;
-  const writeDowns = [];
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-  for (const t of tranches || []) {
-
-    const wipe = Math.min(t.size, remainingLoss);
-
-    writeDowns.push({
-      tranche: t.name,
-      write_down: wipe
-    });
-
-    remainingLoss -= wipe;
-    if (remainingLoss <= 0) break;
   }
 
-  return {
-    statusCode:200,
-    body:JSON.stringify({
-      loss_amount,
-      writeDowns,
-      remainingLoss
-    })
-  };
 }

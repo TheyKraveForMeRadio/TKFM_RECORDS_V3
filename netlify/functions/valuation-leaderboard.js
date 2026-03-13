@@ -1,28 +1,24 @@
-import fetch from "node-fetch";
+export const handler = async () => {
 
-export async function handler(){
+  try {
 
- const res =
- await fetch(
-  process.env.SITE_URL +
-  "/.netlify/functions/catalog-live-valuation"
- );
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const data = await res.json();
+  } catch (err) {
 
- const ranked =
- data.sort(
-  (a,b)=>b.valuation-a.valuation
- );
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- return {
-
-  statusCode:200,
-
-  body:JSON.stringify(
-   ranked.slice(0,20)
-  )
-
- };
+  }
 
 }

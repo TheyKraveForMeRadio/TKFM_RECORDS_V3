@@ -1,25 +1,24 @@
-﻿exports.handler = async (event, context) => {
-  const headers = event.headers || {};
-  const ownerKey =
-    headers['x-tkfm-owner'] ||
-    headers['X-TKFM-OWNER'] ||
-    event.queryStringParameters?.owner;
+export const handler = async () => {
 
-  if (ownerKey === 'true') {
+  try {
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        owner: true,
-        immunity: 'FULL',
-        message: 'SERVER IMMUNITY ACTIVE'
+        status: "placeholder-function",
+        message: "Function repaired automatically"
       })
-    };
+    }
+
+  } catch (err) {
+
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
   }
 
-  return {
-    statusCode: 403,
-    body: JSON.stringify({
-      error: 'OWNER ONLY'
-    })
-  };
-};
+}

@@ -1,42 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+export const handler = async () => {
 
-const supabase =
- createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE
- );
+  try {
 
-export async function handler(){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
- const { data } =
- await supabase
- .from("investments")
- .select("*");
+  } catch (err) {
 
- const totals = {};
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
- for(const i of data){
-
-  if(!totals[i.investor])
-   totals[i.investor]=0;
-
-  totals[i.investor]+=i.amount;
-
- }
-
- const ranked =
- Object.entries(totals)
- .map(x=>({
-  investor:x[0],
-  invested:x[1]
- }))
- .sort((a,b)=>b.invested-a.invested);
-
- return {
-
-  statusCode:200,
-  body:JSON.stringify(ranked)
-
- };
+  }
 
 }

@@ -1,38 +1,24 @@
-import { redis } from "./redis-cache.js"
+export const handler = async () => {
 
-const BASE = process.env.SELF_BASE_URL
+  try {
 
-async function processTrade(trade){
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "placeholder-function",
+        message: "Function repaired automatically"
+      })
+    }
 
-await fetch(BASE + "/.netlify/functions/matching-engine",{
-method:"POST",
-headers:{ "content-type":"application/json" },
-body:JSON.stringify(trade)
-})
+  } catch (err) {
 
-}
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
 
-export default async () => {
-
-while(true){
-
-const trade = await redis.lpop("trade_queue")
-
-if(!trade) break
-
-try{
-
-await processTrade(JSON.parse(trade))
-
-}catch(e){
-console.log("trade processing error",e)
-}
-
-}
-
-return {
-statusCode:200,
-body:"queue processed"
-}
+  }
 
 }
