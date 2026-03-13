@@ -12,13 +12,29 @@ NODE_ENV = "production"
 DEBUG_MODE = "false"
 
 ############################################
-# FUNCTIONS CONFIG
+# FUNCTIONS CONFIG (OPTIMIZED FOR BUNDLE SIZE)
 ############################################
 
 [functions]
 node_bundler = "esbuild"
-external_node_modules = ["stripe","jsonwebtoken","bcryptjs","@supabase/supabase-js"]
-included_files = ["netlify/functions/_middleware-secret-guard.js"]
+timeout = 26
+
+external_node_modules = [
+"stripe",
+"jsonwebtoken",
+"bcryptjs",
+"@supabase/supabase-js",
+"ethers",
+"ioredis",
+"cloudinary",
+"pdfkit",
+"@aws-sdk/client-s3",
+"@apollo/server"
+]
+
+included_files = [
+"netlify/functions/_middleware-secret-guard.js"
+]
 
 ############################################
 # TKFM CENTRAL SCHEDULER
@@ -60,3 +76,15 @@ path = "/private/*"
 [[edge_functions]]
 function = "lockdown"
 path = "/.netlify/*"
+
+############################################
+# GLOBAL SECURITY HEADERS
+############################################
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
