@@ -7,6 +7,9 @@
 <title>TKFM — Music Market Terminal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+
 <style>
 
 :root{
@@ -97,16 +100,6 @@ text-align:center;
 font-size:12px;
 }
 
-.chart{
-height:220px;
-background:#000;
-border-radius:6px;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#64748b;
-}
-
 footer{
 text-align:center;
 padding:30px;
@@ -138,9 +131,7 @@ Market Cap: <span id="marketcap">$0</span>
 
 <div class="section">Market Chart</div>
 
-<div class="chart" id="chart">
-Live Chart
-</div>
+<canvas id="priceChart" height="220"></canvas>
 
 </div>
 
@@ -176,7 +167,7 @@ TKFM Music Economy · DJ KRAVE
 
 <script>
 
-/* MARKET STREAM */
+/* REAL TIME MARKET STREAM */
 
 const source =
 new EventSource("/.netlify/functions/tkfm-market-stream-engine")
@@ -185,18 +176,12 @@ source.onmessage = function(event){
 
 const data = JSON.parse(event.data)
 
-console.log("stream",data)
-
-/* market cap */
-
 if(data.market_cap){
 
 document.getElementById("marketcap").innerText =
 "$"+Number(data.market_cap).toLocaleString()
 
 }
-
-/* trades */
 
 if(data.recent_trades){
 
@@ -210,9 +195,7 @@ const row=document.createElement("div")
 row.className="trade"
 
 row.innerText=
-t.token_id+
-" "+t.quantity+
-" @ $"+t.price
+t.token_id+" "+t.quantity+" @ $"+t.price
 
 container.appendChild(row)
 
@@ -222,14 +205,14 @@ container.appendChild(row)
 
 }
 
-/* MARKET DATA */
+/* LOAD MARKET DATA */
 
 async function loadMarket(){
 
 const res =
 await fetch("/.netlify/functions/catalog-market-data")
 
-const data=await res.json()
+const data = await res.json()
 
 /* ticker */
 
@@ -286,6 +269,42 @@ heat.appendChild(tile)
 loadMarket()
 
 setInterval(loadMarket,5000)
+
+/* PRICE CHART */
+
+async function loadChart(){
+
+const res =
+await fetch("/.netlify/functions/chart-price-history?token_id=song123")
+
+const data = await res.json()
+
+const ctx =
+document.getElementById("priceChart")
+
+const chartData = data.candles.map(c=>({
+x:new Date(c.t),
+o:c.o,
+h:c.h,
+l:c.l,
+c:c.c
+}))
+
+new Chart(ctx,{
+type:"candlestick",
+data:{
+datasets:[{
+label:"Song Price",
+data:chartData
+}]
+}
+})
+
+}
+
+loadChart()
+
+setInterval(loadChart,10000)
 
 </script>
 
