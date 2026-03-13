@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/sponsor-credits.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-nV5kvdydTu7a",
-  "sourcesContent": ["let sponsorCredits = {}; // simulate DB\n\nexports.handler = async (event) => {\n  const { artistEmail, action, amount } = JSON.parse(event.body || \"{}\");\n  if (!artistEmail) return { statusCode: 400, body: \"Missing artistEmail\" };\n\n  sponsorCredits[artistEmail] = sponsorCredits[artistEmail] || 0;\n\n  if (action === \"get\") return { statusCode: 200, body: JSON.stringify({ credits: sponsorCredits[artistEmail] }) };\n  if (action === \"add\") sponsorCredits[artistEmail] += Number(amount || 0);\n  if (action === \"use\") {\n    if (sponsorCredits[artistEmail] < amount) return { statusCode: 400, body: \"Not enough credits\" };\n    sponsorCredits[artistEmail] -= amount;\n  }\n\n  return { statusCode: 200, body: JSON.stringify({ credits: sponsorCredits[artistEmail] }) };\n};\n"],
-  "mappings": ";AAAA,IAAI,iBAAiB,CAAC;AAEtB,QAAQ,UAAU,OAAO,UAAU;AACjC,QAAM,EAAE,aAAa,QAAQ,OAAO,IAAI,KAAK,MAAM,MAAM,QAAQ,IAAI;AACrE,MAAI,CAAC,YAAa,QAAO,EAAE,YAAY,KAAK,MAAM,sBAAsB;AAExE,iBAAe,WAAW,IAAI,eAAe,WAAW,KAAK;AAE7D,MAAI,WAAW,MAAO,QAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,eAAe,WAAW,EAAE,CAAC,EAAE;AAC/G,MAAI,WAAW,MAAO,gBAAe,WAAW,KAAK,OAAO,UAAU,CAAC;AACvE,MAAI,WAAW,OAAO;AACpB,QAAI,eAAe,WAAW,IAAI,OAAQ,QAAO,EAAE,YAAY,KAAK,MAAM,qBAAqB;AAC/F,mBAAe,WAAW,KAAK;AAAA,EACjC;AAEA,SAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,SAAS,eAAe,WAAW,EAAE,CAAC,EAAE;AAC3F;",
-  "names": []
-}

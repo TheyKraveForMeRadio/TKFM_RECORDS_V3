@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/get-royalties.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-6x2fgiPAzNXy",
-  "sourcesContent": ["let trackEarningsDB = {}; // same DB reference as track-royalty.js\n\nexports.handler = async (event) => {\n  const email = event.queryStringParameters?.email;\n  if (!email) return { statusCode: 400, body: \"Email required\" };\n  \n  const data = trackEarningsDB[email] || [];\n  return { statusCode: 200, body: JSON.stringify({ earnings: data }) };\n};\n"],
-  "mappings": ";AAAA,IAAI,kBAAkB,CAAC;AAEvB,QAAQ,UAAU,OAAO,UAAU;AACjC,QAAM,QAAQ,MAAM,uBAAuB;AAC3C,MAAI,CAAC,MAAO,QAAO,EAAE,YAAY,KAAK,MAAM,iBAAiB;AAE7D,QAAM,OAAO,gBAAgB,KAAK,KAAK,CAAC;AACxC,SAAO,EAAE,YAAY,KAAK,MAAM,KAAK,UAAU,EAAE,UAAU,KAAK,CAAC,EAAE;AACrE;",
-  "names": []
-}

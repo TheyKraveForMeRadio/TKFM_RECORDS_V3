@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/owner-immunity.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-5468-4RlhA04Gz9B8",
-  "sourcesContent": ["\uFEFFexports.handler = async (event, context) => {\n  const headers = event.headers || {};\n  const ownerKey =\n    headers['x-tkfm-owner'] ||\n    headers['X-TKFM-OWNER'] ||\n    event.queryStringParameters?.owner;\n\n  if (ownerKey === 'true') {\n    return {\n      statusCode: 200,\n      body: JSON.stringify({\n        owner: true,\n        immunity: 'FULL',\n        message: 'SERVER IMMUNITY ACTIVE'\n      })\n    };\n  }\n\n  return {\n    statusCode: 403,\n    body: JSON.stringify({\n      error: 'OWNER ONLY'\n    })\n  };\n};\n"],
-  "mappings": ";AAAC,QAAQ,UAAU,OAAO,OAAO,YAAY;AAC3C,QAAM,UAAU,MAAM,WAAW,CAAC;AAClC,QAAM,WACJ,QAAQ,cAAc,KACtB,QAAQ,cAAc,KACtB,MAAM,uBAAuB;AAE/B,MAAI,aAAa,QAAQ;AACvB,WAAO;AAAA,MACL,YAAY;AAAA,MACZ,MAAM,KAAK,UAAU;AAAA,QACnB,OAAO;AAAA,QACP,UAAU;AAAA,QACV,SAAS;AAAA,MACX,CAAC;AAAA,IACH;AAAA,EACF;AAEA,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,KAAK,UAAU;AAAA,MACnB,OAAO;AAAA,IACT,CAAC;AAAA,EACH;AACF;",
-  "names": []
-}
