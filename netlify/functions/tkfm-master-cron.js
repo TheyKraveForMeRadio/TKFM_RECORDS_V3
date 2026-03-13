@@ -8,115 +8,80 @@ async function call(fn){
   }
 }
 
-export default async () => {
+export const handler = async () => {
 
   const minute = new Date().getMinutes()
 
-  /* EVERY MINUTE — CORE MARKET SYSTEM */
+  /* CORE MARKET SYSTEM (PARALLEL) */
 
-  await call("trade-queue-worker")
-  await call("matching-engine")
-  await call("market-maker-ai")
-  await call("market-maker-orders")
+  await Promise.all([
+    call("trade-queue-worker"),
+    call("matching-engine"),
+    call("market-maker-ai"),
+    call("market-maker-orders"),
+    call("catalog-price-oracle"),
+    call("ai-market-maker-engine"),
+    call("market-surveillance-engine"),
+    call("trade-risk-engine"),
+    call("global-clearinghouse-engine")
+  ])
 
-  /* PRICE DISCOVERY */
-
-  await call("catalog-price-oracle")
-
-  /* AI MARKET MAKER */
-
-  await call("ai-market-maker-engine")
-
-  /* MARKET SURVEILLANCE */
-
-  await call("market-surveillance-engine")
-
-  /* TRADE RISK ENGINE */
-
-  await call("trade-risk-engine")
-
-  /* CLEARINGHOUSE SETTLEMENT */
-
-  await call("global-clearinghouse-engine")
-
-  /* EVERY 5 MINUTES — PRICE + GROWTH */
+  /* EVERY 5 MINUTES */
 
   if(minute % 5 === 0){
 
-    await call("catalog-price-history")
-    await call("record-catalog-price")
-    await call("live-catalog-price")
-    await call("platform-growth-engine")
+    await Promise.all([
+      call("catalog-price-history"),
+      call("record-catalog-price"),
+      call("live-catalog-price"),
+      call("platform-growth-engine")
+    ])
 
   }
 
-  /* EVERY 10 MINUTES — DISTRIBUTION + INVESTMENT */
+  /* EVERY 10 MINUTES */
 
   if(minute % 10 === 0){
 
-    await call("distribution-router")
-    await call("deliver-to-platforms")
-    await call("fan-invest-catalog")
-    await call("buy-catalog-shares")
+    await Promise.all([
+      call("distribution-router"),
+      call("deliver-to-platforms"),
+      call("fan-invest-catalog"),
+      call("buy-catalog-shares")
+    ])
 
   }
 
-  /* EVERY 30 MINUTES — STREAMING ORACLE */
+  /* EVERY 30 MINUTES */
 
   if(minute % 30 === 0){
 
-    await call("spotify-royalty-sync")
-    await call("streaming-revenue-oracle")
+    await Promise.all([
+      call("spotify-royalty-sync"),
+      call("streaming-revenue-oracle")
+    ])
 
   }
 
-  /* HOURLY — INDEX + ETF + DERIVATIVES + CLEARING + MARGIN + ECONOMY + REGULATION + LIQUIDITY + NETWORK + GOVERNOR */
+  /* HOURLY */
 
   if(minute === 0){
 
-    /* MARKET INDEX */
-
-    await call("music-index-engine")
-
-    /* ETF ENGINE */
-
-    await call("music-etf-engine")
-
-    /* DERIVATIVES */
-
-    await call("music-derivatives-engine")
-
-    /* DERIVATIVES CLEARING */
-
-    await call("music-derivatives-clearing-engine")
-
-    /* DERIVATIVES MARGIN */
-
-    await call("music-derivatives-margin-engine")
-
-    await call("trending-index-engine")
-
-    /* ECONOMY */
-
-    await call("music-economy-simulator-engine")
-    await call("music-central-bank-engine")
-
-    /* AI GOVERNOR */
-
-    await call("tkfm-ai-governor-engine")
-
-    /* REGULATORY */
-
-    await call("regulatory-compliance-engine")
-    await call("global-regulatory-engine")
-
-    /* LIQUIDITY */
-
-    await call("tkfm-global-liquidity-router")
-
-    /* NODE NETWORK */
-
-    await call("tkfm-node-network-engine")
+    await Promise.all([
+      call("music-index-engine"),
+      call("music-etf-engine"),
+      call("music-derivatives-engine"),
+      call("music-derivatives-clearing-engine"),
+      call("music-derivatives-margin-engine"),
+      call("trending-index-engine"),
+      call("music-economy-simulator-engine"),
+      call("music-central-bank-engine"),
+      call("tkfm-ai-governor-engine"),
+      call("regulatory-compliance-engine"),
+      call("global-regulatory-engine"),
+      call("tkfm-global-liquidity-router"),
+      call("tkfm-node-network-engine")
+    ])
 
   }
 
