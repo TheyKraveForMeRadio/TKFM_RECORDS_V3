@@ -17,7 +17,6 @@ DEBUG_MODE = "false"
 
 [functions]
 node_bundler = "esbuild"
-timeout = 26
 
 external_node_modules = [
 "stripe",
@@ -28,6 +27,7 @@ external_node_modules = [
 "ioredis",
 "cloudinary",
 "pdfkit",
+"pdf-lib",
 "@aws-sdk/client-s3",
 "@apollo/server"
 ]
@@ -35,6 +35,13 @@ external_node_modules = [
 included_files = [
 "netlify/functions/_middleware-secret-guard.js"
 ]
+
+############################################
+# FUNCTION TIMEOUT
+############################################
+
+[functions.timeout]
+seconds = 26
 
 ############################################
 # TKFM CENTRAL SCHEDULER
