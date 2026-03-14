@@ -1,17 +1,15 @@
 import fs from "fs"
 import path from "path"
-import url from "url"
 
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
-const enginesDir = path.join(__dirname,"../engines")
+/* resolve engines directory safely */
 
-/* ENGINE CACHE */
+const enginesDir = path.resolve("./netlify/engines")
+
+/* engine cache */
 
 const engineCache = {}
 
-/* GATEWAY HANDLER */
-
-export const handler = async (event,context) => {
+export const handler = async (event, context) => {
 
 try{
 
@@ -32,7 +30,7 @@ endpoint
 }
 }
 
-/* LOAD FROM CACHE */
+/* cached engine load */
 
 if(!engineCache[file]){
 engineCache[file] = await import(file)
