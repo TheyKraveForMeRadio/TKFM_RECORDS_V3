@@ -34,6 +34,7 @@ external_node_modules = [
 ]
 
 included_files = [
+"netlify/engines/**",
 "netlify/functions/_middleware-secret-guard.js",
 "netlify/functions/_shared/**"
 ]
