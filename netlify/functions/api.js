@@ -1,15 +1,12 @@
-const fs = require("fs")
-const path = require("path")
+import fs from "fs"
+import path from "path"
 
-/* engines directory */
-
-const enginesDir = path.join(__dirname,"../engines")
+const enginesDir = new URL("../engines/", import.meta.url)
 
 /* engine cache */
-
 const engineCache = {}
 
-exports.handler = async (event,context)=>{
+export const handler = async (event,context)=>{
 
 try{
 
@@ -18,7 +15,10 @@ const endpoint = event.path
 .replace("/.netlify/functions/","")
 .split("?")[0]
 
-const file = path.join(enginesDir,endpoint+".js")
+const file = path.join(
+enginesDir.pathname,
+endpoint + ".js"
+)
 
 if(!fs.existsSync(file)){
 return{
@@ -31,10 +31,10 @@ path:file
 }
 }
 
-/* cached load */
+/* cached dynamic import */
 
 if(!engineCache[file]){
-engineCache[file] = require(file)
+engineCache[file] = await import(file)
 }
 
 const engine = engineCache[file]
@@ -54,9 +54,7 @@ return await engine.handler(event,context)
 
 return{
 statusCode:500,
-body:JSON.stringify({
-error:err.message
-})
+body:JSON.stringify({error:err.message})
 }
 
 }
