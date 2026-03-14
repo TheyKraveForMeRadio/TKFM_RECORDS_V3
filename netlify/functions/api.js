@@ -5,13 +5,19 @@ import url from "url"
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 const enginesDir = path.join(__dirname,"../engines")
 
+/* ENGINE CACHE */
+
+const engineCache = {}
+
+/* GATEWAY HANDLER */
+
 export const handler = async (event,context) => {
 
 try{
 
 const endpoint = event.path
-.replace("/.netlify/functions/api/api/","")
 .replace("/.netlify/functions/api/","")
+.replace("/.netlify/functions/","")
 .split("?")[0]
 
 const file = path.join(enginesDir, endpoint + ".js")
@@ -26,7 +32,13 @@ endpoint
 }
 }
 
-const engine = await import(file)
+/* LOAD FROM CACHE */
+
+if(!engineCache[file]){
+engineCache[file] = await import(file)
+}
+
+const engine = engineCache[file]
 
 if(!engine.handler){
 return {
