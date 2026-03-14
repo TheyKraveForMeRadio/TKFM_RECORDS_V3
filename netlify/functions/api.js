@@ -1,9 +1,12 @@
 import fs from "fs"
 import path from "path"
 
-const enginesDir = new URL("../engines/", import.meta.url)
+/* resolve engines directory safely for Netlify */
+
+const enginesDir = path.join(process.cwd(),"netlify","engines")
 
 /* engine cache */
+
 const engineCache = {}
 
 export const handler = async (event,context)=>{
@@ -15,10 +18,7 @@ const endpoint = event.path
 .replace("/.netlify/functions/","")
 .split("?")[0]
 
-const file = path.join(
-enginesDir.pathname,
-endpoint + ".js"
-)
+const file = path.join(enginesDir,endpoint+".js")
 
 if(!fs.existsSync(file)){
 return{
@@ -34,7 +34,7 @@ path:file
 /* cached dynamic import */
 
 if(!engineCache[file]){
-engineCache[file] = await import(file)
+engineCache[file] = await import("file://"+file)
 }
 
 const engine = engineCache[file]
@@ -54,7 +54,9 @@ return await engine.handler(event,context)
 
 return{
 statusCode:500,
-body:JSON.stringify({error:err.message})
+body:JSON.stringify({
+error:err.message
+})
 }
 
 }
