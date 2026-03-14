@@ -1,3 +1,4 @@
+import bus from "./_event-bus.js";
 export const handler = async(event) => {
 
  const { service } = event.queryStringParameters || {}

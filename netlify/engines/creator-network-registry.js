@@ -1,3 +1,4 @@
+import bus from "./_event-bus.js";
 let nodes = []
 
 export const handler = async(event) => {
