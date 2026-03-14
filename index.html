@@ -115,7 +115,7 @@ color:#64748b;
 
 <header>
 
-<img src="/tkfm-records-logo.png" class="logo">
+<img src="/tkfm-records-logo.png" class="logo" />
 
 <div class="marketcap">
 Market Cap: <span id="marketcap">$0</span>
@@ -194,7 +194,7 @@ data.recent_trades.forEach(t=>{
 const row=document.createElement("div")
 row.className="trade"
 
-row.innerText=
+row.innerText =
 t.token_id+" "+t.quantity+" @ $"+t.price
 
 container.appendChild(row)
