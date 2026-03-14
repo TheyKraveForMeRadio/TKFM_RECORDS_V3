@@ -1,15 +1,15 @@
 import fs from "fs"
 import path from "path"
 
-/* resolve engines directory safely */
+/* engines directory relative to deployed function */
 
-const enginesDir = path.resolve("./netlify/engines")
+const enginesDir = path.join(__dirname,"../engines")
 
 /* engine cache */
 
 const engineCache = {}
 
-export const handler = async (event, context) => {
+export const handler = async (event,context)=>{
 
 try{
 
@@ -18,19 +18,20 @@ const endpoint = event.path
 .replace("/.netlify/functions/","")
 .split("?")[0]
 
-const file = path.join(enginesDir, endpoint + ".js")
+const file = path.join(enginesDir,endpoint+".js")
 
 if(!fs.existsSync(file)){
-return {
+return{
 statusCode:404,
 body:JSON.stringify({
 error:"engine not found",
-endpoint
+endpoint,
+path:file
 })
 }
 }
 
-/* cached engine load */
+/* load engine with cache */
 
 if(!engineCache[file]){
 engineCache[file] = await import(file)
@@ -39,11 +40,9 @@ engineCache[file] = await import(file)
 const engine = engineCache[file]
 
 if(!engine.handler){
-return {
+return{
 statusCode:500,
-body:JSON.stringify({
-error:"handler missing"
-})
+body:JSON.stringify({error:"handler missing"})
 }
 }
 
@@ -51,11 +50,9 @@ return await engine.handler(event,context)
 
 }catch(err){
 
-return {
+return{
 statusCode:500,
-body:JSON.stringify({
-error:err.message
-})
+body:JSON.stringify({error:err.message})
 }
 
 }
