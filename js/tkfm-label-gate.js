@@ -3,7 +3,7 @@ window.TKFM_LABEL_GATE = (function() {
 
   async function checkSubscription(email) {
     try {
-      const res = await fetch('/.netlify/functions/check-subscription?email=' + encodeURIComponent(email));
+      const res = await fetch('/.netlify/functions/api/check-subscription?email=' + encodeURIComponent(email));
       const data = await res.json();
       return data.active;
     } catch (e) {

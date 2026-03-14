@@ -46,7 +46,7 @@ async function joinArmy(){
 
 document.getElementById("status").innerText="Joining..."
 
-await fetch("/.netlify/functions/join-fan-army",{
+await fetch("/.netlify/functions/api/join-fan-army",{
 method:"POST"
 })
 

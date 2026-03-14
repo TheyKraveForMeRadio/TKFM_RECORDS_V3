@@ -29,7 +29,7 @@ async function sell(){
  document.getElementById("price").value;
 
  await fetch(
- '/.netlify/functions/create-sell-order',
+ '/.netlify/functions/api/create-sell-order',
  {
   method:"POST",
   body:JSON.stringify({

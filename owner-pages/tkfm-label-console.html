@@ -168,7 +168,7 @@
       const status = statusFilter.value;
       const qs = status === 'all' ? '?status=all' : '?status=' + encodeURIComponent(status);
       try {
-        const res = await fetch('/.netlify/functions/get-mixtape-label-view' + qs);
+        const res = await fetch('/.netlify/functions/api/get-mixtape-label-view' + qs);
         const data = await res.json();
         ordersBody.innerHTML = '';
         if (!data?.length) {
@@ -221,7 +221,7 @@
     async function promoteToCatalog(orderId) {
       if (!orderId) { showToast('Missing orderId for catalog'); return; }
       try {
-        const res = await fetch('/.netlify/functions/promote-mixtape-to-catalog', {
+        const res = await fetch('/.netlify/functions/api/promote-mixtape-to-catalog', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ orderId })

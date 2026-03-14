@@ -23,7 +23,7 @@
     const packKey = document.getElementById("aiDropPack").value;
     if (!email) return alert("Enter email");
 
-    const res = await fetch("/.netlify/functions/ai-drops-engine", {
+    const res = await fetch("/.netlify/functions/api/ai-drops-engine", {
       method: "POST",
       body: JSON.stringify({ artistEmail: email, dropPackKey: packKey })
     });

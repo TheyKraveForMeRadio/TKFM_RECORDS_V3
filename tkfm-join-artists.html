@@ -47,7 +47,7 @@ const name=document.getElementById("artist_name").value
 
 document.getElementById("status").innerText="Creating artist account..."
 
-await fetch("/.netlify/functions/onboard-artist",{
+await fetch("/.netlify/functions/api/onboard-artist",{
 method:"POST",
 body:JSON.stringify({name})
 })

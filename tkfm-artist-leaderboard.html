@@ -47,7 +47,7 @@ font-weight:bold;
 
 async function load(){
 
-const res = await fetch("/.netlify/functions/artist-leaderboard")
+const res = await fetch("/.netlify/functions/api/artist-leaderboard")
 const data = await res.json()
 
 const board=document.getElementById("leaderboard")

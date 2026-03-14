@@ -11,7 +11,7 @@ async function fetchJSON(url, options={}) {
 // Get Stripe customer ID and credits
 async function getCustomerInfo() {
     try {
-        const data = await fetchJSON('/.netlify/functions/sponsor-credits-get');
+        const data = await fetchJSON('/.netlify/functions/api/sponsor-credits-get');
         const custIdElem = document.getElementById('custId');
         const creditsElem = document.getElementById('credits');
         if(custIdElem) custIdElem.textContent = data.customerId || '—';

@@ -13,7 +13,7 @@ Requires: Stripe public key set in environment
     const pack = btn.dataset.buyPack;
 
     try {
-      const res = await fetch('/.netlify/functions/create-checkout-session', {
+      const res = await fetch('/.netlify/functions/api/create-checkout-session', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ lookup_key: pack })

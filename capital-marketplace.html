@@ -31,11 +31,11 @@ button { background:#facc15; border:none; padding:6px 12px; cursor:pointer; }
 async function loadMarketplace() {
 
   const pools = await fetch(
-    "/.netlify/functions/institutional-reporting-pack"
+    "/.netlify/functions/api/institutional-reporting-pack"
   );
 
   const monte = await fetch(
-    "/.netlify/functions/monte-carlo-portfolio"
+    "/.netlify/functions/api/monte-carlo-portfolio"
   );
 
   const data = {

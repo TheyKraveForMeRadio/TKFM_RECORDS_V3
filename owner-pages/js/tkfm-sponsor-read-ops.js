@@ -4,7 +4,7 @@
 
   async function load() {
     rows.innerHTML = '<tr><td colspan="5">Loading…</td></tr>';
-    const res = await fetch('/.netlify/functions/sponsor-requests-list',{
+    const res = await fetch('/.netlify/functions/api/sponsor-requests-list',{
       headers:{'x-owner-key':ownerKey}
     });
     const data = await res.json();
@@ -31,7 +31,7 @@
   }
 
   window.deliver = async function(id,email,url){
-    await fetch('/.netlify/functions/sponsor-request-update',{
+    await fetch('/.netlify/functions/api/sponsor-request-update',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -40,7 +40,7 @@
       body:JSON.stringify({id,status:'delivered'})
     });
 
-    await fetch('/.netlify/functions/sponsor-send-email',{
+    await fetch('/.netlify/functions/api/sponsor-send-email',{
       method:'POST',
       headers:{
         'Content-Type':'application/json',

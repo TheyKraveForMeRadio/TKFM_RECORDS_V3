@@ -26,7 +26,7 @@ const id = params.get("id");
 async function loadCatalog(){
 
  const res = await fetch(
-  '/.netlify/functions/catalog-detail?id='+id
+  '/.netlify/functions/api/catalog-detail?id='+id
  );
 
  const data = await res.json();
@@ -39,7 +39,7 @@ async function loadCatalog(){
 async function buy(){
 
  await fetch(
- '/.netlify/functions/execute-trade',
+ '/.netlify/functions/api/execute-trade',
  {
   method:"POST",
   body:JSON.stringify({catalog_id:id})

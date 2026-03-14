@@ -33,7 +33,7 @@ margin-bottom:10px;
 
 async function load(){
 
-const res=await fetch("/.netlify/functions/catalog-market-data")
+const res=await fetch("/.netlify/functions/api/catalog-market-data")
 const data=await res.json()
 
 const el=document.getElementById("market")

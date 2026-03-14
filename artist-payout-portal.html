@@ -36,13 +36,13 @@ const email = new URLSearchParams(location.search).get("email");
 
 async function loadPortal() {
 
-  const balanceRes = await fetch(`/.netlify/functions/get-artist-balance?email=${email}`);
+  const balanceRes = await fetch(`/.netlify/functions/api/get-artist-balance?email=${email}`);
   const balance = await balanceRes.json();
 
   document.getElementById("balance").innerHTML =
     `<strong>$${balance.available_balance || 0}</strong>`;
 
-  const historyRes = await fetch(`/.netlify/functions/get-artist-payouts?email=${email}`);
+  const historyRes = await fetch(`/.netlify/functions/api/get-artist-payouts?email=${email}`);
   const history = await historyRes.json();
 
   document.getElementById("history").textContent =
@@ -51,7 +51,7 @@ async function loadPortal() {
 
 function download1099() {
   const year = new Date().getFullYear() - 1;
-  window.location = `/.netlify/functions/generate-1099-pdf?email=${email}&year=${year}`;
+  window.location = `/.netlify/functions/api/generate-1099-pdf?email=${email}&year=${year}`;
 }
 
 loadPortal();

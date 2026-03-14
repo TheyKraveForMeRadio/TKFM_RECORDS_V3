@@ -1,7 +1,7 @@
 window.TKFM_ROTATION = (function(){
   async function getRotationStatus(email){
     try {
-      const res = await fetch("/.netlify/functions/rotation-unlock", {
+      const res = await fetch("/.netlify/functions/api/rotation-unlock", {
         method: "POST",
         body: JSON.stringify({ artistEmail: email })
       });

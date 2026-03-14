@@ -1,5 +1,5 @@
 async function createAIDrop(email, dropPackKey) {
-  const res = await fetch("/.netlify/functions/ai-drops-engine", {
+  const res = await fetch("/.netlify/functions/api/ai-drops-engine", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, dropPackKey })
   });
@@ -8,7 +8,7 @@ async function createAIDrop(email, dropPackKey) {
 }
 
 async function getCredits(email) {
-  const res = await fetch("/.netlify/functions/ai-drops-credits", {
+  const res = await fetch("/.netlify/functions/api/ai-drops-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "get" })
   });
@@ -17,7 +17,7 @@ async function getCredits(email) {
 }
 
 async function addCredits(email, amount) {
-  const res = await fetch("/.netlify/functions/ai-drops-credits", {
+  const res = await fetch("/.netlify/functions/api/ai-drops-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "add", amount })
   });
@@ -26,7 +26,7 @@ async function addCredits(email, amount) {
 }
 
 async function useCredits(email, amount) {
-  const res = await fetch("/.netlify/functions/ai-drops-credits", {
+  const res = await fetch("/.netlify/functions/api/ai-drops-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "use", amount })
   });

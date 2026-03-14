@@ -112,7 +112,7 @@ document.getElementById("song").innerText = token
 async function loadBook(){
 
 const res =
-await fetch("/.netlify/functions/orderbook-view?token_id="+token)
+await fetch("/.netlify/functions/api/orderbook-view?token_id="+token)
 
 const data = await res.json()
 
@@ -148,7 +148,7 @@ async function buy(){
 
 const shares = document.getElementById("shares").value
 
-await fetch("/.netlify/functions/create-buy-order",{
+await fetch("/.netlify/functions/api/create-buy-order",{
 method:"POST",
 body:JSON.stringify({
 token_id:token,
@@ -162,7 +162,7 @@ async function sell(){
 
 const shares = document.getElementById("shares").value
 
-await fetch("/.netlify/functions/create-sell-order",{
+await fetch("/.netlify/functions/api/create-sell-order",{
 method:"POST",
 body:JSON.stringify({
 token_id:token,

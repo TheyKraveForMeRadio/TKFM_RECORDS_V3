@@ -56,7 +56,7 @@ const catalog=document.getElementById("catalog").value
 const amount=document.getElementById("amount").value
 
 const res=await fetch(
-"/.netlify/functions/add-liquidity",
+"/.netlify/functions/api/add-liquidity",
 {
 method:"POST",
 body:JSON.stringify({

@@ -44,7 +44,7 @@ async function load(){
 const catalog=document.getElementById("catalog").value
 
 const res = await fetch(
-"/.netlify/functions/catalog-price-history?catalog="+catalog
+"/.netlify/functions/api/catalog-price-history?catalog="+catalog
 )
 
 const data = await res.json()

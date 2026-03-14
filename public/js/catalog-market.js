@@ -3,7 +3,7 @@ let chart;
 
 async function loadTrending(){
 
- const res = await fetch('/.netlify/functions/liquidity-dashboard');
+ const res = await fetch('/.netlify/functions/api/liquidity-dashboard');
 
  const pools = await res.json();
 
@@ -34,7 +34,7 @@ async function loadTrending(){
 async function loadChart(token){
 
  const res = await fetch(
-  '/.netlify/functions/price-discovery?token_id='+token
+  '/.netlify/functions/api/price-discovery?token_id='+token
  );
 
  const data = await res.json();
@@ -64,7 +64,7 @@ async function buy(){
  const price = document.getElementById("priceInput").value;
  const quantity = document.getElementById("quantityInput").value;
 
- await fetch('/.netlify/functions/orderbook-engine',{
+ await fetch('/.netlify/functions/api/orderbook-engine',{
   method:'POST',
   body:JSON.stringify({
    token_id,
@@ -85,7 +85,7 @@ async function sell(){
  const price = document.getElementById("priceInput").value;
  const quantity = document.getElementById("quantityInput").value;
 
- await fetch('/.netlify/functions/orderbook-engine',{
+ await fetch('/.netlify/functions/api/orderbook-engine',{
   method:'POST',
   body:JSON.stringify({
    token_id,
@@ -102,7 +102,7 @@ async function sell(){
 
 async function loadLiquidity(){
 
- const res = await fetch('/.netlify/functions/liquidity-dashboard');
+ const res = await fetch('/.netlify/functions/api/liquidity-dashboard');
 
  const data = await res.json();
 

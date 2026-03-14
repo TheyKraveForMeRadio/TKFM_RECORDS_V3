@@ -30,15 +30,15 @@
 
 async function load() {
 
-  const rev = await fetch('/.netlify/functions/revenue-forecast-dashboard');
+  const rev = await fetch('/.netlify/functions/api/revenue-forecast-dashboard');
   document.getElementById("revenue").textContent =
     JSON.stringify(await rev.json(),null,2);
 
-  const nrr = await fetch('/.netlify/functions/net-revenue-retention');
+  const nrr = await fetch('/.netlify/functions/api/net-revenue-retention');
   document.getElementById("nrr").textContent =
     JSON.stringify(await nrr.json(),null,2);
 
-  const churn = await fetch('/.netlify/functions/churn-prediction');
+  const churn = await fetch('/.netlify/functions/api/churn-prediction');
   document.getElementById("churn").textContent =
     JSON.stringify(await churn.json(),null,2);
 }

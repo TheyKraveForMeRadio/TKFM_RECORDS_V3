@@ -46,7 +46,7 @@ async function loadChart(){
 const params=new URLSearchParams(window.location.search)
 const catalog=params.get("id")
 
-const res=await fetch("/.netlify/functions/catalog-price-history?id="+catalog)
+const res=await fetch("/.netlify/functions/api/catalog-price-history?id="+catalog)
 const data=await res.json()
 
 const labels=data.history.map(p=>p.time)

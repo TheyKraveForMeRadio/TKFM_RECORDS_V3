@@ -1,5 +1,5 @@
 async function sendWelcomeEmail() {
-  const res = await fetch("/.netlify/functions/send-email", {
+  const res = await fetch("/.netlify/functions/api/send-email", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

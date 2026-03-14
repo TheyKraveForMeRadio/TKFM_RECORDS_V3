@@ -67,7 +67,7 @@ color:#22d3ee;
 
 async function load(){
 
-const res = await fetch("/.netlify/functions/artist-growth-reactor")
+const res = await fetch("/.netlify/functions/api/artist-growth-reactor")
 const data = await res.json()
 
 document.getElementById("artists").innerText = data.artists

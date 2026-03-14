@@ -93,7 +93,7 @@ TKFM_ROYALTIES.renderStatements(email, "royaltyStatements");
 // Owner Credit Panel & analytics
 TKFM_OWNER_CREDIT_PANEL.render(email);
 async function renderCreditAnalytics(email) {
-  const res = await fetch('/.netlify/functions/use-credit', { method:'POST', body:JSON.stringify({email}) });
+  const res = await fetch('/.netlify/functions/api/use-credit', { method:'POST', body:JSON.stringify({email}) });
   const data = await res.json();
   document.getElementById('creditAnalytics').innerHTML = `<pre>${JSON.stringify(data,null,2)}</pre>`;
 }
@@ -117,7 +117,7 @@ TKFM_AI_ENGINES.refreshUI();
 // Auto monetization
 async function playTrackWithRevenue(audioEl, trackUrl, trackName) {
   audioEl.src = trackUrl; await audioEl.play();
-  await fetch('/.netlify/functions/radio-play',{method:'POST', body:JSON.stringify({trackName, artistEmail:window.TKFM_EMAIL})});
+  await fetch('/.netlify/functions/api/radio-play',{method:'POST', body:JSON.stringify({trackName, artistEmail:window.TKFM_EMAIL})});
 }
 const originalPlayNext = TKFM_RADIO.playNext;
 TKFM_RADIO.playNext = async function(playerId){

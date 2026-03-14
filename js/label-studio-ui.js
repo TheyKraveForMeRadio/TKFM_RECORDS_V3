@@ -19,7 +19,7 @@
     const email = document.getElementById("studioEmail").value;
     if (!trackId || !email) return alert("Enter track ID and email");
 
-    const res = await fetch("/.netlify/functions/label-studio-ai", {
+    const res = await fetch("/.netlify/functions/api/label-studio-ai", {
       method: "POST",
       body: JSON.stringify({ trackId, artistEmail: email })
     });

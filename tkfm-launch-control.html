@@ -45,7 +45,7 @@ border-radius:8px;
 async function load(){
 
 const metrics = await fetch(
-"/.netlify/functions/tkfm-launch-control"
+"/.netlify/functions/api/tkfm-launch-control"
 )
 
 const data = await metrics.json()
@@ -57,7 +57,7 @@ document.getElementById("metrics").innerHTML=
 "<div class='card'>Market Cap: $"+data.market_cap+"</div>"
 
 const feed = await fetch(
-"/.netlify/functions/economy-activity-feed"
+"/.netlify/functions/api/economy-activity-feed"
 )
 
 const activity = await feed.json()

@@ -100,7 +100,7 @@ const catalog=document.getElementById("catalog").value
 const raise=document.getElementById("raise").value
 
 const res=await fetch(
-"/.netlify/functions/launch-catalog-ipo",
+"/.netlify/functions/api/launch-catalog-ipo",
 {
 method:"POST",
 body:JSON.stringify({

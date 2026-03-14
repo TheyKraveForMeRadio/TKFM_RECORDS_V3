@@ -1,7 +1,7 @@
 window.TKFM_AI_DJ = (function(){
   async function scheduleDrop(trackUrl, artistEmail, creditsRequired){
     // Check credits
-    const res = await fetch('/.netlify/functions/use-credit', {
+    const res = await fetch('/.netlify/functions/api/use-credit', {
       method:'POST',
       body: JSON.stringify({ email: artistEmail, creditType: creditsRequired })
     });
@@ -9,7 +9,7 @@ window.TKFM_AI_DJ = (function(){
     if(!data.success) return alert("Not enough credits");
 
     // Mint Token for drop
-    await fetch('/.netlify/functions/mint-token', {
+    await fetch('/.netlify/functions/api/mint-token', {
       method:'POST',
       body: JSON.stringify({ email:artistEmail, tokenId:1, amount:1 })
     });

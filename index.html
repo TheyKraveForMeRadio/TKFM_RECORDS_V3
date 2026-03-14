@@ -170,7 +170,7 @@ TKFM Music Economy · DJ KRAVE
 /* REAL TIME MARKET STREAM */
 
 const source =
-new EventSource("/.netlify/functions/tkfm-market-stream-engine")
+new EventSource("/.netlify/functions/api/tkfm-market-stream-engine")
 
 source.onmessage = function(event){
 
@@ -210,7 +210,7 @@ container.appendChild(row)
 async function loadMarket(){
 
 const res =
-await fetch("/.netlify/functions/catalog-market-data")
+await fetch("/.netlify/functions/api/catalog-market-data")
 
 const data = await res.json()
 
@@ -275,7 +275,7 @@ setInterval(loadMarket,5000)
 async function loadChart(){
 
 const res =
-await fetch("/.netlify/functions/chart-price-history?token_id=song123")
+await fetch("/.netlify/functions/api/chart-price-history?token_id=song123")
 
 const data = await res.json()
 

@@ -18,7 +18,7 @@
 
   async function fetchCatalog() {
     try {
-      const res = await fetch('/.netlify/functions/get-mixtape-catalog');
+      const res = await fetch('/.netlify/functions/api/get-mixtape-catalog');
       if (!res.ok) throw new Error('Failed to fetch catalog');
       const data = await res.json();
       catalogData = data;

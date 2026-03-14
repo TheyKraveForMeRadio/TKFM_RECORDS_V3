@@ -19,7 +19,7 @@ function tierFromUnlocks(unlocks) {
 }
 
 async function submitOrder(payload) {
-  const res = await fetch('/.netlify/functions/submit-mixtape-order', {
+  const res = await fetch('/.netlify/functions/api/submit-mixtape-order', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload)

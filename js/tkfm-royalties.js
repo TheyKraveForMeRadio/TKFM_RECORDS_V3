@@ -1,7 +1,7 @@
 window.TKFM_ROYALTIES = (function() {
 
   async function recordRevenue(email, trackName, revenue) {
-    const res = await fetch('/.netlify/functions/track-royalty', {
+    const res = await fetch('/.netlify/functions/api/track-royalty', {
       method: 'POST',
       body: JSON.stringify({ email, trackName, revenue }),
     });
@@ -9,7 +9,7 @@ window.TKFM_ROYALTIES = (function() {
   }
 
   async function getStatements(email) {
-    const res = await fetch(`/.netlify/functions/get-royalties?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`/.netlify/functions/api/get-royalties?email=${encodeURIComponent(email)}`);
     return res.json();
   }
 

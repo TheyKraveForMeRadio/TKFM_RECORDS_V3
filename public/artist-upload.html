@@ -28,7 +28,7 @@ async function upload(){
  document.getElementById("revenue").value;
 
  await fetch(
- '/.netlify/functions/artist-upload',
+ '/.netlify/functions/api/artist-upload',
  {
   method:"POST",
   body:JSON.stringify({

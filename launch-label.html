@@ -19,7 +19,7 @@ async function create(){
 
  const name = document.getElementById("name").value
 
- await fetch("/.netlify/functions/create-label",{
+ await fetch("/.netlify/functions/api/create-label",{
   method:"POST",
   body:JSON.stringify({
    name:name,

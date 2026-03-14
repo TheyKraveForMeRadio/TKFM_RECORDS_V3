@@ -91,7 +91,7 @@ margin-top:10px;
 
 async function load(){
 
-const res = await fetch("/.netlify/functions/global-economy-metrics")
+const res = await fetch("/.netlify/functions/api/global-economy-metrics")
 const data = await res.json()
 
 document.getElementById("artists").innerText = data.artists || 0

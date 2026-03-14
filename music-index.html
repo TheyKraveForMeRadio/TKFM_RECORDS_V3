@@ -30,7 +30,7 @@ let chart=new Chart(ctx,{
 
 async function loadIndex(){
 
- const res=await fetch("/.netlify/functions/index-dashboard");
+ const res=await fetch("/.netlify/functions/api/index-dashboard");
 
  const data=await res.json();
 

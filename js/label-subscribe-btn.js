@@ -2,7 +2,7 @@ document.getElementById("subscribeBtn").addEventListener("click", async () => {
   const email = prompt("Enter your email to start subscription:");
   if (!email) return;
 
-  const res = await fetch("/.netlify/functions/create-label-subscription", {
+  const res = await fetch("/.netlify/functions/api/create-label-subscription", {
     method: "POST",
     body: JSON.stringify({ email }),
   });

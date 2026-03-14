@@ -83,7 +83,7 @@ Risk Alerts
 
 async function loadSystem(){
 
-const res = await fetch("/.netlify/functions/tkfm-system-monitor")
+const res = await fetch("/.netlify/functions/api/tkfm-system-monitor")
 const data = await res.json()
 
 document.getElementById("marketcap").innerText =

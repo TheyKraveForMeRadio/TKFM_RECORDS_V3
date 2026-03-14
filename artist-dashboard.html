@@ -123,7 +123,7 @@ window.addEventListener("DOMContentLoaded", () => {
   TKFM_ROYALTIES.renderStatements(email, "royaltyStatements");
 
   async function renderCreditAnalytics(email) {
-    const res = await fetch('/.netlify/functions/get-credits', {
+    const res = await fetch('/.netlify/functions/api/get-credits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

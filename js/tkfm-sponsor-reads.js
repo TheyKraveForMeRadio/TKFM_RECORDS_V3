@@ -1,5 +1,5 @@
 async function createSponsorRead(email, readPackKey) {
-  const res = await fetch("/.netlify/functions/sponsor-read-engine", {
+  const res = await fetch("/.netlify/functions/api/sponsor-read-engine", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, readPackKey })
   });
@@ -8,7 +8,7 @@ async function createSponsorRead(email, readPackKey) {
 }
 
 async function getSponsorCredits(email) {
-  const res = await fetch("/.netlify/functions/sponsor-credits", {
+  const res = await fetch("/.netlify/functions/api/sponsor-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "get" })
   });
@@ -17,7 +17,7 @@ async function getSponsorCredits(email) {
 }
 
 async function addSponsorCredits(email, amount) {
-  const res = await fetch("/.netlify/functions/sponsor-credits", {
+  const res = await fetch("/.netlify/functions/api/sponsor-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "add", amount })
   });
@@ -26,7 +26,7 @@ async function addSponsorCredits(email, amount) {
 }
 
 async function useSponsorCredits(email, amount) {
-  const res = await fetch("/.netlify/functions/sponsor-credits", {
+  const res = await fetch("/.netlify/functions/api/sponsor-credits", {
     method: "POST",
     body: JSON.stringify({ artistEmail: email, action: "use", amount })
   });

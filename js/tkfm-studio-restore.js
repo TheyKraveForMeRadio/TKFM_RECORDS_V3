@@ -8,8 +8,8 @@
   $("plan").textContent = planId || "—";
 
   function fnUrl(path){
-    const rel = `/.netlify/functions/${path}`;
-    const direct = `http://localhost:9999/.netlify/functions/${path}`;
+    const rel = `/.netlify/functions/api/${path}`;
+    const direct = `http://localhost:9999/.netlify/functions/api/${path}`;
     return { rel, direct };
   }
 

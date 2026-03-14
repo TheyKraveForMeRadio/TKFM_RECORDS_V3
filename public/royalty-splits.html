@@ -28,7 +28,7 @@ async function save(){
  document.getElementById("percent").value;
 
  await fetch(
- '/.netlify/functions/royalty-split-engine',
+ '/.netlify/functions/api/royalty-split-engine',
  {
   method:"POST",
   body:JSON.stringify({

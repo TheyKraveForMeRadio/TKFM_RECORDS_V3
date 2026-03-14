@@ -38,7 +38,7 @@ async function loadStatement() {
   const id = document.getElementById("entity").value;
 
   const res = await fetch(
-    "/.netlify/functions/label-financial-statement?entity_id="+id
+    "/.netlify/functions/api/label-financial-statement?entity_id="+id
   );
 
   const data = await res.json();

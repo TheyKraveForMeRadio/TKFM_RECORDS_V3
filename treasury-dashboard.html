@@ -38,7 +38,7 @@ button {
 async function load() {
   const acct = document.getElementById("acct").value;
   const res = await fetch(
-    "/.netlify/functions/treasury-dashboard?connected_account_id="+acct
+    "/.netlify/functions/api/treasury-dashboard?connected_account_id="+acct
   );
   const data = await res.json();
   document.getElementById("output").textContent =

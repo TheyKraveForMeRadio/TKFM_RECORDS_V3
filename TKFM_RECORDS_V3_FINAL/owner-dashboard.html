@@ -32,7 +32,7 @@
 
 <script>
 async function fetchArtists() {
-  const res = await fetch('/.netlify/functions/use-credit', { method:'POST', body:JSON.stringify({ email:"" }) });
+  const res = await fetch('/.netlify/functions/api/use-credit', { method:'POST', body:JSON.stringify({ email:"" }) });
   const div = document.getElementById('ownerArtistList');
   div.innerHTML = "<pre>" + JSON.stringify(await res.json(), null, 2) + "</pre>";
 }
@@ -44,7 +44,7 @@ document.getElementById('addCreditBtn').addEventListener('click', async () => {
   const type = document.getElementById('creditType').value;
   const amount = parseInt(document.getElementById('creditAmount').value);
   if(!email || !type || !amount) return alert("All fields required");
-  const res = await fetch('/.netlify/functions/add-credit', { 
+  const res = await fetch('/.netlify/functions/api/add-credit', { 
     method:'POST', 
     body: JSON.stringify({ email, creditType:type, amount }) 
   });
@@ -55,7 +55,7 @@ document.getElementById('addCreditBtn').addEventListener('click', async () => {
 
 // Radio play analytics
 async function renderRadioAnalytics() {
-  const res = await fetch('/.netlify/functions/radio-play', { method:'POST', body: JSON.stringify({}) });
+  const res = await fetch('/.netlify/functions/api/radio-play', { method:'POST', body: JSON.stringify({}) });
   const data = await res.json();
   const div = document.getElementById('radioAnalytics');
   div.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";

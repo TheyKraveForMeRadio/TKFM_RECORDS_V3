@@ -23,7 +23,7 @@
     const packType = document.getElementById("sponsorPack").value;
     if (!email) return alert("Enter email");
 
-    const res = await fetch("/.netlify/functions/sponsor-reads", {
+    const res = await fetch("/.netlify/functions/api/sponsor-reads", {
       method: "POST",
       body: JSON.stringify({ artistEmail: email, packType })
     });

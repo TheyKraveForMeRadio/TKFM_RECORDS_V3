@@ -1,5 +1,5 @@
 async function fetchDeliverables() {
-  const res = await fetch("/.netlify/functions/label-studio", {
+  const res = await fetch("/.netlify/functions/api/label-studio", {
     method: "POST",
     body: JSON.stringify({ action: "list", artistEmail: TKFM_OWNER_EMAIL })
   });
@@ -8,7 +8,7 @@ async function fetchDeliverables() {
 }
 
 async function markDeliverableDelivered(deliverableId) {
-  const res = await fetch("/.netlify/functions/label-studio", {
+  const res = await fetch("/.netlify/functions/api/label-studio", {
     method: "POST",
     body: JSON.stringify({ action: "update", deliverableId })
   });
@@ -16,7 +16,7 @@ async function markDeliverableDelivered(deliverableId) {
 }
 
 async function createDeliverable(artistEmail) {
-  const res = await fetch("/.netlify/functions/label-studio", {
+  const res = await fetch("/.netlify/functions/api/label-studio", {
     method: "POST",
     body: JSON.stringify({ action: "create", artistEmail })
   });
