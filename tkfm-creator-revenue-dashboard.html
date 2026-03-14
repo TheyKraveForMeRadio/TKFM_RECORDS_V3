@@ -37,7 +37,7 @@ color:#22d3ee;
 
 async function load(){
 
-const res=await fetch("/.netlify/functions/get-royalties")
+const res=await fetch("/.netlify/functions/api/get-royalties")
 const data=await res.json()
 
 document.getElementById("royalties").innerText=data.total || 0

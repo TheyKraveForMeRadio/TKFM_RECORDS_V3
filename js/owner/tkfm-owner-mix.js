@@ -1,7 +1,7 @@
 window.TKFM_OWNER_MIX = (function(){
   async function reviewMix(mixId, action){
     try {
-      const res = await fetch("/.netlify/functions/owner-mix-approval", {
+      const res = await fetch("/.netlify/functions/api/owner-mix-approval", {
         method: "POST",
         body: JSON.stringify({
           mixId,

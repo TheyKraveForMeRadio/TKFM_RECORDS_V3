@@ -46,7 +46,7 @@ color:#f97316;
 
 async function loadHealth(){
 
-const res = await fetch("/.netlify/functions/platform-health-monitor")
+const res = await fetch("/.netlify/functions/api/platform-health-monitor")
 const data = await res.json()
 
 const container=document.getElementById("health")

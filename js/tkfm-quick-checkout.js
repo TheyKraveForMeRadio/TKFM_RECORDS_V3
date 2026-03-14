@@ -1,5 +1,5 @@
 function tkfmQuickCheckout(lookup_key){
-  fetch('/.netlify/functions/create-checkout-session',{
+  fetch('/.netlify/functions/api/create-checkout-session',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({lookup_key})

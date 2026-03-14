@@ -1,12 +1,12 @@
 export async function handler(event) {
   const data = JSON.parse(event.body);
 
-  const rev = await fetch(process.env.URL + "/.netlify/functions/revenue-predict", {
+  const rev = await fetch(process.env.URL + "/.netlify/functions/api/revenue-predict", {
     method: "POST",
     body: JSON.stringify(data)
   }).then(r=>r.json());
 
-  const pricing = await fetch(process.env.URL + "/.netlify/functions/auto-pricing", {
+  const pricing = await fetch(process.env.URL + "/.netlify/functions/api/auto-pricing", {
     method: "POST",
     body: JSON.stringify({ email: data.email, projectedRevenue: rev.projectedMonthlyUSD })
   }).then(r=>r.json());

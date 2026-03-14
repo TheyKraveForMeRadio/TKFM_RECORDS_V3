@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!email) return;
 
     try {
-      const res = await fetch("/.netlify/functions/create-label-subscription", {
+      const res = await fetch("/.netlify/functions/api/create-label-subscription", {
         method: "POST",
         body: JSON.stringify({ email }),
       });

@@ -71,13 +71,13 @@ margin-top:10px;
 
 async function load(){
 
-const indexRes = await fetch("/.netlify/functions/global-music-index-engine")
+const indexRes = await fetch("/.netlify/functions/api/global-music-index-engine")
 const indexData = await indexRes.json()
 
-const yieldRes = await fetch("/.netlify/functions/royalty-yield-feed")
+const yieldRes = await fetch("/.netlify/functions/api/royalty-yield-feed")
 const yieldData = await yieldRes.json()
 
-const capRes = await fetch("/.netlify/functions/institutional-capital-feed")
+const capRes = await fetch("/.netlify/functions/api/institutional-capital-feed")
 const capData = await capRes.json()
 
 document.getElementById("index").innerText = indexData.index || 0

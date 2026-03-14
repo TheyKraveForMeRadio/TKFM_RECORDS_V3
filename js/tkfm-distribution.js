@@ -1,7 +1,7 @@
 window.TKFM_DISTRIBUTION = (function() {
 
   async function submitTrack(email, trackName, trackUrl) {
-    const res = await fetch('/.netlify/functions/submit-track', {
+    const res = await fetch('/.netlify/functions/api/submit-track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, trackName, trackUrl })
@@ -10,14 +10,14 @@ window.TKFM_DISTRIBUTION = (function() {
   }
 
   async function listTracks(email) {
-    const res = await fetch(`/.netlify/functions/get-tracks?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`/.netlify/functions/api/get-tracks?email=${encodeURIComponent(email)}`);
     
     if (!res.ok) return [];
     return res.json();
   }
 
   async function distributeTrack(email, index) {
-    const res = await fetch('/.netlify/functions/distribute-track', {
+    const res = await fetch('/.netlify/functions/api/distribute-track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, index })

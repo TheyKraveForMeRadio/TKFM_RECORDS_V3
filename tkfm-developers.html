@@ -24,7 +24,7 @@ async function create(){
 const name=document.getElementById("name").value
 
 const res=await fetch(
-"/.netlify/functions/create-api-key",
+"/.netlify/functions/api/create-api-key",
 {
 method:"POST",
 body:JSON.stringify({

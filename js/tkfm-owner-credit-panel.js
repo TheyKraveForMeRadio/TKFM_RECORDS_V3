@@ -1,7 +1,7 @@
 window.TKFM_OWNER_CREDIT_PANEL = (function() {
 
   async function render(email) {
-    const res = await fetch('/.netlify/functions/get-credits', {
+    const res = await fetch('/.netlify/functions/api/get-credits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

@@ -24,7 +24,7 @@ async function upload(){
  const title=document.getElementById("title").value
 
  const res = await fetch(
- "/.netlify/functions/upload-track",
+ "/.netlify/functions/api/upload-track",
  {
   method:"POST",
   body:JSON.stringify({

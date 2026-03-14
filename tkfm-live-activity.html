@@ -8,7 +8,7 @@
 
 async function loadActivity(){
 
-const res = await fetch("/.netlify/functions/economy-activity-feed")
+const res = await fetch("/.netlify/functions/api/economy-activity-feed")
 const data = await res.json()
 
 const container=document.getElementById("activity")

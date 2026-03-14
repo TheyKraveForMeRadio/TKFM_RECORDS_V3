@@ -129,7 +129,7 @@ ORDER BOOK
 
 async function loadOrderbook(){
 
-const res = await fetch("/.netlify/functions/orderbook-view")
+const res = await fetch("/.netlify/functions/api/orderbook-view")
 
 const data = await res.json()
 
@@ -159,7 +159,7 @@ loadOrderbook()
 TRADE FEED
 ------------------------- */
 
-const source = new EventSource("/.netlify/functions/trade-feed")
+const source = new EventSource("/.netlify/functions/api/trade-feed")
 
 source.onmessage = function(event){
 
@@ -184,7 +184,7 @@ BUY ORDER
 
 async function buy(){
 
-await fetch("/.netlify/functions/create-buy-order",{
+await fetch("/.netlify/functions/api/create-buy-order",{
 
 method:"POST",
 
@@ -210,7 +210,7 @@ SELL ORDER
 
 async function sell(){
 
-await fetch("/.netlify/functions/create-sell-order",{
+await fetch("/.netlify/functions/api/create-sell-order",{
 
 method:"POST",
 

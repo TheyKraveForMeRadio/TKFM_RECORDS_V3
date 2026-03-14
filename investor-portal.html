@@ -36,15 +36,15 @@ button {
 async function loadReport() {
 
   const report = await fetch(
-    "/.netlify/functions/institutional-reporting-pack"
+    "/.netlify/functions/api/institutional-reporting-pack"
   );
 
   const ratings = await fetch(
-    "/.netlify/functions/credit-rating-engine"
+    "/.netlify/functions/api/credit-rating-engine"
   );
 
   const stress = await fetch(
-    "/.netlify/functions/stress-simulation-engine"
+    "/.netlify/functions/api/stress-simulation-engine"
   );
 
   const data = {

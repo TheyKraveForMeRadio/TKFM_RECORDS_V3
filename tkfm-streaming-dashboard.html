@@ -16,7 +16,7 @@
 async function load(){
 
  const res = await fetch(
- "/.netlify/functions/streaming-stats-ingest"
+ "/.netlify/functions/api/streaming-stats-ingest"
  )
 
  const data = await res.json()

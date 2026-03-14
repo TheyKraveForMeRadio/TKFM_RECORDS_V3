@@ -39,7 +39,7 @@ async function load(){
 const params=new URLSearchParams(window.location.search)
 const id=params.get("song")
 
-const res=await fetch("/.netlify/functions/catalog-detail?id="+id)
+const res=await fetch("/.netlify/functions/api/catalog-detail?id="+id)
 const data=await res.json()
 
 document.getElementById("song").innerText=data.title
@@ -48,7 +48,7 @@ document.getElementById("song").innerText=data.title
 
 async function buy(){
 
-await fetch("/.netlify/functions/buy-catalog-shares",{
+await fetch("/.netlify/functions/api/buy-catalog-shares",{
 method:"POST",
 body:JSON.stringify({amount:50})
 })

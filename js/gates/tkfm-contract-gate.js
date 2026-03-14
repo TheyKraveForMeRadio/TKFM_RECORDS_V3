@@ -1,7 +1,7 @@
 window.TKFM_CONTRACT_GATE = (function(){
   async function checkAccess(artistEmail, trackId){
     try {
-      const res = await fetch("/.netlify/functions/enforce-contract", {
+      const res = await fetch("/.netlify/functions/api/enforce-contract", {
         method: "POST",
         body: JSON.stringify({ artistEmail, trackId })
       });

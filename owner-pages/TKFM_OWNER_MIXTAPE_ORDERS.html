@@ -102,7 +102,7 @@
     meta.textContent = 'Loading…';
     list.innerHTML = '';
 
-    const res = await fetch('/.netlify/functions/list-mixtape-orders', {
+    const res = await fetch('/.netlify/functions/api/list-mixtape-orders', {
       headers: { 'x-owner-key': key }
     });
 

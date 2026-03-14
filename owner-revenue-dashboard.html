@@ -94,7 +94,7 @@ Artists On Platform
 
 async function loadDashboard(){
 
-const res = await fetch("/.netlify/functions/owner-revenue-metrics")
+const res = await fetch("/.netlify/functions/api/owner-revenue-metrics")
 const data = await res.json()
 
 document.getElementById("revenue").innerText="$"+data.revenue

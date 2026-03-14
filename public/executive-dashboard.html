@@ -32,17 +32,17 @@
 async function load() {
 
   const metrics =
-    await fetch('/.netlify/functions/metrics-engine');
+    await fetch('/.netlify/functions/api/metrics-engine');
   document.getElementById("metrics").textContent =
     JSON.stringify(await metrics.json(),null,2);
 
   const pipeline =
-    await fetch('/.netlify/functions/pipeline-forecast');
+    await fetch('/.netlify/functions/api/pipeline-forecast');
   document.getElementById("pipeline").textContent =
     JSON.stringify(await pipeline.json(),null,2);
 
   const quality =
-    await fetch('/.netlify/functions/revenue-quality');
+    await fetch('/.netlify/functions/api/revenue-quality');
   document.getElementById("quality").textContent =
     JSON.stringify(await quality.json(),null,2);
 }

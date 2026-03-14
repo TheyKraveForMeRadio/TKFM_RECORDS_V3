@@ -46,7 +46,7 @@ async function create(){
 const artist=document.getElementById("artist").value
 
 const res=await fetch(
-"/.netlify/functions/create-referral-link",
+"/.netlify/functions/api/create-referral-link",
 {
 method:"POST",
 body:JSON.stringify({artist})

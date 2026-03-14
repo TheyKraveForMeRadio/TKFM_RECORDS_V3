@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Fetch and update credits
   async function updateCredits() {
     try {
-      const res = await fetch('/.netlify/functions/sponsor-credits-get');
+      const res = await fetch('/.netlify/functions/api/sponsor-credits-get');
       const data = await res.json();
       if(creditsDisplay) creditsDisplay.textContent = data.credits || 0;
     } catch(err) {

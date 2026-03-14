@@ -6,7 +6,7 @@ const status=document.getElementById("own-status")
 
 status.innerText="Processing investment..."
 
-const res=await fetch("/.netlify/functions/own-this-song",{
+const res=await fetch("/.netlify/functions/api/own-this-song",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"

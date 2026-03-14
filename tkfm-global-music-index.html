@@ -59,7 +59,7 @@ border-radius:6px;
 
 async function loadIndex(){
 
-const res = await fetch("/.netlify/functions/music-index")
+const res = await fetch("/.netlify/functions/api/music-index")
 const data = await res.json()
 
 document.getElementById("index").innerText="$"+data.index

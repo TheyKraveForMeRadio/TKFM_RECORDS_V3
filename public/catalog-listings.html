@@ -33,7 +33,7 @@ margin-bottom:15px;
 async function loadCatalogs(){
 
  const res = await fetch(
-  '/.netlify/functions/catalog-list'
+  '/.netlify/functions/api/catalog-list'
  );
 
  const data = await res.json();

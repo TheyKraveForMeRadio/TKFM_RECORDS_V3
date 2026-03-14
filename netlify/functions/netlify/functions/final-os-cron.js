@@ -1,5 +1,5 @@
 export async function handler() {
-  const base = process.env.SITE_URL + '/.netlify/functions/';
+  const base = process.env.SITE_URL + '/.netlify/functions/api/';
   await fetch(base + 'artist-score-engine');
   await fetch(base + 'ai-ar-engine');
   await fetch(base + 'auto-signing-engine');

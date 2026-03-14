@@ -5,7 +5,7 @@ async function buyCredits(lookup_key) {
     return;
   }
 
-  const res = await fetch("/.netlify/functions/create-credit-checkout", {
+  const res = await fetch("/.netlify/functions/api/create-credit-checkout", {
     method: "POST",
     body: JSON.stringify({ email, lookup_key })
   });

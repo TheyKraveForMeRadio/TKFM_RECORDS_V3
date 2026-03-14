@@ -1,7 +1,7 @@
 window.TKFM_OWNER_MIX = (function() {
 
   async function approveTrack(email, trackIndex) {
-    const res = await fetch("/.netlify/functions/owner-approve-track", {
+    const res = await fetch("/.netlify/functions/api/owner-approve-track", {
       method: "POST",
       body: JSON.stringify({ email, trackIndex, action: "approve" })
     });
@@ -9,7 +9,7 @@ window.TKFM_OWNER_MIX = (function() {
   }
 
   async function requestChanges(email, trackIndex) {
-    const res = await fetch("/.netlify/functions/owner-approve-track", {
+    const res = await fetch("/.netlify/functions/api/owner-approve-track", {
       method: "POST",
       body: JSON.stringify({ email, trackIndex, action: "request_changes" })
     });

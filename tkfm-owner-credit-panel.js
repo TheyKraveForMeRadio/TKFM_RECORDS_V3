@@ -6,13 +6,13 @@
 // Auto-Boost & KPI Engine (placeholder-safe)
 async function runAutoBoost() {
   try {
-    await fetch('/.netlify/functions/auto-boost');
+    await fetch('/.netlify/functions/api/auto-boost');
   } catch (e) {
     console.warn("auto-boost not active");
   }
 
   try {
-    await fetch('/.netlify/functions/auto-radio');
+    await fetch('/.netlify/functions/api/auto-radio');
   } catch (e) {
     console.warn("auto-radio not active");
   }
@@ -23,7 +23,7 @@ async function runAutoBoost() {
 // Owner Credit Panel Render (READ ONLY)
 async function renderCreditPanel() {
   try {
-    const res = await fetch('/.netlify/functions/get-credits', {
+    const res = await fetch('/.netlify/functions/api/get-credits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

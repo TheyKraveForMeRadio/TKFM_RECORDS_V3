@@ -2,7 +2,7 @@ const BASE = process.env.SELF_BASE_URL || "https://tkfmrecords.com"
 
 async function call(fn){
   try{
-    await fetch(BASE + "/.netlify/functions/" + fn)
+    await fetch(BASE + "/.netlify/functions/api/" + fn)
   }catch(e){
     console.log("cron error",fn,e)
   }

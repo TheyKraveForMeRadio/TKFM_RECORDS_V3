@@ -1,7 +1,7 @@
 window.TKFM_RADIO = (function() {
 
   async function getRotation() {
-    const res = await fetch("/.netlify/functions/radio-rotation");
+    const res = await fetch("/.netlify/functions/api/radio-rotation");
     const data = await res.json();
     return data.rotation || [];
   }

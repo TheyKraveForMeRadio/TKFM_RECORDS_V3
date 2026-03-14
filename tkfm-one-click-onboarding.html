@@ -54,7 +54,7 @@ const song = document.getElementById("song").value
 
 document.getElementById("status").innerText="Launching..."
 
-await fetch("/.netlify/functions/one-click-onboarding",{
+await fetch("/.netlify/functions/api/one-click-onboarding",{
 method:"POST",
 body:JSON.stringify({artist,song})
 })

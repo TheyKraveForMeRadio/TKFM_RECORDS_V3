@@ -55,7 +55,7 @@ const artist=document.getElementById("artist").value
 const email=document.getElementById("email").value
 
 const res=await fetch(
-"/.netlify/functions/onboard-artist",
+"/.netlify/functions/api/onboard-artist",
 {
 method:"POST",
 body:JSON.stringify({

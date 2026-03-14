@@ -1,6 +1,6 @@
 window.TKFM_TOKEN_NETWORK = {
   async mint(email, type, amount, wallet) {
-    const res = await fetch('/.netlify/functions/mint-token', {
+    const res = await fetch('/.netlify/functions/api/mint-token', {
       method: 'POST',
       body: JSON.stringify({ email, token_type: type, amount, wallet_address: wallet })
     });
@@ -9,7 +9,7 @@ window.TKFM_TOKEN_NETWORK = {
     return data;
   },
   async log(action, details) {
-    await fetch('/.netlify/functions/ledger-log', {
+    await fetch('/.netlify/functions/api/ledger-log', {
       method: 'POST',
       body: JSON.stringify({ actor: window.TKFM_EMAIL, action_type: action, details })
     });

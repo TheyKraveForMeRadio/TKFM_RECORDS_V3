@@ -1,7 +1,7 @@
 window.TKFM_DISTRIBUTE = (function(){
   async function submitRelease(artistEmail, releaseId, distributionType){
     try {
-      const res = await fetch("/.netlify/functions/distribute-release", {
+      const res = await fetch("/.netlify/functions/api/distribute-release", {
         method: "POST",
         body: JSON.stringify({ artistEmail, releaseId, distributionType })
       });

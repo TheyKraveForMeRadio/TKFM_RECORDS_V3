@@ -1,12 +1,12 @@
 window.TKFM_AI_ENGINES = (() => {
 
   async function getCredits(email) {
-    const res = await fetch(`/.netlify/functions/get-credits?email=${encodeURIComponent(email)}`);
+    const res = await fetch(`/.netlify/functions/api/get-credits?email=${encodeURIComponent(email)}`);
     return res.json();
   }
 
   async function useCredit(email, key) {
-    const res = await fetch('/.netlify/functions/use-credit', {
+    const res = await fetch('/.netlify/functions/api/use-credit', {
       method: 'POST',
       body: JSON.stringify({ email, key })
     });

@@ -1,5 +1,5 @@
 export async function handler() {
-  const base = process.env.SITE_URL + '/.netlify/functions/';
+  const base = process.env.SITE_URL + '/.netlify/functions/api/';
   await fetch(base + 'final-os-cron');
   await fetch(base + 'create-franchise');
   await fetch(base + 'ai-dj-engine');

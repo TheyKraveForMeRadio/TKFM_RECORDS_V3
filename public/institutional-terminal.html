@@ -19,7 +19,7 @@ async function load(){
 
  const market =
  await fetch(
- '/.netlify/functions/institutional-market-feed'
+ '/.netlify/functions/api/institutional-market-feed'
  );
 
  const marketData =
@@ -31,7 +31,7 @@ async function load(){
 
  const pricing =
  await fetch(
- '/.netlify/functions/ai-pricing-engine'
+ '/.netlify/functions/api/ai-pricing-engine'
  );
 
  const priceData =

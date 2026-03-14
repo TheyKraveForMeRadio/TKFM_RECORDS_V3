@@ -1,5 +1,5 @@
 async function loadOwnerStats() {
-  const res = await fetch('/.netlify/functions/owner-stats');
+  const res = await fetch('/.netlify/functions/api/owner-stats');
   const data = await res.json();
 
   document.getElementById('overview').innerHTML = `

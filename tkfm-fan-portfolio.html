@@ -130,7 +130,7 @@ Royalty Earnings
 
 async function loadPortfolio(){
 
-const res = await fetch("/.netlify/functions/fan-portfolio")
+const res = await fetch("/.netlify/functions/api/fan-portfolio")
 const data = await res.json()
 
 const container = document.getElementById("portfolio")

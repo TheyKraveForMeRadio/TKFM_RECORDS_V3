@@ -4,7 +4,7 @@ async function renderLabelAI() {
   const predictions = [];
 
   for (const t of tracks) {
-    const res = await fetch('/.netlify/functions/predict-hit', {
+    const res = await fetch('/.netlify/functions/api/predict-hit', {
       method: 'POST',
       body: JSON.stringify({ trackName: t.trackName, artistEmail: window.TKFM_EMAIL })
     });

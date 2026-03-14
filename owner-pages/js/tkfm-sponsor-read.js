@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         try {
             // Call backend to consume 1 credit
-            await fetchJSON('/.netlify/functions/sponsor-credits-use', {
+            await fetchJSON('/.netlify/functions/api/sponsor-credits-use', {
                 method: 'POST',
                 headers: {'Content-Type':'application/json'},
                 body: JSON.stringify({amount:1})
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const res = await fetchJSON('/.netlify/functions/sponsor-request-submit', {
+            const res = await fetchJSON('/.netlify/functions/api/sponsor-request-submit', {
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body: JSON.stringify(data)
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tbody = document.getElementById('reqRows');
         if(!tbody) return;
         try{
-            const res = await fetchJSON('/.netlify/functions/sponsor-request-list');
+            const res = await fetchJSON('/.netlify/functions/api/sponsor-request-list');
             tbody.innerHTML = '';
             res.requests?.forEach(r=>{
                 const tr = document.createElement('tr');

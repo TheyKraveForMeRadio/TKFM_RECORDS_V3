@@ -25,7 +25,7 @@ async function trade(){
  document.getElementById("amount").value;
 
  await fetch(
- '/.netlify/functions/execute-trade',
+ '/.netlify/functions/api/execute-trade',
  {
   method:"POST",
   body:JSON.stringify({

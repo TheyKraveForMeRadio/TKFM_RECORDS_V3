@@ -14,7 +14,7 @@
 
 async function loadCatalogs(){
 
- const res = await fetch("/.netlify/functions/catalogs-list")
+ const res = await fetch("/.netlify/functions/api/catalogs-list")
 
  const catalogs = await res.json()
 
@@ -38,7 +38,7 @@ async function loadCatalogs(){
 
 function buy(id){
 
- fetch("/.netlify/functions/investor-buy-catalog",{
+ fetch("/.netlify/functions/api/investor-buy-catalog",{
   method:"POST",
   body:JSON.stringify({
    catalog_id:id,
