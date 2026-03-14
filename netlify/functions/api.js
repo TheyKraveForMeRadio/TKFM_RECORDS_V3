@@ -1,7 +1,10 @@
 import fs from "fs"
 import path from "path"
+import { createRequire } from "module"
 
-/* engines directory relative to deployed function */
+const require = createRequire(import.meta.url)
+
+/* engines directory */
 
 const enginesDir = path.join(__dirname,"../engines")
 
@@ -31,10 +34,10 @@ path:file
 }
 }
 
-/* load engine with cache */
+/* load engine */
 
 if(!engineCache[file]){
-engineCache[file] = await import(file)
+engineCache[file] = require(file)
 }
 
 const engine = engineCache[file]
@@ -42,7 +45,9 @@ const engine = engineCache[file]
 if(!engine.handler){
 return{
 statusCode:500,
-body:JSON.stringify({error:"handler missing"})
+body:JSON.stringify({
+error:"handler missing"
+})
 }
 }
 
