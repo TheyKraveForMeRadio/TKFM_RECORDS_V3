@@ -1,29 +1,34 @@
 import { EventEmitter } from "events"
-
-/* GLOBAL EVENT BUS */
+import { broadcast, subscribe } from "./_engine-mesh.js"
 
 const bus = new EventEmitter()
-
-/* allow unlimited engines */
 
 bus.setMaxListeners(10000)
 
 /* emit */
 
 export function emit(event,data){
+
 bus.emit(event,data)
+
+broadcast(event,data)
+
 }
 
 /* subscribe */
 
 export function on(event,handler){
+
 bus.on(event,handler)
+
 }
 
-/* once */
+/* mesh subscription */
 
-export function once(event,handler){
-bus.once(event,handler)
-}
+subscribe((event,data)=>{
+
+bus.emit(event,data)
+
+})
 
 export default bus
