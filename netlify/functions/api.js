@@ -1,8 +1,5 @@
-import fs from "fs"
-import path from "path"
-import { createRequire } from "module"
-
-const require = createRequire(import.meta.url)
+const fs = require("fs")
+const path = require("path")
 
 /* engines directory */
 
@@ -12,7 +9,7 @@ const enginesDir = path.join(__dirname,"../engines")
 
 const engineCache = {}
 
-export const handler = async (event,context)=>{
+exports.handler = async (event,context)=>{
 
 try{
 
@@ -34,7 +31,7 @@ path:file
 }
 }
 
-/* load engine */
+/* cached load */
 
 if(!engineCache[file]){
 engineCache[file] = require(file)
@@ -57,7 +54,9 @@ return await engine.handler(event,context)
 
 return{
 statusCode:500,
-body:JSON.stringify({error:err.message})
+body:JSON.stringify({
+error:err.message
+})
 }
 
 }
