@@ -1,3 +1,4 @@
+import bus from "./_event-bus.js";
 import { ethers } from "ethers";
 
 const provider = new ethers.JsonRpcProvider(

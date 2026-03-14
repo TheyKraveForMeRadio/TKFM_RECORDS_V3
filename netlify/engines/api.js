@@ -1,3 +1,4 @@
+import bus from "./_event-bus.js";
 import * as tradeFeed from "./trade-feed.js"
 import * as musicIndex from "./music-index-engine.js"
 import * as marketStream from "./tkfm-market-stream-engine.js"

@@ -1,3 +1,4 @@
+import bus from "./_event-bus.js";
 import { createClient } from "@supabase/supabase-js";
 import { ethers } from "ethers";
 
