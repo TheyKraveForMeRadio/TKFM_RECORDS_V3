@@ -18,7 +18,9 @@ exports.handler = async function(event, context) {
   if (!engineCache[engineName]) {
 
    const enginePath = path.resolve(
-    "./netlify/engines/" + engineName + ".js"
+    __dirname,
+    "../engines",
+    engineName + ".js"
    )
 
    engineCache[engineName] = require(enginePath)
