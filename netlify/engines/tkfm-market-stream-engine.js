@@ -1,20 +1,18 @@
 exports.handler = async function(event) {
 
+ const payload = {
+  catalog_id: "song123",
+  price: (Math.random()*10).toFixed(2),
+  volume: Math.floor(Math.random()*10)+1,
+  time: Date.now()
+ }
+
  return {
   statusCode: 200,
   headers: {
-   "Content-Type": "text/event-stream",
-   "Cache-Control": "no-cache",
-   "Connection": "keep-alive"
+   "Content-Type":"application/json"
   },
-  body:
-   "data: " +
-   JSON.stringify({
-    price: (Math.random() * 10).toFixed(2),
-    catalog_id: "song123",
-    time: Date.now()
-   }) +
-   "\n\n"
- };
+  body: JSON.stringify(payload)
+ }
 
-};
+}
