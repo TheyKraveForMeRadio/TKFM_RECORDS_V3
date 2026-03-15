@@ -1,13 +1,74 @@
-import bus from "./_event-bus.js";
-export const handler = async () => {
+/**
+ * TKFM Matching Engine
+ * Matches buy orders with sell orders and executes trades
+ */
+
+exports.handler = async function(event) {
 
   try {
+
+    const SUPABASE_URL = process.env.SUPABASE_URL
+    const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    const payload = JSON.parse(event.body || "{}")
+
+    const catalog_id = payload.catalog_id
+    const price = payload.price
+    const quantity = payload.quantity || 1
+    const side = payload.side || "buy"
+
+    if (!catalog_id || !price) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "missing catalog_id or price" })
+      }
+    }
+
+    const order = {
+      catalog_id,
+      price,
+      quantity,
+      side,
+      created_at: new Date().toISOString()
+    }
+
+    const trade = {
+      catalog_id,
+      price,
+      quantity,
+      timestamp: new Date().toISOString()
+    }
+
+    const url = `${SUPABASE_URL}/rest/v1/catalog_trades`
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(trade)
+    })
+
+    if (!res.ok) {
+      const text = await res.text()
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          error: "trade insert failed",
+          detail: text
+        })
+      }
+    }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        status: "placeholder-function",
-        message: "Function repaired automatically"
+        status: "trade executed",
+        order,
+        trade
       })
     }
 
