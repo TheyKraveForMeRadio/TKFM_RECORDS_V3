@@ -1,71 +1,63 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js";
+const { createClient } = require("@supabase/supabase-js")
 
 const supabase = createClient(
  process.env.SUPABASE_URL,
  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+)
 
-export const handler = async () => {
+exports.handler = async function(event) {
 
- try {
-
-  const { data: catalogs, error } = await supabase
-   .from("catalog_revenue_totals")
-   .select("*");
-
-  if(error){
-   throw error;
-  }
-
-  if(!catalogs || catalogs.length === 0){
-   return {
-    statusCode:200,
-    body:JSON.stringify({status:"no catalogs"})
-   };
-  }
-
-  const derivatives = [];
-
-  for(const c of catalogs){
-
-   const revenue = Number(c.total_revenue || 0);
-
-   const forecastYield = revenue * 1.1;
-
-   derivatives.push({
-    catalog_id: c.catalog_id,
-    forecast_yield: forecastYield,
-    contract_type: "futures",
-    expiry: new Date(
-      Date.now() + 90 * 24 * 60 * 60 * 1000
-    ).toISOString(),
-    updated_at: new Date().toISOString()
-   });
-
-  }
-
-  await supabase
-   .from("music_derivatives")
-   .upsert(derivatives, {
-    onConflict: "catalog_id,contract_type"
-   });
-
+ if (event.httpMethod !== "POST") {
   return {
-   statusCode:200,
-   body:JSON.stringify({
-    status:"derivatives_generated",
-    count: derivatives.length
-   })
-  };
-
- } catch(err){
-
-  return {
-   statusCode:500,
-   body:JSON.stringify({error:err.message})
-  };
-
+   statusCode: 405,
+   body: JSON.stringify({ error: "POST required" })
+  }
  }
 
-};
+ let payload
+
+ try {
+  payload = JSON.parse(event.body)
+ } catch {
+  return {
+   statusCode: 400,
+   body: JSON.stringify({ error: "invalid JSON payload" })
+  }
+ }
+
+ const {
+  catalog_id,
+  contract_type = "future",
+  entry_price,
+  target_price,
+  expiration_days = 30
+ } = payload
+
+ if (!catalog_id || !entry_price || !target_price) {
+  return {
+   statusCode: 400,
+   body: JSON.stringify({ error: "missing required fields" })
+  }
+ }
+
+ const expiration_date = new Date()
+ expiration_date.setDate(expiration_date.getDate() + expiration_days)
+
+ const contract = {
+  catalog_id,
+  contract_type,
+  entry_price,
+  target_price,
+  expiration_date,
+  created_at: new Date().toISOString()
+ }
+
+ return {
+  statusCode: 200,
+  body: JSON.stringify({
+   status: "derivative contract created",
+   contract
+  })
+ }
+
+}
