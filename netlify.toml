@@ -16,8 +16,6 @@ DEBUG_MODE = "false"
 ############################################
 
 [functions]
-
-# Disable bundling so dynamic engine loader works
 node_bundler = "none"
 
 external_node_modules = [
@@ -37,6 +35,7 @@ external_node_modules = [
 
 included_files = [
 "netlify/engines/**",
+"netlify/functions/engine-registry.js",
 "netlify/functions/_middleware-secret-guard.js",
 "netlify/functions/_shared/**"
 ]
@@ -100,4 +99,3 @@ for = "/*"
 X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "strict-origin-when-cross-origin"
-
