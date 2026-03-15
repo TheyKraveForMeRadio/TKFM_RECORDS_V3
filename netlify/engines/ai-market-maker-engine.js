@@ -1,70 +1,120 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+/*
+AI MARKET MAKER ENGINE
+Creates automated trades for songs
+*/
 
-const supabase = createClient(
+async function handler(event,context){
+
+try{
+
+const mod =
+await import("@supabase/supabase-js")
+
+const createClient =
+mod.createClient
+
+const supabase =
+createClient(
 process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-const BUY_THRESHOLD = 0.85
-const SELL_THRESHOLD = 1.15
-const ORDER_SIZE = 10
+/* get market songs */
 
-export const handler = async () => {
-
-try{
-
-const { data: tokens } = await supabase
-.from("catalog_tokens")
+const { data:songs } =
+await supabase
+.from("catalog_market")
 .select("*")
+.limit(10)
 
-for(const token of tokens || []){
+if(!songs || songs.length===0){
 
-const price = Number(token.price || 1)
-const fairValue = Number(token.fair_value || price)
+return{
+statusCode:200,
+body:JSON.stringify({
+status:"no songs available"
+})
+}
 
-const ratio = price / fairValue
+}
 
-/* BUY UNDERVALUED ASSETS */
+/* pick random song */
 
-if(ratio < BUY_THRESHOLD){
+const song =
+songs[Math.floor(Math.random()*songs.length)]
+
+const basePrice =
+Number(song.price || 1)
+
+/* random movement */
+
+const movement =
+( Math.random() - 0.5 ) * 0.2
+
+const newPrice =
+Number((basePrice + movement).toFixed(2))
+
+const quantity =
+Math.floor(Math.random()*5)+1
+
+/* record trade */
 
 await supabase
-.from("order_book")
+.from("catalog_trades")
 .insert({
-token_id:token.id,
-side:"buy",
-price:price,
-quantity:ORDER_SIZE,
-source:"ai_market_maker"
+
+catalog_id:song.catalog_id,
+price:newPrice,
+quantity:quantity,
+created_at:new Date().toISOString()
+
 })
 
-}
+/* update price */
 
-/* SELL OVERHEATED ASSETS */
+const volume =
+Number(song.volume || 0) + quantity
 
-if(ratio > SELL_THRESHOLD){
+const marketCap =
+newPrice * 1000000
 
 await supabase
-.from("order_book")
-.insert({
-token_id:token.id,
-side:"sell",
-price:price,
-quantity:ORDER_SIZE,
-source:"ai_market_maker"
+.from("catalog_market")
+.update({
+
+price:newPrice,
+volume:volume,
+market_cap:marketCap,
+updated_at:new Date().toISOString()
+
 })
+.eq("catalog_id",song.catalog_id)
 
-}
+/* candle */
 
-}
+await supabase
+.from("catalog_candles")
+.insert({
+
+catalog_id:song.catalog_id,
+open:newPrice,
+high:newPrice,
+low:newPrice,
+close:newPrice,
+timestamp:new Date().toISOString()
+
+})
 
 return{
 
 statusCode:200,
 body:JSON.stringify({
-success:true,
-message:"AI market maker executed"
+
+status:"market maker trade",
+catalog_id:song.catalog_id,
+price:newPrice,
+quantity:quantity
+
 })
 
 }
@@ -72,12 +122,14 @@ message:"AI market maker executed"
 }catch(err){
 
 return{
-
 statusCode:500,
 body:JSON.stringify({error:err.message})
-
 }
 
 }
 
 }
+
+module.exports.handler = handler
+module.exports.default = {handler}
+

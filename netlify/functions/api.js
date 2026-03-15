@@ -1,69 +1,42 @@
-import fs from "fs"
-import path from "path"
+const path = require("path");
 
-/* Netlify runtime working directory */
+const cache = {};
 
-const enginesDir =
-path.join(process.cwd(),"netlify","engines")
+exports.handler = async function (event, context) {
 
-/* engine cache */
+  const engine = event.path.split("/api/")[1];
 
-const cache = {}
+  if (!engine) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "No engine specified" })
+    };
+  }
 
-export const handler = async (event,context)=>{
+  try {
 
-try{
+    if (!cache[engine]) {
 
-const endpoint = event.path
-.replace("/.netlify/functions/api/","")
-.replace("/.netlify/functions/","")
-.split("?")[0]
+      const enginePath = path.resolve(
+        "./netlify/engines/" + engine + ".js"
+      );
 
-const file =
-path.join(enginesDir,endpoint+".js")
+      cache[engine] = require(enginePath);
 
-if(!fs.existsSync(file)){
-return{
-statusCode:404,
-body:JSON.stringify({
-error:"engine not found",
-endpoint,
-path:file
-})
-}
-}
+    }
 
-/* dynamic ESM load */
+    const engineHandler =
+      cache[engine].handler || cache[engine];
 
-if(!cache[file]){
+    return await engineHandler(event, context);
 
-cache[file] =
-await import("file://"+file)
+  } catch (err) {
 
-}
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    };
 
-const engine = cache[file]
+  }
 
-if(!engine.handler){
-return{
-statusCode:500,
-body:JSON.stringify({
-error:"handler missing"
-})
-}
-}
-
-return await engine.handler(event,context)
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({
-error:err.message
-})
-}
-
-}
-
-}
+};
