@@ -1,43 +1,42 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+const { createClient } = require("@supabase/supabase-js")
 
 const supabase = createClient(
  process.env.SUPABASE_URL,
  process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-export const handler = async () => {
+exports.handler = async function(event) {
 
- const { data: revenues } = await supabase
-  .from("catalog_revenue_totals")
-  .select("*")
+ const { data, error } = await supabase
+  .from("catalog_market")
+  .select("catalog_id, price, market_cap")
 
- const { data: tokens } = await supabase
-  .from("catalog_tokens")
-  .select("*")
+ if (error) {
+  return {
+   statusCode: 500,
+   body: JSON.stringify({ error: error.message })
+  }
+ }
 
- let yields = []
+ const yields = data.map(asset => {
 
- tokens.forEach(token => {
+  const simulatedRevenue = Math.random() * 10000
+  const yieldPercent = ((simulatedRevenue / asset.market_cap) * 100).toFixed(4)
 
-  const revenue = revenues.find(r => r.catalog_id === token.catalog_id)
-
-  if(!revenue) return
-
-  const apy = (revenue.total_revenue / token.total_shares) * 100
-
-  yields.push({
-   catalog_id:token.catalog_id,
-   revenue:revenue.total_revenue,
-   apy:apy
-  })
+  return {
+   catalog_id: asset.catalog_id,
+   market_cap: asset.market_cap,
+   simulated_revenue: simulatedRevenue.toFixed(2),
+   yield_percent: yieldPercent
+  }
 
  })
 
  return {
-  statusCode:200,
-  body:JSON.stringify({
-   yields
+  statusCode: 200,
+  body: JSON.stringify({
+   royalty_yields: yields
   })
-}
+ }
+
 }
