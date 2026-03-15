@@ -1,6 +1,8 @@
-const path = require("path")
+const { loadEngines, getEngine } = require("./_engine-registry")
 
-const cache = {}
+/* LOAD ENGINES ON STARTUP */
+
+loadEngines()
 
 exports.handler = async function(event, context) {
 
@@ -10,41 +12,22 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 400,
-      body: JSON.stringify({
-        error: "engine not specified"
-      })
+      body: JSON.stringify({ error: "engine not specified" })
     }
 
   }
 
-  try {
+  const engine = getEngine(engineName)
 
-    if (!cache[engineName]) {
-
-      const enginePath = path.join(
-        __dirname,
-        "../engines",
-        engineName + ".js"
-      )
-
-      cache[engineName] = require(enginePath)
-
-    }
-
-    const engine = cache[engineName]
-
-    return await engine.handler(event, context)
-
-  } catch (err) {
+  if (!engine) {
 
     return {
-      statusCode: 500,
-      body: JSON.stringify({
-        engine: engineName,
-        error: err.message
-      })
+      statusCode: 404,
+      body: JSON.stringify({ error: "engine not found" })
     }
 
   }
+
+  return await engine.handler(event, context)
 
 }
