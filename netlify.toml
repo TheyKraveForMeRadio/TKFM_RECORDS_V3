@@ -9,10 +9,9 @@ functions = "netlify/functions"
 [build.environment]
 NODE_VERSION = "22"
 NODE_ENV = "production"
-DEBUG_MODE = "false"
 
 ############################################
-# FUNCTIONS CONFIG (OPTIMIZED)
+# FUNCTIONS CONFIG
 ############################################
 
 [functions]
@@ -33,11 +32,10 @@ external_node_modules = [
 "@apollo/server"
 ]
 
+# IMPORTANT: include the entire engine mesh
 included_files = [
 "netlify/engines/**",
-"netlify/functions/engine-registry.js",
-"netlify/functions/_middleware-secret-guard.js",
-"netlify/functions/_shared/**"
+"netlify/functions/**"
 ]
 
 ############################################
@@ -48,7 +46,7 @@ included_files = [
 seconds = 26
 
 ############################################
-# TKFM CENTRAL SCHEDULER
+# TKFM CRON
 ############################################
 
 [[scheduled]]
@@ -56,7 +54,7 @@ path = "/.netlify/functions/tkfm-master-cron"
 schedule = "*/1 * * * *"
 
 ############################################
-# STRIPE WEBHOOK ROUTING
+# STRIPE WEBHOOK
 ############################################
 
 [[redirects]]
@@ -65,31 +63,7 @@ to = "/.netlify/functions/stripe-webhook-ledger"
 status = 200
 
 ############################################
-# EDGE SECURITY
-############################################
-
-[[edge_functions]]
-function = "lockdown"
-path = "/admin/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/owner/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/secure/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/private/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/.netlify/*"
-
-############################################
-# GLOBAL SECURITY HEADERS
+# SECURITY HEADERS
 ############################################
 
 [[headers]]
