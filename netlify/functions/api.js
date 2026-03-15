@@ -1,49 +1,51 @@
+const fs = require("fs")
 const path = require("path")
 
-const cache = {}
+/* ENGINE REGISTRY CACHE */
+
+const registry = {}
+
+function loadEngines() {
+
+  const dir = path.join(__dirname, "../engines")
+
+  const files = fs.readdirSync(dir)
+
+  for (const file of files) {
+
+    if (file.endsWith(".js")) {
+
+      const name = file.replace(".js","")
+
+      registry[name] = require(path.join(dir,file))
+
+    }
+
+  }
+
+}
+
+/* LOAD ONCE */
+
+loadEngines()
 
 exports.handler = async function(event, context) {
 
- const engineName = event.path.split("/api/")[1]
+  const engineName = event.path.split("/api/")[1]
 
- if (!engineName) {
-  return {
-   statusCode: 400,
-   body: JSON.stringify({ error: "engine not specified" })
-  }
- }
+  const engine = registry[engineName]
 
- try {
+  if (!engine) {
 
-  if (!cache[engineName]) {
-
-   const enginePath = path.join(
-    __dirname,
-    "..",
-    "engines",
-    engineName + ".js"
-   )
-
-   cache[engineName] = require(enginePath)
+    return {
+      statusCode: 404,
+      body: JSON.stringify({
+        error: "engine not found"
+      })
+    }
 
   }
 
-  const engine =
-   cache[engineName].handler ||
-   cache[engineName]
-
-  return await engine(event, context)
-
- } catch (err) {
-
-  return {
-   statusCode: 500,
-   body: JSON.stringify({
-    engine: engineName,
-    error: err.message
-   })
-  }
-
- }
+  return await engine.handler(event, context)
 
 }
