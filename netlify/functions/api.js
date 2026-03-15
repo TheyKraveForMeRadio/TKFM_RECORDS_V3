@@ -1,6 +1,6 @@
 const path = require("path")
 
-const engineCache = {}
+const cache = {}
 
 exports.handler = async function(event, context) {
 
@@ -15,21 +15,22 @@ exports.handler = async function(event, context) {
 
  try {
 
-  if (!engineCache[engineName]) {
+  if (!cache[engineName]) {
 
-   const enginePath = path.resolve(
+   const enginePath = path.join(
     __dirname,
-    "../engines",
+    "..",
+    "engines",
     engineName + ".js"
    )
 
-   engineCache[engineName] = require(enginePath)
+   cache[engineName] = require(enginePath)
 
   }
 
   const engine =
-   engineCache[engineName].handler ||
-   engineCache[engineName]
+   cache[engineName].handler ||
+   cache[engineName]
 
   return await engine(event, context)
 
@@ -38,8 +39,8 @@ exports.handler = async function(event, context) {
   return {
    statusCode: 500,
    body: JSON.stringify({
-    error: err.message,
-    engine: engineName
+    engine: engineName,
+    error: err.message
    })
   }
 
