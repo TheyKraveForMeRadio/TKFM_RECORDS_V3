@@ -1,99 +1,109 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+exports.handler = async function() {
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+  try {
 
-const VOLUME_SPIKE = 5
-const PRICE_SPIKE = 2
+    const SUPABASE_URL = process.env.SUPABASE_URL
+    const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-export const handler = async () => {
+    /* FETCH RECENT TRADES */
 
-try{
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/catalog_trades?select=catalog_id,price,quantity,created_at&order=created_at.desc&limit=100`,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        }
+      }
+    )
 
-const { data: trades } = await supabase
-.from("trades")
-.select("*")
-.order("created_at",{ascending:false})
-.limit(200)
+    const trades = await res.json()
 
-let alerts=[]
+    if (!trades || trades.length === 0) {
 
-for(const trade of trades || []){
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          status: "no trades to analyze"
+        })
+      }
 
-const price = Number(trade.price||0)
-const qty = Number(trade.quantity||0)
+    }
 
-if(price <=0 || qty <=0) continue
+    const alerts = []
 
-/* WASH TRADE CHECK */
+    /* GROUP TRADES BY SONG */
 
-if(trade.buyer_id === trade.seller_id){
+    const groups = {}
 
-alerts.push({
-type:"wash_trade",
-trade_id:trade.id
-})
+    for (const t of trades) {
 
-}
+      if (!groups[t.catalog_id]) {
 
-/* PRICE SPIKE CHECK */
+        groups[t.catalog_id] = []
 
-if(price > PRICE_SPIKE * (trade.prev_price || price)){
+      }
 
-alerts.push({
-type:"price_spike",
-trade_id:trade.id
-})
+      groups[t.catalog_id].push(t)
 
-}
+    }
 
-/* VOLUME SPIKE */
+    /* ANALYZE EACH MARKET */
 
-if(qty > VOLUME_SPIKE * (trade.avg_quantity || qty)){
+    for (const catalog_id in groups) {
 
-alerts.push({
-type:"volume_spike",
-trade_id:trade.id
-})
+      const list = groups[catalog_id]
 
-}
+      const totalVolume =
+        list.reduce((sum,t)=>sum + t.quantity,0)
 
-}
+      const prices =
+        list.map(t=>t.price)
 
-/* STORE ALERTS */
+      const maxPrice = Math.max(...prices)
+      const minPrice = Math.min(...prices)
 
-for(const alert of alerts){
+      const priceJump = maxPrice - minPrice
 
-await supabase
-.from("fraud_alerts")
-.insert({
-alert_type:alert.type,
-reference_id:alert.trade_id
-})
+      if (totalVolume > 50) {
 
-}
+        alerts.push({
+          catalog_id,
+          type: "volume_spike",
+          volume: totalVolume
+        })
 
-return{
+      }
 
-statusCode:200,
-body:JSON.stringify({
-alerts_detected:alerts.length
-})
+      if (priceJump > 2) {
 
-}
+        alerts.push({
+          catalog_id,
+          type: "price_manipulation",
+          priceJump
+        })
 
-}catch(err){
+      }
 
-return{
+    }
 
-statusCode:500,
-body:JSON.stringify({error:err.message})
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "surveillance complete",
+        alerts
+      })
+    }
 
-}
+  } catch (err) {
 
-}
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: err.message
+      })
+    }
+
+  }
 
 }
