@@ -2,6 +2,8 @@ exports.handler = async function() {
 
   try {
 
+    const base = "https://www.tkfmrecords.com/.netlify/functions/api/"
+
     const engines = [
       "music-index-engine",
       "music-etf-rebalance-engine",
@@ -16,9 +18,7 @@ exports.handler = async function() {
 
       try {
 
-        const res = await fetch(
-          `/.netlify/functions/api/${engine}`
-        )
+        const res = await fetch(base + engine)
 
         const data = await res.json()
 
