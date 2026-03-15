@@ -1,47 +1,32 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+ process.env.SUPABASE_URL,
+ process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-export const handler = async (event) => {
+exports.handler = async function(event) {
 
-try{
+ const catalog_id =
+  event.queryStringParameters?.catalog_id || "song123";
 
-const token =
-event.queryStringParameters?.token_id || "song123"
+ const { data, error } = await supabase
+  .from("catalog_candles")
+  .select("*")
+  .eq("catalog_id", catalog_id)
+  .order("timestamp", { ascending: true })
+  .limit(100);
 
-const { data } = await supabase
-.from("catalog_price_history")
-.select("*")
-.eq("token_id",token)
-.order("created_at",{ascending:true})
-.limit(200)
+ if (error) {
+  return {
+   statusCode: 500,
+   body: JSON.stringify({ error: error.message })
+  };
+ }
 
-const candles = (data||[]).map(p=>({
+ return {
+  statusCode: 200,
+  body: JSON.stringify({ candles: data })
+ };
 
-t:new Date(p.created_at).getTime(),
-o:Number(p.open),
-h:Number(p.high),
-l:Number(p.low),
-c:Number(p.close)
-
-}))
-
-return{
-statusCode:200,
-body:JSON.stringify({candles})
-}
-
-}catch(err){
-
-return{
-statusCode:500,
-body:JSON.stringify({error:err.message})
-}
-
-}
-
-}
+};
