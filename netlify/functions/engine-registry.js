@@ -1,35 +1,54 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs")
+const path = require("path")
+
+const enginesDir = path.join(__dirname, "../engines")
 
 const registry = {}
 
-function loadEngines() {
+function loadEngine(name) {
+
   try {
-    const enginesDir = path.join(__dirname, '../engines')
-    const files = fs.readdirSync(enginesDir)
-    for (const file of files) {
-      if (!file.endsWith('.js') && !file.endsWith('.cjs')) continue
-      const name = file.replace(/\.js$|\.cjs$/,'')
-      try {
-        delete require.cache[require.resolve(path.join(enginesDir, file))]
-        registry[name] = require(path.join(enginesDir, file))
-      } catch (err) {
-        console.warn('[engine-registry] failed to load', name, ' — skipping. error:', err && err.message)
-      }
+
+    const fileJS = path.join(enginesDir, name + ".js")
+    const fileCJS = path.join(enginesDir, name + ".cjs")
+
+    if (fs.existsSync(fileJS)) {
+      registry[name] = require(fileJS)
+      return registry[name]
     }
-    console.log('[engine-registry] loaded engines:', Object.keys(registry).length)
+
+    if (fs.existsSync(fileCJS)) {
+      registry[name] = require(fileCJS)
+      return registry[name]
+    }
+
   } catch (err) {
-    console.error('[engine-registry] init failed:', err && err.message)
+
+    console.warn("Engine failed to load:", name, err.message)
+
   }
+
+  return null
+
 }
 
-function getEngine(name) { return registry[name] }
-function listEngines() { return Object.keys(registry) }
+function getEngine(name) {
 
-loadEngines()
+  if (registry[name]) {
+    return registry[name]
+  }
+
+  return loadEngine(name)
+
+}
+
+function listEngines() {
+
+  return Object.keys(registry)
+
+}
 
 module.exports = {
-  loadEngines,
   getEngine,
   listEngines
 }
