@@ -16,7 +16,9 @@ DEBUG_MODE = "false"
 ############################################
 
 [functions]
-node_bundler = "esbuild"
+
+# Disable bundling so dynamic engine loader works
+node_bundler = "none"
 
 external_node_modules = [
 "stripe",
@@ -98,3 +100,4 @@ for = "/*"
 X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "strict-origin-when-cross-origin"
+
