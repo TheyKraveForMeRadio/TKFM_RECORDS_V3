@@ -1,8 +1,3 @@
-/**
- * TKFM Matching Engine
- * Matches buy orders with sell orders and executes trades
- */
-
 exports.handler = async function(event) {
 
   try {
@@ -15,33 +10,24 @@ exports.handler = async function(event) {
     const catalog_id = payload.catalog_id
     const price = payload.price
     const quantity = payload.quantity || 1
-    const side = payload.side || "buy"
 
     if (!catalog_id || !price) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "missing catalog_id or price" })
+        body: JSON.stringify({
+          error: "missing catalog_id or price"
+        })
       }
     }
 
-    const order = {
-      catalog_id,
-      price,
-      quantity,
-      side,
+    const trade = {
+      catalog_id: catalog_id,
+      price: price,
+      quantity: quantity,
       created_at: new Date().toISOString()
     }
 
-    const trade = {
-      catalog_id,
-      price,
-      quantity,
-      timestamp: new Date().toISOString()
-    }
-
-    const url = `${SUPABASE_URL}/rest/v1/catalog_trades`
-
-    const res = await fetch(url, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/catalog_trades`, {
       method: "POST",
       headers: {
         "apikey": SUPABASE_KEY,
@@ -53,7 +39,9 @@ exports.handler = async function(event) {
     })
 
     if (!res.ok) {
+
       const text = await res.text()
+
       return {
         statusCode: 500,
         body: JSON.stringify({
@@ -61,14 +49,14 @@ exports.handler = async function(event) {
           detail: text
         })
       }
+
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         status: "trade executed",
-        order,
-        trade
+        trade: trade
       })
     }
 
