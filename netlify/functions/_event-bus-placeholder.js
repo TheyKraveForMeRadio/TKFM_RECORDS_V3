@@ -1,14 +1,14 @@
 const bus = require("./_event-bus.js")
 
-exports.handler = async function () {
+exports.handler = async function(event) {
 
  try {
 
   return {
    statusCode: 200,
    body: JSON.stringify({
-    status: "placeholder-function",
-    message: "Function repaired automatically"
+    status: "event-bus-placeholder",
+    message: "Event bus operational"
    })
   }
 
