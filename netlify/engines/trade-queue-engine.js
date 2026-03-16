@@ -1,6 +1,5 @@
-const Redis = require("ioredis")
 
-const redis = new Redis(process.env.REDIS_URL)
+const queue = global.tkfm_trade_queue || (global.tkfm_trade_queue = [])
 
 exports.handler = async function(event) {
 
@@ -11,24 +10,29 @@ exports.handler = async function(event) {
     if (!trade.catalog_id || !trade.price || !trade.quantity || !trade.side) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "invalid trade payload" })
+        body: JSON.stringify({
+          error: "invalid trade payload"
+        })
       }
     }
 
-    const entry = await redis.xadd(
-      "tkfm_trade_stream",
-      "*",
-      "catalog_id", trade.catalog_id,
-      "price", trade.price,
-      "quantity", trade.quantity,
-      "side", trade.side
-    )
+    const id = Date.now() + "-" + Math.floor(Math.random()*100000)
+
+    queue.push({
+      id,
+      catalog_id: trade.catalog_id,
+      price: trade.price,
+      quantity: trade.quantity,
+      side: trade.side,
+      timestamp: Date.now()
+    })
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         status: "trade queued",
-        id: entry
+        id,
+        queue_size: queue.length
       })
     }
 
@@ -44,3 +48,4 @@ exports.handler = async function(event) {
   }
 
 }
+
