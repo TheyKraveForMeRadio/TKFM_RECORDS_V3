@@ -9,7 +9,6 @@ functions = "netlify/functions"
 [build.environment]
 NODE_VERSION = "22"
 NODE_ENV = "production"
-DEBUG_MODE = "false"
 
 ############################################
 # FUNCTIONS CONFIG
@@ -18,25 +17,10 @@ DEBUG_MODE = "false"
 [functions]
 node_bundler = "esbuild"
 
-external_node_modules = [
-"stripe",
-"jsonwebtoken",
-"bcryptjs",
-"@supabase/supabase-js",
-"ethers",
-"ioredis",
-"cloudinary",
-"pdfkit",
-"pdf-lib",
-"resend",
-"@aws-sdk/client-s3",
-"@apollo/server"
-]
-
 included_files = [
 "netlify/engines/**",
-"netlify/functions/_middleware-secret-guard.js",
-"netlify/functions/_shared/**"
+"netlify/functions/_shared/**",
+"netlify/functions/_middleware-secret-guard.js"
 ]
 
 ############################################
@@ -62,30 +46,6 @@ schedule = "*/1 * * * *"
 from = "/stripe-webhook"
 to = "/.netlify/functions/stripe-webhook-ledger"
 status = 200
-
-############################################
-# EDGE SECURITY
-############################################
-
-[[edge_functions]]
-function = "lockdown"
-path = "/admin/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/owner/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/secure/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/private/*"
-
-[[edge_functions]]
-function = "lockdown"
-path = "/.netlify/*"
 
 ############################################
 # GLOBAL SECURITY HEADERS
