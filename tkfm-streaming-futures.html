@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Streaming Futures Market — TKFM</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+padding:40px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:6px;
+margin-bottom:20px;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #1e293b;
+}
+
+button{
+background:#22d3ee;
+border:none;
+padding:8px 16px;
+border-radius:4px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Streaming Revenue Futures</h1>
+
+<div class="panel">
+
+<div class="row">
+<span>Song123 — 12M Revenue Future</span>
+<span>$12,000</span>
+<button onclick="buy()">BUY</button>
+</div>
+
+<div class="row">
+<span>Song456 — 6M Revenue Future</span>
+<span>$4,500</span>
+<button onclick="buy()">BUY</button>
+</div>
+
+</div>
+
+<script>
+
+async function buy(){
+
+await fetch("/.netlify/functions/api/futures-engine",{
+method:"POST"
+})
+
+alert("Futures contract purchased")
+
+}
+
+</script>
+
+</body>
+</html>

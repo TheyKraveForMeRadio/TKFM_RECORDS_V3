@@ -1,20 +1,67 @@
-<div style="text-align:center;margin-top:40px;">
+<!DOCTYPE html>
+<html>
 
-<button
-onclick="ownSong(CATALOG_ID)"
-style="
-background:#22d3ee;
+<head>
+
+<meta charset="UTF-8">
+<title>Own Your Song — TKFM</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+text-align:center;
+padding:80px;
+}
+
+button{
+background:#facc15;
 border:none;
 padding:20px 40px;
-font-size:24px;
+font-size:20px;
+border-radius:6px;
 cursor:pointer;
-border-radius:8px;
-">
-OWN THIS SONG
+}
+
+button:hover{
+opacity:.9;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Turn Your Song Into an Asset</h1>
+
+<p>
+Upload a track and launch it as a financial asset on TKFM.
+</p>
+
+<button onclick="launchIPO()">
+OWN YOUR SONG
 </button>
 
-<p id="own-status" style="margin-top:15px;"></p>
+<script>
 
-</div>
+async function launchIPO(){
 
-<script src="/js/tkfm-own-song-button.js"></script>
+const res =
+await fetch("/.netlify/functions/api/song-ipo-engine",{
+method:"POST"
+})
+
+const data =
+await res.json()
+
+alert("Song IPO launched!")
+
+}
+
+</script>
+
+</body>
+</html>

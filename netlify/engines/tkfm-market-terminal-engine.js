@@ -1,96 +1,52 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+const fetch = require("node-fetch")
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+exports.handler = async function () {
 
-export const handler = async () => {
+  try {
 
-try {
+    const base =
+      process.env.SELF_BASE_URL + "/.netlify/functions/api"
 
-/* -----------------------------
-LOAD MARKET DATA
------------------------------ */
+    const [
+      index,
+      vix,
+      market,
+      liquidity
+    ] = await Promise.all([
 
-const { data: tokens } = await supabase
-.from("catalog_tokens")
-.select("id,name,price,total_supply")
+      fetch(base + "/music-index-engine").then(r=>r.json()),
+      fetch(base + "/music-vix-engine").then(r=>r.json()),
+      fetch(base + "/catalog-market-data").then(r=>r.json()),
+      fetch(base + "/liquidity-stats").then(r=>r.json())
 
-const { data: trades } = await supabase
-.from("trades")
-.select("*")
-.order("created_at",{ascending:false})
-.limit(20)
+    ])
 
-const { data: royalties } = await supabase
-.from("streaming_revenue_events")
-.select("*")
-.order("created_at",{ascending:false})
-.limit(20)
+    return {
+      statusCode:200,
+      body:JSON.stringify({
 
-/* -----------------------------
-MARKET STATS
------------------------------ */
+        terminal:"TKFM MARKET TERMINAL",
 
-let marketCap = 0
+        music_index:index.index_value || 0,
 
-for (const t of tokens || []) {
+        music_vix:vix.volatility_index || 0,
 
-const price = Number(t.price || 0)
-const supply = Number(t.total_supply || 0)
+        market_cap:market.market_cap || 0,
 
-marketCap += price * supply
+        top_assets:(market.market || []).slice(0,10),
 
-}
+        liquidity:liquidity.total_liquidity || 0
 
-const marketData = {
+      })
+    }
 
-timestamp: Date.now(),
+  } catch(err) {
 
-catalog_count: tokens?.length || 0,
+    return {
+      statusCode:500,
+      body:JSON.stringify({error:err.message})
+    }
 
-market_cap: marketCap,
-
-recent_trades: trades || [],
-
-recent_royalties: royalties || [],
-
-tokens: tokens || []
-
-}
-
-/* -----------------------------
-SSE RESPONSE
------------------------------ */
-
-return {
-
-statusCode: 200,
-
-headers: {
-"Content-Type": "text/event-stream",
-"Cache-Control": "no-cache",
-"Connection": "keep-alive"
-},
-
-body: `data: ${JSON.stringify(marketData)}\n\n`
-
-}
-
-} catch (err) {
-
-return {
-
-statusCode: 500,
-
-body: JSON.stringify({
-error: err.message
-})
-
-}
-
-}
+  }
 
 }

@@ -1,52 +1,74 @@
-// TKFM V3 — Master Autoload: Lane Lock + Background + FX
+/*
+TKFM MASTER AUTOLOADER
+Loads all frontend modules dynamically
+Prevents 40+ script tags across pages
+*/
+
 (function(){
-  const html = document.documentElement;
 
-  // --- LANE LOCK ---
-  const metaLane = document.querySelector('meta[name="tkfm-lane"]');
-  const lane = metaLane ? metaLane.content.toLowerCase() : null;
-  if(lane) html.setAttribute("data-tkfm-lane", lane);
+const modules = [
 
-  // --- BACKGROUND DIVS ---
-  if(!document.querySelector('.tkfm-bg-main')){
-    const bgMain = document.createElement('div');
-    bgMain.className = 'tkfm-bg-main';
-    document.body.prepend(bgMain);
+"tkfm-shell.js",
+"tkfm-network.js",
+"tkfm-functions-client.js",
+"tkfm-wallet.js",
+"tkfm-song-router.js",
+"tkfm-financial-api.js",
+"tkfm-checkout.js",
+"tkfm-buy-credits.js",
+"tkfm-own-song-button.js",
+"tkfm-radio-rotation-engine.js",
+"tkfm-radio-rotation.js",
+"tkfm-royalties.js",
+"tkfm-royalty-engine.js",
+"tkfm-token-network.js",
+"tkfm-ai-engines.js",
+"tkfm-ai-drops.js",
+"tkfm-ai-dashboard.js",
+"tkfm-label-gate.js",
+"tkfm-owner-nav.js"
 
-    const bgOrbit = document.createElement('div');
-    bgOrbit.className = 'tkfm-bg-orbit';
-    document.body.prepend(bgOrbit);
-  }
+]
 
-  // --- THEME & FX LOADERS ---
-  if(lane === "records-only"){
-    // Remove Radio scripts if present
-    document.querySelectorAll('script[src*="tkfm-radio"]').forEach(s=>s.remove());
+function loadScript(src){
 
-    // Inject Records CSS if missing
-    if(!document.querySelector('link[href="/css/tkfm-records.css"]')){
-      const l = document.createElement('link');
-      l.rel = "stylesheet";
-      l.href = "/css/tkfm-records.css";
-      document.head.appendChild(l);
-    }
+return new Promise((resolve,reject)=>{
 
-    // Inject Records Autoload FX if missing
-    if(!document.querySelector('script[src="/js/tkfm-records-autoload.js"]')){
-      const s = document.createElement('script');
-      s.src = "/js/tkfm-records-autoload.js";
-      document.head.appendChild(s);
-    }
-  }
+const s=document.createElement("script")
 
-  // Force Records theme globally
-  html.setAttribute("data-tkfm-theme","records");
+s.src="/js/"+src
 
-  // Ensure TKFM Shell FX is loaded
-  if(!document.querySelector('script[src="/js/tkfm-shell.js"]')){
-    const s = document.createElement("script");
-    s.src = "/js/tkfm-shell.js";
-    s.defer = true;
-    document.head.appendChild(s);
-  }
-})();
+s.onload=resolve
+s.onerror=reject
+
+document.head.appendChild(s)
+
+})
+
+}
+
+async function boot(){
+
+for(const m of modules){
+
+try{
+
+await loadScript(m)
+
+console.log("TKFM module loaded:",m)
+
+}catch(err){
+
+console.error("Module failed:",m)
+
+}
+
+}
+
+console.log("TKFM OS READY")
+
+}
+
+boot()
+
+})()

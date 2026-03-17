@@ -1,100 +1,58 @@
-import bus from "./_event-bus.js";
-import { createClient } from "@supabase/supabase-js"
+const fetch = require("node-fetch")
 
-const supabase = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+exports.handler = async function() {
 
-const TARGET_LIQUIDITY = 1000000
+  try {
 
-export const handler = async () => {
+    const base = process.env.SELF_BASE_URL + "/.netlify/functions/api"
 
-try{
+    const market = await fetch(base + "/music-index-engine")
+    const marketData = await market.json()
 
-/* LOAD TREASURY */
+    const liquidity = await fetch(base + "/liquidity-stats")
+    const liquidityData = await liquidity.json()
 
-const { data: treasury } = await supabase
-.from("treasury_reserves")
-.select("*")
+    let actions = []
 
-let reserves = 0
+    // Liquidity stabilization
+    if (liquidityData.total_liquidity < 1000000) {
 
-for(const r of treasury || []){
-reserves += Number(r.amount || 0)
-}
+      await fetch(base + "/global-liquidity-engine", { method:"POST" })
 
-/* LOAD MARKET CAP */
+      actions.push("liquidity_injection")
 
-const { data: tokens } = await supabase
-.from("catalog_tokens")
-.select("*")
+    }
 
-let marketCap = 0
+    // Volatility monitoring
+    if (marketData.index_value < 1000000) {
 
-for(const t of tokens || []){
-marketCap +=
-Number(t.price || 0) *
-Number(t.total_supply || 0)
-}
+      await fetch(base + "/market-surveillance-engine")
 
-/* LIQUIDITY POLICY */
+      actions.push("volatility_monitor")
 
-let action = "none"
+    }
 
-if(marketCap < TARGET_LIQUIDITY){
+    // Rebalance funds
+    await fetch(base + "/music-etf-rebalance-engine")
+    await fetch(base + "/music-hedge-fund-engine")
 
-action = "inject_liquidity"
+    actions.push("fund_rebalance")
 
-await supabase
-.from("liquidity_pools")
-.insert({
+    return {
+      statusCode:200,
+      body:JSON.stringify({
+        status:"economic cycle complete",
+        actions
+      })
+    }
 
-amount:50000,
-source:"central_bank"
+  } catch(err) {
 
-})
+    return {
+      statusCode:500,
+      body:JSON.stringify({error:err.message})
+    }
 
-}
-
-if(marketCap > TARGET_LIQUIDITY * 2){
-
-action = "withdraw_liquidity"
-
-await supabase
-.from("treasury_reserves")
-.insert({
-
-amount:50000,
-source:"central_bank_withdrawal"
-
-})
-
-}
-
-return{
-
-statusCode:200,
-
-body:JSON.stringify({
-
-market_cap:marketCap,
-reserves:reserves,
-policy_action:action
-
-})
-
-}
-
-}catch(err){
-
-return{
-
-statusCode:500,
-body:JSON.stringify({error:err.message})
-
-}
-
-}
+  }
 
 }

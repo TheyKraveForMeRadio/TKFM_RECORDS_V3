@@ -39,6 +39,78 @@ path = "/.netlify/functions/tkfm-master-cron"
 schedule = "*/1 * * * *"
 
 ############################################
+# ECONOMY ENGINES
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/music-central-bank-engine"
+schedule = "*/5 * * * *"
+
+[[scheduled]]
+path = "/.netlify/functions/api/music-index-engine"
+schedule = "*/2 * * * *"
+
+[[scheduled]]
+path = "/.netlify/functions/api/order-flow-engine"
+schedule = "*/3 * * * *"
+
+############################################
+# EXCHANGE CORE
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/matching-engine"
+schedule = "* * * * *"
+
+[[scheduled]]
+path = "/.netlify/functions/api/trade-settlement-engine"
+schedule = "* * * * *"
+
+[[scheduled]]
+path = "/.netlify/functions/api/price-oracle-engine"
+schedule = "*/2 * * * *"
+
+############################################
+# TRADE PROCESSOR
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/trade-processor-engine"
+schedule = "* * * * *"
+
+############################################
+# LIQUIDITY AI
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/liquidity-ai-engine"
+schedule = "*/2 * * * *"
+
+############################################
+# GLOBAL METRICS CACHE
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/tkfm-metrics-cache"
+schedule = "*/1 * * * *"
+
+############################################
+# MARKET SNAPSHOT ENGINE
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/tkfm-market-snapshot"
+schedule = "*/1 * * * *"
+
+############################################
+# SUPERNODE NETWORK
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/tkfm-supernode"
+schedule = "*/2 * * * *"
+
+############################################
 # STRIPE WEBHOOK ROUTING
 ############################################
 

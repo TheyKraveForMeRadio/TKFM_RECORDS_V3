@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>TKFM Platform Health</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+:root{
+--bg:#020617;
+--panel:#0f172a;
+--gold:#facc15;
+--blue:#22d3ee;
+--green:#22c55e;
+--red:#ef4444;
+--text:#e5e7eb;
+}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:system-ui;
+}
+
+header{
+background:#000;
+padding:20px;
+font-size:20px;
+color:var(--gold);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:20px;
+max-width:1200px;
+margin:auto;
+}
+
+.panel{
+background:var(--panel);
+padding:20px;
+border-radius:8px;
+}
+
+.stat{
+font-size:26px;
+color:var(--blue);
+}
+
+.status{
+font-size:14px;
+margin-top:10px;
+}
+
+.ok{
+color:var(--green);
+}
+
+.fail{
+color:var(--red);
+}
+
+.alert{
+padding:8px;
+border-bottom:1px solid #1e293b;
+font-size:13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+TKFM Platform Health Monitor
+</header>
+
+<div class="grid">
+
+<div class="panel">
+<div>Active Engines</div>
+<div class="stat" id="engines">0</div>
+</div>
+
+<div class="panel">
+<div>Trade Volume</div>
+<div class="stat" id="volume">0</div>
+</div>
+
+<div class="panel">
+<div>Market Cap</div>
+<div class="stat" id="cap">$0</div>
+</div>
+
+<div class="panel">
+<div>API Status</div>
+<div class="status ok" id="apiStatus">Online</div>
+</div>
+
+</div>
+
+<div class="panel" style="margin:20px">
+
+<div style="color:#facc15;margin-bottom:10px">
+System Alerts
+</div>
+
+<div id="alerts">
+
+<div class="alert">No alerts</div>
+
+</div>
+
+</div>
+
+<script>
+
+async function loadHealth(){
+
+try{
+
+const res =
+await fetch("/.netlify/functions/api/tkfm-public-metrics")
+
+const data =
+await res.json()
+
+document.getElementById("engines")
+.innerText = data.active_engines || 0
+
+document.getElementById("volume")
+.innerText = data.trade_volume || 0
+
+document.getElementById("cap")
+.innerText =
+"$"+Number(data.market_cap||0).toLocaleString()
+
+document.getElementById("apiStatus")
+.innerText = "Online"
+
+}catch(e){
+
+document.getElementById("apiStatus")
+.innerText = "Offline"
+
+document.getElementById("apiStatus")
+.className="status fail"
+
+const alerts =
+document.getElementById("alerts")
+
+alerts.innerHTML =
+'<div class="alert">API failure detected</div>'
+
+}
+
+}
+
+loadHealth()
+
+setInterval(loadHealth,5000)
+
+</script>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+
+</body>
+</html>

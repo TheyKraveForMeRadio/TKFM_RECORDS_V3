@@ -1,72 +1,57 @@
-exports.handler = async function(event) {
+const { createClient } = require("@supabase/supabase-js")
+
+const supabase = createClient(
+process.env.SUPABASE_URL,
+process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+exports.handler = async function () {
 
   try {
 
-    const SUPABASE_URL = process.env.SUPABASE_URL
-    const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const { data: bids } = await supabase
+      .from("catalog_orders")
+      .select("*")
+      .eq("side","buy")
+      .order("price",{ascending:false})
 
-    const payload = JSON.parse(event.body || "{}")
+    const { data: asks } = await supabase
+      .from("catalog_orders")
+      .select("*")
+      .eq("side","sell")
+      .order("price",{ascending:true})
 
-    const catalog_id = payload.catalog_id
-    const price = payload.price
-    const quantity = payload.quantity || 1
+    const trades=[]
 
-    if (!catalog_id || !price) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "missing catalog_id or price"
-        })
-      }
-    }
+    for(const bid of bids){
 
-    const trade = {
-      catalog_id: catalog_id,
-      price: price,
-      quantity: quantity,
-      created_at: new Date().toISOString()
-    }
+      const ask = asks.find(a=>a.price<=bid.price)
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/catalog_trades`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(trade)
-    })
+      if(!ask) continue
 
-    if (!res.ok) {
+      const qty = Math.min(bid.quantity,ask.quantity)
 
-      const text = await res.text()
-
-      return {
-        statusCode: 500,
-        body: JSON.stringify({
-          error: "trade insert failed",
-          detail: text
-        })
-      }
+      trades.push({
+        catalog_id:bid.catalog_id,
+        price:ask.price,
+        quantity:qty
+      })
 
     }
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({
-        status: "trade executed",
-        trade: trade
+      statusCode:200,
+      body:JSON.stringify({
+        engine:"matching-engine",
+        trades
       })
     }
 
-  } catch (err) {
+  } catch(err){
 
     return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: err.message
-      })
+      statusCode:500,
+      body:JSON.stringify({error:err.message})
     }
 
   }

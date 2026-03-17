@@ -1,57 +1,84 @@
-const engines = {
 
-  "music-index-engine": require("../engines/music-index-engine"),
-  "music-etf-rebalance-engine": require("../engines/music-etf-rebalance-engine"),
-  "music-hedge-fund-engine": require("../engines/music-hedge-fund-engine"),
-  "global-liquidity-engine": require("../engines/global-liquidity-engine"),
-  "market-surveillance-engine": require("../engines/market-surveillance-engine"),
+const fs = require("fs")
+const path = require("path")
 
-  "order-book-engine": require("../engines/order-book-engine"),
-  "matching-engine": require("../engines/matching-engine"),
+const clusters = [
+"engines",
+"engines-exchange",
+"engines-economy",
+"engines-oracles",
+"engines-creator",
+"engines-risk",
+"engines-payments",
+"engines-ai"
+]
 
-  "trade-queue-engine": require("../engines/trade-queue-engine")
+const engineRegistry = {}
+
+clusters.forEach(cluster=>{
+
+const dir =
+path.join(__dirname,"../",cluster)
+
+if(!fs.existsSync(dir)) return
+
+fs.readdirSync(dir).forEach(file=>{
+
+if(file.endsWith(".js")){
+
+const name = file.replace(".js","")
+
+try{
+
+engineRegistry[name] =
+require("../"+cluster+"/"+name)
+
+}catch(err){
+
+console.log("engine load fail",name,err.message)
+
+}
 
 }
 
-exports.handler = async function(event, context) {
+})
 
-  try {
+})
 
-    const path = event.path || ""
-    const engineName = path.split("/api/")[1]
+exports.handler = async function(event){
 
-    if (!engineName) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "engine not specified"
-        })
-      }
-    }
+try{
 
-    const engine = engines[engineName]
+const engineName =
+event.path.split("/api/")[1]
 
-    if (!engine) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify({
-          error: "engine not found",
-          engine: engineName
-        })
-      }
-    }
+const engine =
+engineRegistry[engineName]
 
-    return await engine.handler(event, context)
+if(!engine){
 
-  } catch (err) {
-
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: err.message
-      })
-    }
-
-  }
+return{
+statusCode:404,
+body:JSON.stringify({
+error:"engine not found",
+engine:engineName
+})
+}
 
 }
+
+return engine.handler(event)
+
+}catch(err){
+
+return{
+statusCode:500,
+body:JSON.stringify({
+error:err.message
+})
+}
+
+}
+
+}
+

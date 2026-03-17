@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Engine Control Center</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+margin:0;
+}
+
+header{
+background:#000;
+padding:20px;
+font-size:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+padding:20px;
+}
+
+.engine{
+
+background:#0f172a;
+padding:10px;
+border-radius:6px;
+font-size:12px;
+
+}
+
+.ok{
+border-left:4px solid #22c55e;
+}
+
+.fail{
+border-left:4px solid #ef4444;
+}
+
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+</head>
+
+<body>
+
+<header>
+TKFM ENGINE CONTROL CENTER
+</header>
+
+<div class="grid" id="engines"></div>
+
+<script>
+
+async function loadEngines(){
+
+const res =
+await fetch("/.netlify/functions/api")
+
+const data = await res.json()
+
+const container =
+document.getElementById("engines")
+
+container.innerHTML=""
+
+Object.keys(data.engines || {}).forEach(name=>{
+
+const e=document.createElement("div")
+
+e.className="engine ok"
+
+e.innerHTML=name
+
+container.appendChild(e)
+
+})
+
+}
+
+setInterval(loadEngines,5000)
+
+loadEngines()
+
+</script>
+
+</body>
+
+</html>
