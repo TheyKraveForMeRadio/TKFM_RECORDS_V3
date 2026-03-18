@@ -1,66 +1,45 @@
-
 const { createClient } = require("@supabase/supabase-js")
 
-const supabase =
-createClient(
+const supabase = createClient(
 process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-exports.handler = async function(){
+exports.handler = async () => {
 
-try{
+try {
 
-const { data:catalog } =
-await supabase
-.from("catalog")
+const { data } = await supabase
+.from("catalog_assets")
 .select("*")
-.limit(50)
 
-let orders = []
+const catalog = data || []
 
-for(const song of catalog){
+let liquidity = []
 
-const base =
-song.price || 1
+catalog.forEach(asset => {
 
-orders.push({
-
-catalog_id:song.catalog_id,
-side:"buy",
-price:base*0.98,
-quantity:1
-
+liquidity.push({
+catalog_id: asset.catalog_id,
+price: asset.price,
+market_cap: asset.market_cap,
+recommended_liquidity: asset.market_cap * 0.02
 })
 
-orders.push({
-
-catalog_id:song.catalog_id,
-side:"sell",
-price:base*1.02,
-quantity:1
-
 })
-
-}
 
 return {
-
 statusCode:200,
-
 body:JSON.stringify({
-
 engine:"liquidity-ai",
-
-orders
-
+assets:liquidity.length,
+liquidity
 })
-
 }
 
-}catch(err){
+} catch(err){
 
-return{
+return {
 statusCode:500,
 body:JSON.stringify({error:err.message})
 }
@@ -68,4 +47,3 @@ body:JSON.stringify({error:err.message})
 }
 
 }
-

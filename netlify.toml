@@ -79,6 +79,14 @@ path = "/.netlify/functions/api/trade-processor-engine"
 schedule = "* * * * *"
 
 ############################################
+# AUTONOMOUS MARKET ENGINE
+############################################
+
+[[scheduled]]
+path = "/.netlify/functions/api/autonomous-market-engine"
+schedule = "*/1 * * * *"
+
+############################################
 # LIQUIDITY AI
 ############################################
 

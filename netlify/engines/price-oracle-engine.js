@@ -5,38 +5,44 @@ process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-exports.handler = async function(){
+exports.handler = async () => {
 
-  try{
+try {
 
-    const { data } = await supabase
-      .from("catalog_trades")
-      .select("catalog_id,price")
-      .order("timestamp",{ascending:false})
+const { data } = await supabase
+.from("price_history")
+.select("*")
 
-    const prices={}
+const prices = data || []
 
-    data.forEach(t=>{
-      if(!prices[t.catalog_id]){
-        prices[t.catalog_id]=t.price
-      }
-    })
+let latest = {}
 
-    return {
-      statusCode:200,
-      body:JSON.stringify({
-        engine:"price-oracle",
-        prices
-      })
-    }
+prices.forEach(row => {
 
-  }catch(err){
+latest[row.catalog_id] = {
+price: row.price,
+volume: row.volume,
+timestamp: row.created_at
+}
 
-    return {
-      statusCode:500,
-      body:JSON.stringify({error:err.message})
-    }
+})
 
-  }
+return {
+statusCode:200,
+body:JSON.stringify({
+engine:"price-oracle",
+assets:Object.keys(latest).length,
+prices:latest
+})
+}
+
+} catch(err){
+
+return {
+statusCode:500,
+body:JSON.stringify({error:err.message})
+}
+
+}
 
 }

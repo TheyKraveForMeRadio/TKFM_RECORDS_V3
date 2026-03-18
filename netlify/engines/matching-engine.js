@@ -5,55 +5,75 @@ process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-exports.handler = async function () {
+exports.handler = async ()=>{
 
-  try {
+try{
 
-    const { data: bids } = await supabase
-      .from("catalog_orders")
-      .select("*")
-      .eq("side","buy")
-      .order("price",{ascending:false})
+const { data: orders } = await supabase
+.from("order_book")
+.select("*")
+.eq("status","open")
 
-    const { data: asks } = await supabase
-      .from("catalog_orders")
-      .select("*")
-      .eq("side","sell")
-      .order("price",{ascending:true})
+const book = orders || []
 
-    const trades=[]
+let trades = []
 
-    for(const bid of bids){
+for(let i=0;i<book.length;i++){
 
-      const ask = asks.find(a=>a.price<=bid.price)
+const buy = book[i]
 
-      if(!ask) continue
+if(buy.side !== "buy") continue
 
-      const qty = Math.min(bid.quantity,ask.quantity)
+const sell = book.find(o =>
+o.catalog_id === buy.catalog_id &&
+o.side === "sell" &&
+o.price <= buy.price &&
+o.status === "open"
+)
 
-      trades.push({
-        catalog_id:bid.catalog_id,
-        price:ask.price,
-        quantity:qty
-      })
+if(!sell) continue
 
-    }
+const quantity = Math.min(buy.quantity,sell.quantity)
+const price = sell.price
 
-    return {
-      statusCode:200,
-      body:JSON.stringify({
-        engine:"matching-engine",
-        trades
-      })
-    }
+trades.push({
+catalog_id:buy.catalog_id,
+price,
+quantity,
+buyer:buy.id,
+seller:sell.id
+})
 
-  } catch(err){
+await supabase
+.from("order_book")
+.update({status:"filled"})
+.in("id",[buy.id,sell.id])
 
-    return {
-      statusCode:500,
-      body:JSON.stringify({error:err.message})
-    }
+}
 
-  }
+if(trades.length>0){
+
+await supabase
+.from("trades")
+.insert(trades)
+
+}
+
+return {
+statusCode:200,
+body:JSON.stringify({
+engine:"matching-engine",
+trades_executed:trades.length
+})
+}
+
+}catch(err){
+
+return {
+statusCode:500,
+body:JSON.stringify({error:err.message})
+}
+
+}
 
 }

@@ -1,67 +1,56 @@
-const Redis = require("ioredis")
 const fetch = require("node-fetch")
 
-const redis = new Redis(process.env.REDIS_URL)
+const base = process.env.SELF_BASE_URL || "http://localhost:8888"
 
-async function processTrades(){
+async function run(engine){
 
-while(true){
+const url = `${base}/.netlify/functions/api/${engine}`
 
 try{
 
-const stream =
-await redis.xread(
-"BLOCK",0,
-"STREAMS",
-"tkfm_trade_stream",
-"$"
-)
+const res = await fetch(url)
+const data = await res.json()
 
-if(!stream) continue
+console.log(engine,data)
 
-const trades = stream[0][1]
-
-for(const entry of trades){
-
-const data = entry[1]
-
-const trade = {
-catalog_id:data[1],
-price:Number(data[3]),
-quantity:Number(data[5]),
-side:data[7]
-}
-
-await fetch(
-process.env.SELF_BASE_URL +
-"/.netlify/functions/api/matching-engine",
-{
-method:"POST",
-headers:{"content-type":"application/json"},
-body:JSON.stringify(trade)
-})
-
-}
+return data
 
 }catch(err){
 
-console.error("trade processor error",err)
+console.error(engine,err.message)
+
+return null
 
 }
 
 }
 
-}
+exports.handler = async ()=>{
 
-exports.handler = async function(){
+try{
 
-processTrades()
+await run("ai-trading-engine")
+await run("amm-market-maker-engine")
+await run("matching-engine")
+await run("trade-settlement-engine")
+await run("price-oracle-engine")
+await run("music-index-engine")
 
 return {
 statusCode:200,
 body:JSON.stringify({
-status:"trade processor running"
+engine:"trade-processor",
+status:"cycle complete"
 })
+}
+
+}catch(err){
+
+return {
+statusCode:500,
+body:JSON.stringify({error:err.message})
+}
+
 }
 
 }

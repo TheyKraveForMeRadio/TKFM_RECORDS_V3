@@ -5,42 +5,74 @@ process.env.SUPABASE_URL,
 process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-exports.handler = async function(event){
+exports.handler = async ()=>{
 
-  try{
+try{
 
-    const body = JSON.parse(event.body || "{}")
+const { data: trades } = await supabase
+.from("trades")
+.select("*")
+.is("total",null)
 
-    const {catalog_id,price,quantity,buyer,seller} = body
+const pending = trades || []
 
-    await supabase
-      .from("catalog_trades")
-      .insert({
-        catalog_id,
-        price,
-        quantity,
-        buyer,
-        seller,
-        timestamp:new Date()
-      })
+for(const trade of pending){
 
-    return {
-      statusCode:200,
-      body:JSON.stringify({
-        status:"trade settled",
-        catalog_id,
-        price,
-        quantity
-      })
-    }
+const total = trade.price * trade.quantity
 
-  }catch(err){
+// update trade total
+await supabase
+.from("trades")
+.update({ total })
+.eq("id",trade.id)
 
-    return {
-      statusCode:500,
-      body:JSON.stringify({error:err.message})
-    }
+// get current asset
+const { data: asset } = await supabase
+.from("catalog_assets")
+.select("*")
+.eq("catalog_id",trade.catalog_id)
+.single()
 
-  }
+const currentVolume = asset.volume || 0
+const newVolume = currentVolume + trade.quantity
+const newMarketCap = trade.price * 1000000
+
+// update asset price + volume
+await supabase
+.from("catalog_assets")
+.update({
+price: trade.price,
+volume: newVolume,
+market_cap: newMarketCap
+})
+.eq("catalog_id",trade.catalog_id)
+
+// record price history
+await supabase
+.from("price_history")
+.insert({
+catalog_id:trade.catalog_id,
+price:trade.price,
+volume:trade.quantity
+})
+
+}
+
+return {
+statusCode:200,
+body:JSON.stringify({
+engine:"trade-settlement",
+trades_settled:pending.length
+})
+}
+
+}catch(err){
+
+return {
+statusCode:500,
+body:JSON.stringify({error:err.message})
+}
+
+}
 
 }
