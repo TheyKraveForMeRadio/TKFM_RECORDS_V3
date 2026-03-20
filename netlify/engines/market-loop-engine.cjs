@@ -3,6 +3,8 @@ const orderBook = require("./order-book-engine.cjs")
 const matchEngine = require("./matching-engine.cjs")
 const priceOracle = require("./price-oracle-engine.cjs")
 
+const FEE_RATE = 0.005
+
 module.exports = async () => {
 
   const redis = getRedis()
@@ -21,8 +23,17 @@ module.exports = async () => {
 
     if (match && match.matched) {
 
+      // 🔥 BLOCK SELF TRADES
+      if (match.buy.user === match.sell.user) {
+        console.log("⚠️ SELF TRADE BLOCKED")
+        continue
+      }
+
+      const fee = match.price * match.quantity * FEE_RATE
+
       await redis.lpush("executed_trades", JSON.stringify({
         ...match,
+        fee,
         executed_at: Date.now()
       }))
 
@@ -30,22 +41,26 @@ module.exports = async () => {
 
       const buyerKey = `user:${match.buy.user}`
       const sellerKey = `user:${match.sell.user}`
+      const treasuryKey = `treasury:fees`
 
       const buyer = JSON.parse(await redis.get(buyerKey))
       const seller = JSON.parse(await redis.get(sellerKey))
 
       const cost = match.price * match.quantity
 
-      buyer.balance -= cost
+      buyer.balance -= (cost + fee)
       buyer.assets[match.buy.catalog_id] = (buyer.assets[match.buy.catalog_id] || 0) + match.quantity
 
-      seller.balance += cost
+      seller.balance += (cost - fee)
       seller.assets[match.sell.catalog_id] = (seller.assets[match.sell.catalog_id] || 0) - match.quantity
+
+      const treasury = parseFloat(await redis.get(treasuryKey) || "0")
+      await redis.set(treasuryKey, treasury + fee)
 
       await redis.set(buyerKey, JSON.stringify(buyer))
       await redis.set(sellerKey, JSON.stringify(seller))
 
-      console.log("🔒 SECURE TRADE EXECUTED")
+      console.log("💰 FEE COLLECTED:", fee)
 
     }
 

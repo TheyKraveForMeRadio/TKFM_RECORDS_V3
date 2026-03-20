@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM ADMIN</title>
+  <style>
+    body { background:#020617; color:#fff; font-family:Arial; padding:20px }
+  </style>
+</head>
+<body>
+
+<h1>💰 TKFM ADMIN DASHBOARD</h1>
+
+<div id="stats"></div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function loadAdmin(){
+
+  const res = await fetch(API + "/admin-engine")
+  const data = await res.json()
+
+  document.getElementById("stats").innerHTML = `
+    <h2>Total Fees: $${data.total_fees}</h2>
+    <pre>${JSON.stringify(data.recent_trades, null, 2)}</pre>
+  `
+}
+
+setInterval(loadAdmin, 3000)
+</script>
+
+</body>
+</html>
