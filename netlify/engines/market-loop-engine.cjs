@@ -28,12 +28,11 @@ module.exports = async () => {
 
       await priceOracle(match)
 
-      // WALLET UPDATE
-      const buyerKey = `wallet:buyer`
-      const sellerKey = `wallet:seller`
+      const buyerKey = `user:${match.buy.user}`
+      const sellerKey = `user:${match.sell.user}`
 
-      const buyer = JSON.parse(await redis.get(buyerKey) || '{"balance":1000,"assets":{}}')
-      const seller = JSON.parse(await redis.get(sellerKey) || '{"balance":1000,"assets":{}}')
+      const buyer = JSON.parse(await redis.get(buyerKey))
+      const seller = JSON.parse(await redis.get(sellerKey))
 
       const cost = match.price * match.quantity
 
@@ -46,24 +45,7 @@ module.exports = async () => {
       await redis.set(buyerKey, JSON.stringify(buyer))
       await redis.set(sellerKey, JSON.stringify(seller))
 
-      // 🔥 TRADE HISTORY TRACKING (ADDED)
-      await redis.lpush(`trades:buyer`, JSON.stringify({
-        type: "buy",
-        asset: match.buy.catalog_id,
-        price: match.price,
-        quantity: match.quantity,
-        timestamp: Date.now()
-      }))
-
-      await redis.lpush(`trades:seller`, JSON.stringify({
-        type: "sell",
-        asset: match.sell.catalog_id,
-        price: match.price,
-        quantity: match.quantity,
-        timestamp: Date.now()
-      }))
-
-      console.log("💰 WALLET + TRADE HISTORY UPDATED")
+      console.log("🔒 SECURE TRADE EXECUTED")
 
     }
 

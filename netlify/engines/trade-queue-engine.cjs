@@ -1,26 +1,20 @@
 const { getRedis } = require("../functions/_redis")
+const auth = require("./_auth.cjs")
 
-module.exports.handler = async (event) => {
+module.exports = async (event) => {
 
   try {
 
     const redis = getRedis()
+    const user = auth(event)
 
-    const body = event.body ? JSON.parse(event.body) : {}
+    const body = JSON.parse(event.body || "{}")
 
     const { catalog_id, price, quantity, side } = body
 
-    if (!catalog_id || !price || !quantity || !side) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          error: "invalid trade payload"
-        })
-      }
-    }
-
     const trade = {
       id: Date.now() + "-" + Math.floor(Math.random()*100000),
+      user,
       catalog_id,
       price,
       quantity,
@@ -32,19 +26,14 @@ module.exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        status: "queued",
-        trade
-      })
+      body: JSON.stringify({ status: "queued", trade })
     }
 
   } catch (err) {
 
     return {
-      statusCode: 500,
-      body: JSON.stringify({
-        error: err.message
-      })
+      statusCode: 401,
+      body: JSON.stringify({ error: err.message })
     }
 
   }
