@@ -1,101 +1,53 @@
+const fs = require("fs")
+const path = require("path")
 
-/*
-TKFM DISTRIBUTED ENGINE MESH ROUTER
+const engines = {}
 
-Routes engine requests across node clusters.
-Works similar to Kubernetes service routing.
-*/
+function loadEngines() {
 
-const fetch = require("node-fetch")
+  const enginesDir = path.join(process.cwd(), "netlify", "engines")
 
-/*
-REGISTERED TKFM NODES
-Add more nodes as your network grows
-*/
+  const files = fs.readdirSync(enginesDir)
 
-const NODES = [
+  files.forEach(file => {
 
-process.env.SELF_BASE_URL,
+    if (!file.endsWith(".js")) return
 
-process.env.TKFM_NODE_US,
-process.env.TKFM_NODE_EU,
-process.env.TKFM_NODE_ASIA
+    try {
 
-].filter(Boolean)
+      const enginePath = path.join(enginesDir, file)
 
+      const engine = require(enginePath)
 
-/*
-Simple round-robin router
-*/
+      const handler =
+        engine.handler ||
+        engine.default ||
+        engine
 
-let pointer = 0
+      if (typeof handler === "function") {
 
-function getNode(){
+        const name = file.replace(".js","")
 
-if(NODES.length === 0){
+        engines[name] = handler
 
-throw new Error("No TKFM nodes registered")
+        console.log("Loaded engine:", name)
 
-}
+      } else {
 
-const node = NODES[pointer]
+        console.log("Skipped engine:", file)
 
-pointer++
+      }
 
-if(pointer >= NODES.length){
-pointer = 0
-}
+    } catch(err) {
 
-return node
+      console.log("Engine failed to load:", file, err.message)
+
+    }
+
+  })
 
 }
 
+loadEngines()
 
-/*
-Route engine execution to node
-*/
-
-async function route(engine,event){
-
-const node = getNode()
-
-const url =
-node + "/.netlify/functions/api/" + engine
-
-try{
-
-const res = await fetch(url,{
-method:event.httpMethod || "GET",
-headers:{
-"content-type":"application/json"
-},
-body:event.body
-})
-
-const data = await res.text()
-
-return {
-statusCode:200,
-body:data
-}
-
-}catch(err){
-
-return {
-statusCode:500,
-body:JSON.stringify({
-error:"engine routing failed",
-engine,
-node,
-message:err.message
-})
-}
-
-}
-
-}
-
-module.exports = {
-route
-}
-
+module.exports = { engines }
