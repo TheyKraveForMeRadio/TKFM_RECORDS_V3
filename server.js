@@ -10,14 +10,21 @@ app.all("/engine/:name", async (req, res) => {
   try {
 
     const engineName = req.params.name
-    const engine = require(`./netlify/engines/${engineName}.cjs`)
+    const mod = require(`./netlify/engines/${engineName}.cjs`)
+
+    // 🔥 SUPPORT BOTH EXPORT TYPES
+    const engine = typeof mod === "function" ? mod : mod.handler
+
+    if (!engine) {
+      return res.status(500).send({ error: "engine not a function export" })
+    }
 
     const result = await engine({
       body: JSON.stringify(req.body),
       queryStringParameters: req.query
     })
 
-    res.status(result.statusCode || 200).send(result.body)
+    res.status(result?.statusCode || 200).send(result?.body || result)
 
   } catch (err) {
 
