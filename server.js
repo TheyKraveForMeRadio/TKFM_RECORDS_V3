@@ -1,44 +1,31 @@
 const express = require("express")
 const http = require("http")
 const WebSocket = require("ws")
-require("dotenv").config()
+const path = require("path")
 
 const app = express()
 
-// ✅ STATIC
-app.use(express.static("public"))
+// ✅ ABSOLUTE PUBLIC PATH (CRITICAL FIX)
+const PUBLIC_DIR = path.join(__dirname, "public")
+app.use(express.static(PUBLIC_DIR))
 
-// ✅ CORS
-app.use((req,res,next)=>{
-  res.header("Access-Control-Allow-Origin","*")
-  res.header("Access-Control-Allow-Headers","Origin, Content-Type, Authorization")
-  res.header("Access-Control-Allow-Methods","GET, POST, OPTIONS")
-  if(req.method === "OPTIONS") return res.sendStatus(200)
-  next()
-})
-
-// ✅ SECURITY
-app.use((req,res,next)=>{
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self' https: wss:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
-  )
-  next()
-})
-
+// ✅ JSON
 app.use(express.json())
 
-const server = http.createServer(app)
-const wss = new WebSocket.Server({ server })
+// 🔥 FORCE ROUTES (NO 404 EVER AGAIN)
+app.get("/", (req,res)=>{
+  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
+})
 
-function broadcast(data){
-  const msg = JSON.stringify(data)
-  wss.clients.forEach(c=>{
-    if(c.readyState === 1) c.send(msg)
-  })
-}
+app.get("/trading-app", (req,res)=>{
+  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
+})
 
-// 🔥 ENGINE ROUTER
+app.get("/trading-app.html", (req,res)=>{
+  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
+})
+
+// 🔥 ENGINE ROUTER (KEEP YOUR SYSTEM WORKING)
 app.all("/engine/:name", async (req,res)=>{
   try{
     const engine = require(`./netlify/engines/${req.params.name}.cjs`)
@@ -47,17 +34,17 @@ app.all("/engine/:name", async (req,res)=>{
       queryStringParameters: req.query,
       headers: req.headers
     })
-
-    if(req.params.name === "market-loop-engine"){
-      broadcast({ type:"market_update" })
-    }
-
     res.status(result.statusCode).send(result.body)
-
   }catch(err){
     res.status(500).json({ error: err.message })
   }
 })
 
-const PORT = process.env.PORT || 3000
-server.listen(PORT, ()=>console.log("🚀 LIVE:", PORT))
+// 🔥 WEBSOCKET (OPTIONAL BUT SAFE)
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
+
+wss.on("connection", ()=>console.log("⚡ WS Connected"))
+
+const PORT = 3000
+server.listen(PORT, ()=>console.log("🚀 TKFM LOCAL FIXED:", PORT))

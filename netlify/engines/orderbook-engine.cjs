@@ -1,30 +1,33 @@
-const { getRedis } = require("../functions/_redis")
+const Redis = require("ioredis")
 
-module.exports = async (event) => {
+const redis = new Redis(process.env.REDIS_URL)
 
-  const redis = getRedis()
-  const catalog_id = event.queryStringParameters?.catalog_id
+exports.handler = async (event) => {
+  try {
+    const { catalog_id } = event.queryStringParameters
 
-  const orders = await redis.lrange("orderbook", 0, 200)
+    const orders = await redis.lrange(`orderbook:${catalog_id}`, 0, -1)
 
-  const bids = []
-  const asks = []
+    const parsed = orders.map(o => JSON.parse(o))
 
-  orders.forEach(o => {
-    const order = JSON.parse(o)
+    const bids = parsed.filter(o=>o.side==="buy")
+    const asks = parsed.filter(o=>o.side==="sell")
 
-    if(order.catalog_id !== catalog_id) return
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        bids,
+        asks
+      })
+    }
 
-    if(order.side === "buy") bids.push(order)
-    if(order.side === "sell") asks.push(order)
-  })
-
-  bids.sort((a,b)=> b.price - a.price)
-  asks.sort((a,b)=> a.price - b.price)
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ bids, asks })
+  } catch (err) {
+    return {
+      statusCode: 200, // ⚠️ DO NOT BREAK UI
+      body: JSON.stringify({
+        bids: [],
+        asks: []
+      })
+    }
   }
-
 }

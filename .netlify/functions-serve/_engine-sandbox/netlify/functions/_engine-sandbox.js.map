@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/_engine-sandbox.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-12656-vn20awkvskC4",
+  "sourcesContent": ["exports.runEngine = async function(engine, event, context) {\n\n  const TIMEOUT = 8000\n\n  return new Promise(async (resolve) => {\n\n    let finished = false\n\n    const timer = setTimeout(() => {\n\n      if (!finished) {\n\n        finished = true\n\n        resolve({\n          statusCode: 504,\n          body: JSON.stringify({\n            error: \"engine timeout\"\n          })\n        })\n\n      }\n\n    }, TIMEOUT)\n\n    try {\n\n      const result = await engine.handler(event, context)\n\n      if (!finished) {\n\n        finished = true\n        clearTimeout(timer)\n\n        resolve(result)\n\n      }\n\n    } catch (err) {\n\n      if (!finished) {\n\n        finished = true\n        clearTimeout(timer)\n\n        resolve({\n          statusCode: 500,\n          body: JSON.stringify({\n            error: err.message\n          })\n        })\n\n      }\n\n    }\n\n  })\n\n}\n"],
+  "mappings": ";AAAA,QAAQ,YAAY,eAAe,QAAQ,OAAO,SAAS;AAEzD,QAAM,UAAU;AAEhB,SAAO,IAAI,QAAQ,OAAO,YAAY;AAEpC,QAAI,WAAW;AAEf,UAAM,QAAQ,WAAW,MAAM;AAE7B,UAAI,CAAC,UAAU;AAEb,mBAAW;AAEX,gBAAQ;AAAA,UACN,YAAY;AAAA,UACZ,MAAM,KAAK,UAAU;AAAA,YACnB,OAAO;AAAA,UACT,CAAC;AAAA,QACH,CAAC;AAAA,MAEH;AAAA,IAEF,GAAG,OAAO;AAEV,QAAI;AAEF,YAAM,SAAS,MAAM,OAAO,QAAQ,OAAO,OAAO;AAElD,UAAI,CAAC,UAAU;AAEb,mBAAW;AACX,qBAAa,KAAK;AAElB,gBAAQ,MAAM;AAAA,MAEhB;AAAA,IAEF,SAAS,KAAK;AAEZ,UAAI,CAAC,UAAU;AAEb,mBAAW;AACX,qBAAa,KAAK;AAElB,gBAAQ;AAAA,UACN,YAAY;AAAA,UACZ,MAAM,KAAK,UAAU;AAAA,YACnB,OAAO,IAAI;AAAA,UACb,CAAC;AAAA,QACH,CAAC;AAAA,MAEH;AAAA,IAEF;AAAA,EAEF,CAAC;AAEH;",
+  "names": []
+}

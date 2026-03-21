@@ -1,8 +1,3 @@
+.env
+.env.*
 node_modules
-.netlify
-artifacts
-releases
-*.zip
-*.tar.gz
-*.log
-.DS_Store

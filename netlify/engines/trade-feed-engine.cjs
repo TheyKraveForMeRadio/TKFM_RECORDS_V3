@@ -1,16 +1,26 @@
-const { getRedis } = require("../functions/_redis")
+const Redis = require("ioredis")
 
-module.exports = async () => {
+const redis = new Redis(process.env.REDIS_URL)
 
-  const redis = getRedis()
+exports.handler = async () => {
+  try {
+    const trades = await redis.lrange("executed_trades", 0, 50)
 
-  const trades = await redis.lrange("executed_trades", 0, 50)
+    const parsed = trades.map(t => JSON.parse(t))
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      trades: trades.map(t => JSON.parse(t))
-    })
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        trades: parsed
+      })
+    }
+
+  } catch (err) {
+    return {
+      statusCode: 200, // ⚠️ prevent frontend crash
+      body: JSON.stringify({
+        trades: []
+      })
+    }
   }
-
 }

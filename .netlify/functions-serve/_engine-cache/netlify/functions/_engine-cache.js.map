@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/_engine-cache.js"],
+  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-12656-igMtGT59DBMR",
+  "sourcesContent": ["\nconst cache = {}\n\nfunction getEngine(name,loader){\n\nif(!cache[name]){\n\ncache[name] = loader()\n\n}\n\nreturn cache[name]\n\n}\n\nmodule.exports = { getEngine }\n\n"],
+  "mappings": ";AACA,IAAM,QAAQ,CAAC;AAEf,SAAS,UAAU,MAAK,QAAO;AAE/B,MAAG,CAAC,MAAM,IAAI,GAAE;AAEhB,UAAM,IAAI,IAAI,OAAO;AAAA,EAErB;AAEA,SAAO,MAAM,IAAI;AAEjB;AAEA,OAAO,UAAU,EAAE,UAAU;",
+  "names": []
+}

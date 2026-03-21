@@ -3,7 +3,7 @@
 <head>
   <title>TKFM TERMINAL</title>
 
-  <link rel="stylesheet" href="css/tkfm-global.css?v=7">
+  <link rel="stylesheet" href="css/tkfm-global.css?v=8">
 
   <style>
     body { margin:0; }
@@ -24,29 +24,11 @@
       padding:15px;
     }
 
-    .chart {
-      grid-column:1/2;
-      grid-row:1/2;
-      height:300px;
-    }
+    .chart { height:300px; }
+    .orderbook { height:300px; overflow:auto; }
+    .trades { height:300px; overflow:auto; }
 
-    .orderbook {
-      grid-column:2/3;
-      grid-row:1/2;
-      height:300px;
-      overflow:auto;
-    }
-
-    .trades {
-      grid-column:2/3;
-      grid-row:2/3;
-      height:300px;
-      overflow:auto;
-    }
-
-    .card {
-      padding:15px;
-    }
+    .card { padding:15px; }
 
     .bid { color:#22c55e }
     .ask { color:#ef4444 }
@@ -62,7 +44,6 @@
       height:100%;
       border-radius:10px;
     }
-
   </style>
 
 </head>
@@ -74,7 +55,6 @@
     <img src="tkfm-records-logo.png" class="logo" height="50">
     <h2>TKFM EXCHANGE</h2>
   </div>
-
   <div>
     <span id="price">$0</span>
   </div>
@@ -98,21 +78,32 @@
 
 </div>
 
+<!-- 💰 DEPOSIT -->
+<div class="card" style="margin:20px;">
+  <h3>💰 Deposit Funds</h3>
+  <input id="amount" placeholder="Amount USD" />
+  <button onclick="deposit()">Deposit</button>
+</div>
+
 <script>
 const API = "https://tkfm-records-v3.onrender.com/engine"
-const ws = new WebSocket("ws://localhost:3000")
+const ws = new WebSocket("wss://tkfm-records-v3.onrender.com")
 
 async function loadOrderBook(){
   const res = await fetch(API + "/orderbook-engine?catalog_id=song123")
   const data = await res.json()
 
+  // ✅ SAFE FIX
+  const asks = data.asks || []
+  const bids = data.bids || []
+
   let html = ""
 
-  data.asks.slice(0,10).forEach(a=>{
+  asks.slice(0,10).forEach(a=>{
     html += `<div class="ask">SELL $${a.price} (${a.quantity})</div>`
   })
 
-  data.bids.slice(0,10).forEach(b=>{
+  bids.slice(0,10).forEach(b=>{
     html += `<div class="bid">BUY $${b.price} (${b.quantity})</div>`
   })
 
@@ -123,13 +114,32 @@ async function loadTrades(){
   const res = await fetch(API + "/trade-feed-engine")
   const data = await res.json()
 
+  // ✅ SAFE FIX
+  const trades = data.trades || []
+
   let html = ""
 
-  data.trades.slice(0,20).forEach(t=>{
+  trades.slice(0,20).forEach(t=>{
     html += `<div class="trade">$${t.price} | ${t.quantity}</div>`
   })
 
   document.getElementById("trades").innerHTML = html
+}
+
+async function deposit(){
+  const amount = document.getElementById("amount").value
+
+  const res = await fetch(API + "/stripe-deposit-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      amount,
+      user:"user1"
+    })
+  })
+
+  const data = await res.json()
+  window.location = data.url
 }
 
 ws.onmessage = ()=>{
@@ -145,27 +155,26 @@ loadTrades()
 </html>
 
 <div class="card" style="margin:20px;">
-  <h3>💰 Deposit Funds</h3>
-  <input id="amount" placeholder="Amount USD" />
-  <button onclick="deposit()">Deposit</button>
+  <h3>💸 Withdraw Funds</h3>
+  <input id="withdrawAmount" placeholder="Amount USD" />
+  <button onclick="withdraw()">Withdraw</button>
 </div>
 
 <script>
-async function deposit(){
-  const amount = document.getElementById("amount").value
+async function withdraw(){
+  const amount = document.getElementById("withdrawAmount").value
 
-  const res = await fetch(API + "/stripe-deposit-engine", {
+  const res = await fetch(API + "/withdraw-engine", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
-      amount,
-      user:"user1"
+      user:"user1",
+      amount
     })
   })
 
   const data = await res.json()
-
-  window.location = data.url
+  alert(JSON.stringify(data))
 }
 </script>
 

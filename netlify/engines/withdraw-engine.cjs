@@ -1,29 +1,41 @@
-const { getRedis } = require("../functions/_redis")
+const Redis = require("ioredis")
+const redis = new Redis(process.env.REDIS_URL)
 
-module.exports = async (event) => {
+exports.handler = async (event) => {
+  try {
+    const { user, amount } = JSON.parse(event.body)
 
-  const redis = getRedis()
-  const body = JSON.parse(event.body || "{}")
+    const balance = await redis.get(`wallet:${user}:balance`) || 0
 
-  const { user, amount } = body
+    if (parseFloat(balance) < amount) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Insufficient funds" })
+      }
+    }
 
-  const key = `user:${user}`
-  const wallet = JSON.parse(await redis.get(key))
+    // 💸 deduct balance
+    await redis.decrby(`wallet:${user}:balance`, amount)
 
-  if (wallet.balance < amount) {
+    // 🧾 log withdrawal
+    await redis.lpush(`withdrawals:${user}`, JSON.stringify({
+      amount,
+      status: "pending",
+      timestamp: Date.now()
+    }))
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "insufficient funds" })
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "withdrawal_requested",
+        amount
+      })
+    }
+
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
     }
   }
-
-  wallet.balance -= amount
-
-  await redis.set(key, JSON.stringify(wallet))
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ status: "withdraw requested" })
-  }
-
 }

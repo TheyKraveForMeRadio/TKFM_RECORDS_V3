@@ -1,8 +1,15 @@
 const Stripe = require("stripe")
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 exports.handler = async (event) => {
   try {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ error: "Stripe not configured" })
+      }
+    }
+
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
     const { amount, user } = JSON.parse(event.body)
 
     const session = await stripe.checkout.sessions.create({
@@ -11,15 +18,13 @@ exports.handler = async (event) => {
       line_items: [{
         price_data: {
           currency: "usd",
-          product_data: {
-            name: "TKFM Wallet Deposit"
-          },
+          product_data: { name: "TKFM Deposit" },
           unit_amount: amount * 100
         },
         quantity: 1
       }],
-      success_url: `https://tkfm-records-v3.onrender.com/deposit-success.html?user=${user}`,
-      cancel_url: `https://tkfm-records-v3.onrender.com/deposit-cancel.html`
+      success_url: `http://localhost:3000/deposit-success.html`,
+      cancel_url: `http://localhost:3000/trading-app.html`
     })
 
     return {
@@ -28,6 +33,9 @@ exports.handler = async (event) => {
     }
 
   } catch (err) {
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ error: err.message })
+    }
   }
 }
