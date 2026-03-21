@@ -5,7 +5,7 @@ require("dotenv").config()
 
 const app = express()
 
-// ✅ SERVE FRONTEND
+// ✅ STATIC
 app.use(express.static("public"))
 
 // ✅ CORS
@@ -17,11 +17,11 @@ app.use((req,res,next)=>{
   next()
 })
 
-// ✅ SECURITY (NO unsafe-eval)
+// ✅ SECURITY
 app.use((req,res,next)=>{
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self' https: ws:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
+    "default-src 'self' https: wss:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
   )
   next()
 })
@@ -38,6 +38,7 @@ function broadcast(data){
   })
 }
 
+// 🔥 ENGINE ROUTER
 app.all("/engine/:name", async (req,res)=>{
   try{
     const engine = require(`./netlify/engines/${req.params.name}.cjs`)
@@ -59,4 +60,4 @@ app.all("/engine/:name", async (req,res)=>{
 })
 
 const PORT = process.env.PORT || 3000
-server.listen(PORT, ()=>console.log("🚀 TKFM LIVE ON PORT", PORT))
+server.listen(PORT, ()=>console.log("🚀 LIVE:", PORT))
