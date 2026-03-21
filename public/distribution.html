@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>TKFM Distribution Assist — Distribute Your Music</title>
@@ -21,13 +24,11 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--t);background:var(--bg);overflow-x:hidden}
     a{color:inherit;text-decoration:none}
     button,input,textarea,select{font:inherit}
     .bg{position:fixed;inset:0;z-index:-10}
     .bg:before{
       content:"";position:absolute;inset:-35%;
-      background:
         radial-gradient(900px 560px at 12% 10%, rgba(250,204,21,.16), transparent 60%),
         radial-gradient(900px 560px at 88% 14%, rgba(249,115,22,.12), transparent 60%),
         radial-gradient(900px 560px at 52% 92%, rgba(34,211,238,.10), transparent 60%),
@@ -38,7 +39,6 @@
     }
     .bg:after{
       content:"";position:absolute;inset:-25%;
-      background:
         repeating-linear-gradient(0deg, rgba(250,204,21,.07) 0px, rgba(250,204,21,.07) 1px, transparent 1px, transparent 30px),
         repeating-linear-gradient(90deg, rgba(249,115,22,.06) 0px, rgba(249,115,22,.06) 1px, transparent 1px, transparent 36px);
       transform: rotate(-6deg);
@@ -48,11 +48,8 @@
     @keyframes drift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(1.2%,-1.1%,0) scale(1.02)}}
     @keyframes grid{0%{transform:translate3d(-1%,-1%,0) rotate(-6deg)}50%{transform:translate3d(1.5%,1%,0) rotate(-6deg)}100%{transform:translate3d(-1%,-1%,0) rotate(-6deg)}}
 
-    header{position:sticky;top:0;z-index:80;background:rgba(0,0,0,.72);border-bottom:1px solid rgba(30,41,59,.65);backdrop-filter:blur(14px)}
     header .wrap{max-width:1240px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:12px}
     .brand{display:flex;align-items:center;gap:10px;min-width:260px}
-    .logo{width:46px;height:46px;border-radius:14px;position:relative;overflow:hidden;border:1px solid rgba(148,163,184,.18);background:rgba(2,6,23,.62);box-shadow:0 0 0 1px rgba(255,255,255,.03),0 18px 60px rgba(0,0,0,.45)}
-    .logo:before{content:"";position:absolute;inset:-12px;border-radius:16px;background:
       radial-gradient(closest-side at 50% 50%, rgba(250,204,21,.18), transparent 70%),
       radial-gradient(closest-side at 35% 65%, rgba(249,115,22,.14), transparent 72%),
       radial-gradient(closest-side at 70% 30%, rgba(34,211,238,.10), transparent 72%);
@@ -61,36 +58,22 @@
     .k{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--m)}
     .title{font-weight:950;letter-spacing:.06em}
     .nav{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .pill{padding:10px 14px;border-radius:999px;border:1px solid rgba(148,163,184,.28);background:rgba(15,23,42,.62);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(226,232,240,.95);transition:transform .16s ease,border-color .16s ease,background .16s ease;white-space:nowrap}
-    .pill:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.65);background:rgba(15,23,42,.90)}
     .pill.hot{border-color:rgba(250,204,21,.55);box-shadow:0 0 0 1px rgba(250,204,21,.14),0 0 22px rgba(250,204,21,.10)}
 
     main{max-width:1240px;margin:0 auto;padding:18px 22px 56px}
-    .glass{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(18px);box-shadow:var(--shadow)}
     .card{padding:18px;border-radius:28px}
     .h1{margin:10px 0 0;font-size:44px;line-height:1.05;font-weight:950}
     .grad{background-image:linear-gradient(90deg,var(--gold),var(--amber),var(--c),var(--p));-webkit-background-clip:text;background-clip:text;color:transparent}
     .p{margin:10px 0 0;color:var(--m);line-height:1.6;font-size:14px;max-width:980px}
-    .divider{height:1px;margin:16px 0;background:linear-gradient(90deg,transparent,rgba(250,204,21,.20),rgba(249,115,22,.12),transparent)}
     .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
     @media(max-width:1100px){.grid{grid-template-columns:1fr}}
-    .tile{border:1px solid rgba(148,163,184,.16);background:rgba(2,6,23,.55);border-radius:22px;padding:14px;position:relative;overflow:hidden}
-    .tile:before{content:"";position:absolute;inset:-2px;background:radial-gradient(560px 240px at 12% 12%,rgba(250,204,21,.12),transparent 60%),radial-gradient(560px 240px at 86% 16%,rgba(249,115,22,.10),transparent 60%);opacity:.95;pointer-events:none}
     .tile>*{position:relative}
     .tileH{font-size:18px;font-weight:950;margin-top:6px}
     .tileP{margin-top:8px;color:rgba(148,163,184,.95);font-size:13px;line-height:1.55}
-    .tag{padding:7px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.20);background:rgba(2,6,23,.55);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(226,232,240,.92)}
-    .btn{padding:11px 12px;border-radius:14px;border:1px solid rgba(148,163,184,.34);background:rgba(15,23,42,.72);color:rgba(226,232,240,.96);cursor:pointer;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:900;transition:transform .16s ease,border-color .16s ease,background .16s ease;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center}
-    .btn:hover{transform:translateY(-1px);border-color:rgba(250,204,21,.70);background:rgba(15,23,42,.92)}
-    .btnHot{border-color:rgba(250,204,21,.65);box-shadow:0 0 0 1px rgba(250,204,21,.16),0 0 22px rgba(250,204,21,.08);background:linear-gradient(90deg, rgba(250,204,21,.14), rgba(249,115,22,.08))}
-    .warn{border:1px solid rgba(245,158,11,.24);background:rgba(245,158,11,.06);border-radius:16px;padding:12px}
     .steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
     @media(max-width:1100px){.steps{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:620px){.steps{grid-template-columns:1fr}}
-    .step{border:1px solid rgba(148,163,184,.16);background:rgba(2,6,23,.55);border-radius:18px;padding:12px}
-    .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:12px;border:1px solid rgba(250,204,21,.28);background:rgba(250,204,21,.06);font-weight:950}
-    .faq{border:1px solid rgba(148,163,184,.16);background:rgba(2,6,23,.55);border-radius:18px;padding:12px}
     .q{font-weight:950}
     .a{margin-top:6px;color:rgba(148,163,184,.95);line-height:1.55;font-size:13px}
     code{color:var(--c)}

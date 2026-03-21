@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM TERMINAL</title>
+
+  <link rel="stylesheet" href="css/tkfm-global.css?v=7">
+
+  <style>
+    body { margin:0; }
+
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:15px 25px;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .container {
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap:15px;
+      padding:15px;
+    }
+
+    .chart {
+      grid-column:1/2;
+      grid-row:1/2;
+      height:300px;
+    }
+
+    .orderbook {
+      grid-column:2/3;
+      grid-row:1/2;
+      height:300px;
+      overflow:auto;
+    }
+
+    .trades {
+      grid-column:2/3;
+      grid-row:2/3;
+      height:300px;
+      overflow:auto;
+    }
+
+    .card {
+      padding:15px;
+    }
+
+    .bid { color:#22c55e }
+    .ask { color:#ef4444 }
+
+    .trade {
+      font-size:12px;
+      padding:5px;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    canvas {
+      width:100%;
+      height:100%;
+      border-radius:10px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="tkfm-records-logo.png" class="logo" height="50">
+    <h2>TKFM EXCHANGE</h2>
+  </div>
+
+  <div>
+    <span id="price">$0</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card chart">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="card orderbook">
+    <h3>Order Book</h3>
+    <div id="orderbook"></div>
+  </div>
+
+  <div class="card trades">
+    <h3>Live Trades</h3>
+    <div id="trades"></div>
+  </div>
+
+</div>
+
+<script>
+const API = "http://localhost:3000/engine"
+const ws = new WebSocket("ws://localhost:3000")
+
+async function loadOrderBook(){
+  const res = await fetch(API + "/orderbook-engine?catalog_id=song123")
+  const data = await res.json()
+
+  let html = ""
+
+  data.asks.slice(0,10).forEach(a=>{
+    html += `<div class="ask">SELL $${a.price} (${a.quantity})</div>`
+  })
+
+  data.bids.slice(0,10).forEach(b=>{
+    html += `<div class="bid">BUY $${b.price} (${b.quantity})</div>`
+  })
+
+  document.getElementById("orderbook").innerHTML = html
+}
+
+async function loadTrades(){
+  const res = await fetch(API + "/trade-feed-engine")
+  const data = await res.json()
+
+  let html = ""
+
+  data.trades.slice(0,20).forEach(t=>{
+    html += `<div class="trade">$${t.price} | ${t.quantity}</div>`
+  })
+
+  document.getElementById("trades").innerHTML = html
+}
+
+ws.onmessage = ()=>{
+  loadOrderBook()
+  loadTrades()
+}
+
+loadOrderBook()
+loadTrades()
+</script>
+
+</body>
+</html>

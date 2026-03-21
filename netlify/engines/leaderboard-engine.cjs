@@ -10,17 +10,17 @@ module.exports = async () => {
 
   for (const key of keys) {
 
-    const user = JSON.parse(await redis.get(key))
+    const username = key.replace("user:","")
+    const volume = parseFloat(await redis.get(`volume:${username}`) || "0")
 
     leaderboard.push({
-      username: key.replace("user:",""),
-      balance: user.balance,
-      assets: user.assets
+      username,
+      volume
     })
 
   }
 
-  leaderboard.sort((a,b) => b.balance - a.balance)
+  leaderboard.sort((a,b) => b.volume - a.volume)
 
   return {
     statusCode: 200,

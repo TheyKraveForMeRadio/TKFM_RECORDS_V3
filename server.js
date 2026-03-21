@@ -1,51 +1,62 @@
+const express = require("express")
+const http = require("http")
+const WebSocket = require("ws")
 require("dotenv").config()
 
-const express = require("express")
 const app = express()
 
-app.use(express.json())
+// ✅ SERVE FRONTEND
+app.use(express.static("public"))
 
-// 🔥 ENABLE CORS (FIX)
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200)
-  }
-
+// ✅ CORS
+app.use((req,res,next)=>{
+  res.header("Access-Control-Allow-Origin","*")
+  res.header("Access-Control-Allow-Headers","Origin, Content-Type, Authorization")
+  res.header("Access-Control-Allow-Methods","GET, POST, OPTIONS")
+  if(req.method === "OPTIONS") return res.sendStatus(200)
   next()
 })
 
-app.all("/engine/:name", async (req, res) => {
+// ✅ SECURITY (NO unsafe-eval)
+app.use((req,res,next)=>{
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self' https: ws:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;"
+  )
+  next()
+})
 
-  try {
+app.use(express.json())
 
-    const engineName = req.params.name
-    const mod = require(`./netlify/engines/${engineName}.cjs`)
-    const engine = typeof mod === "function" ? mod : mod.handler
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
 
-    if (!engine) {
-      return res.status(500).send({ error: "engine not a function export" })
-    }
+function broadcast(data){
+  const msg = JSON.stringify(data)
+  wss.clients.forEach(c=>{
+    if(c.readyState === 1) c.send(msg)
+  })
+}
 
+app.all("/engine/:name", async (req,res)=>{
+  try{
+    const engine = require(`./netlify/engines/${req.params.name}.cjs`)
     const result = await engine({
       body: JSON.stringify(req.body),
       queryStringParameters: req.query,
       headers: req.headers
     })
 
-    res.status(result?.statusCode || 200).send(result?.body || result)
+    if(req.params.name === "market-loop-engine"){
+      broadcast({ type:"market_update" })
+    }
 
-  } catch (err) {
+    res.status(result.statusCode).send(result.body)
 
-    res.status(500).send({ error: err.message })
-
+  }catch(err){
+    res.status(500).json({ error: err.message })
   }
-
 })
 
-app.listen(3000, () => {
-  console.log("🚀 TKFM ENGINE SERVER RUNNING ON 3000")
-})
+const PORT = process.env.PORT || 3000
+server.listen(PORT, ()=>console.log("🚀 TKFM LIVE ON PORT", PORT))

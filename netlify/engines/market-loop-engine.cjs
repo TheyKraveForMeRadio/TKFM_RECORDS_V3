@@ -73,3 +73,8 @@ module.exports = async () => {
   }
 
 }
+
+// 📊 TRACK USER VOLUME
+await redis.incrbyfloat(`volume:${match.buy.user}`, match.price * match.quantity)
+await redis.incrbyfloat(`volume:${match.sell.user}`, match.price * match.quantity)
+

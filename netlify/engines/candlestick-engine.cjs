@@ -1,53 +1,29 @@
 const { getRedis } = require("../functions/_redis")
 
-module.exports = async () => {
+module.exports = async (event) => {
 
   const redis = getRedis()
+  const catalog_id = event.queryStringParameters?.catalog_id
 
   const trades = await redis.lrange("executed_trades", 0, 100)
 
-  if (!trades.length) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ candles: [] })
-    }
-  }
-
-  const parsed = trades.map(t => JSON.parse(t)).reverse()
-
   const candles = []
 
-  const interval = 60000 // 1 minute
+  trades.reverse().forEach(t => {
 
-  let bucket = null
+    const trade = JSON.parse(t)
 
-  parsed.forEach(t => {
+    if(trade.buy?.catalog_id !== catalog_id) return
 
-    const time = Math.floor(t.executed_at / interval) * interval
-
-    if (!bucket || bucket.time !== time) {
-
-      if (bucket) candles.push(bucket)
-
-      bucket = {
-        time,
-        open: t.price,
-        high: t.price,
-        low: t.price,
-        close: t.price
-      }
-
-    } else {
-
-      bucket.high = Math.max(bucket.high, t.price)
-      bucket.low = Math.min(bucket.low, t.price)
-      bucket.close = t.price
-
-    }
+    candles.push({
+      open: trade.price,
+      high: trade.price,
+      low: trade.price,
+      close: trade.price,
+      time: trade.executed_at
+    })
 
   })
-
-  if (bucket) candles.push(bucket)
 
   return {
     statusCode: 200,
