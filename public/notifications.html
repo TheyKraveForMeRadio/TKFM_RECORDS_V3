@@ -27,7 +27,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 const user = "user1"
 
 async function load(){
-  const res = await fetch(API + "/get-notifications-engine?user=" + user)
+  const res = await authFetch( + "/get-notifications-engine?user=" + user)
   const data = await res.json()
 
   let html = ""

@@ -1,80 +1,66 @@
-const jwt = require("jsonwebtoken")
+const Redis = require("ioredis")
 const bcrypt = require("bcryptjs")
-const { getRedis } = require("../functions/_redis")
+const jwt = require("jsonwebtoken")
 
-const SECRET = process.env.JWT_SECRET || "tkfm_secret"
+const redis = new Redis(process.env.REDIS_URL)
+const SECRET = process.env.TKFM_JWT_SECRET
 
 module.exports = async (event) => {
+  try {
+    const { action, user, password } = JSON.parse(event.body)
 
-  const redis = getRedis()
-  const body = JSON.parse(event.body || "{}")
+    if(action === "register"){
+      const exists = await redis.get(`user:${user}`)
+      if(exists){
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "user exists" })
+        }
+      }
 
-  const { action, username, password } = body
+      const hash = await bcrypt.hash(password, 10)
 
-  if (!action || !username || !password) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "missing fields" })
-    }
-  }
+      await redis.set(`user:${user}`, hash)
+      await redis.set(`wallet:${user}`, 0)
+      await redis.set(`xp:${user}`, 0)
 
-  const key = `user:${username}`
-
-  // REGISTER
-  if (action === "register") {
-
-    const exists = await redis.get(key)
-    if (exists) {
       return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "user exists" })
+        statusCode: 200,
+        body: JSON.stringify({ status: "registered" })
       }
     }
 
-    const hash = await bcrypt.hash(password, 10)
+    if(action === "login"){
+      const hash = await redis.get(`user:${user}`)
 
-    const user = {
-      username,
-      password: hash,
-      balance: 1000,
-      assets: {}
-    }
+      if(!hash){
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "user not found" })
+        }
+      }
 
-    await redis.set(key, JSON.stringify(user))
+      const valid = await bcrypt.compare(password, hash)
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ status: "registered" })
-    }
-  }
+      if(!valid){
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ error: "invalid login" })
+        }
+      }
 
-  // LOGIN
-  if (action === "login") {
+      const token = jwt.sign({ user }, SECRET, { expiresIn: "7d" })
 
-    const data = await redis.get(key)
-    if (!data) {
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "user not found" })
+        statusCode: 200,
+        body: JSON.stringify({ token })
       }
     }
 
-    const user = JSON.parse(data)
-
-    const valid = await bcrypt.compare(password, user.password)
-    if (!valid) {
-      return {
-        statusCode: 401,
-        body: JSON.stringify({ error: "invalid password" })
-      }
-    }
-
-    const token = jwt.sign({ username }, SECRET, { expiresIn: "7d" })
-
+  } catch(err){
     return {
-      statusCode: 200,
-      body: JSON.stringify({ token })
+      statusCode: 500,
+      body: err.message
     }
   }
-
 }

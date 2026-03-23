@@ -28,7 +28,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 const user = "user1"
 
 async function loadPNL(){
-  const res = await fetch(API + "/user-pnl-engine?user=" + user)
+  const res = await authFetch( + "/user-pnl-engine?user=" + user)
   const data = await res.json()
 
   document.getElementById("wallet").innerText = "$" + data.wallet.toFixed(2)
@@ -38,7 +38,7 @@ async function loadPNL(){
 }
 
 async function loadChart(){
-  const res = await fetch(API + "/pnl-history-engine?user=" + user)
+  const res = await authFetch( + "/pnl-history-engine?user=" + user)
   const data = await res.json()
 
   const ctx = document.getElementById("chart").getContext("2d")

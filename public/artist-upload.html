@@ -27,7 +27,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 async function upload(){
 
   // 💳 charge artist $10 listing fee
-  const pay = await fetch(API + "/stripe-deposit-engine", {
+  const pay = await authFetch( + "/stripe-deposit-engine", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({ amount:10, user:"artist" })

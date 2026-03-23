@@ -16,7 +16,7 @@
 const API = "https://tkfm-records-v3.onrender.com/engine"
 
 async function load(){
-  const res = await fetch(API + "/admin-withdrawals-engine")
+  const res = await authFetch( + "/admin-withdrawals-engine")
   const data = await res.json()
 
   let html = ""
@@ -38,7 +38,7 @@ async function load(){
 }
 
 async function approve(user, index){
-  await fetch(API + `/admin-withdrawals-engine?action=approve&user=${user}&index=${index}`)
+  await authFetch( + `/admin-withdrawals-engine?action=approve&user=${user}&index=${index}`)
   load()
 }
 

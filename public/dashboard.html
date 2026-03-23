@@ -28,7 +28,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 const TOKEN = localStorage.getItem("token")
 
 async function load(){
-  const res = await fetch(API + "/user-stats-engine?user=user1", {
+  const res = await authFetch( + "/user-stats-engine?user=user1", {
     headers: { Authorization: "Bearer " + TOKEN }
   })
 

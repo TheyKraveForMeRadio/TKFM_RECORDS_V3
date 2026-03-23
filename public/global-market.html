@@ -16,7 +16,7 @@
 const API = "https://tkfm-records-v3.onrender.com/engine"
 
 async function load(){
-  const res = await fetch(API + "/assets-engine")
+  const res = await authFetch( + "/assets-engine")
   const data = await res.json()
 
   let html = ""

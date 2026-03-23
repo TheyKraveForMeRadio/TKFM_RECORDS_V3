@@ -19,7 +19,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 async function copy(){
   const leader = document.getElementById("leader").value
 
-  await fetch(API + "/copy-trade-engine", {
+  await authFetch( + "/copy-trade-engine", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({

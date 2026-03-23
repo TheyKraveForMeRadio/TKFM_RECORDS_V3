@@ -25,7 +25,7 @@ const API = "https://tkfm-records-v3.onrender.com/engine"
 const user = "user1"
 
 async function loadXP(){
-  const res = await fetch(API + "/xp-engine", {
+  const res = await authFetch( + "/xp-engine", {
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({ user, amount:0 })
@@ -38,7 +38,7 @@ async function loadXP(){
 }
 
 async function loadBadges(){
-  const res = await fetch(API + "/badge-engine?user=" + user)
+  const res = await authFetch( + "/badge-engine?user=" + user)
   const data = await res.json()
 
   let html = ""

@@ -16,7 +16,7 @@
 const API = "https://tkfm-records-v3.onrender.com/engine"
 
 async function load(){
-  const res = await fetch(API + "/leaderboard-engine")
+  const res = await authFetch( + "/leaderboard-engine")
   const data = await res.json()
 
   let html = ""

@@ -1,24 +1,29 @@
-const { getRedis } = require("../functions/_redis")
-const auth = require("./_auth.cjs")
+const Redis = require("ioredis")
+const redis = new Redis(process.env.REDIS_URL)
+
+// 🔐 AUTH
+const auth = require("./auth-middleware.cjs")
 
 module.exports = async (event) => {
-
   try {
-
-    const redis = getRedis()
+    // 🔐 GET USER FROM TOKEN
     const user = auth(event)
+    if(!user){
+      return {
+        statusCode: 401,
+        body: "unauthorized"
+      }
+    }
 
-    const body = JSON.parse(event.body || "{}")
-
-    const { catalog_id, price, quantity, side } = body
+    const body = JSON.parse(event.body)
 
     const trade = {
       id: Date.now() + "-" + Math.floor(Math.random()*100000),
-      user,
-      catalog_id,
-      price,
-      quantity,
-      side,
+      user: user, // 🔥 REPLACED
+      catalog_id: body.catalog_id,
+      price: body.price,
+      quantity: body.quantity,
+      side: body.side,
       timestamp: Date.now()
     }
 
@@ -29,13 +34,10 @@ module.exports = async (event) => {
       body: JSON.stringify({ status: "queued", trade })
     }
 
-  } catch (err) {
-
+  } catch(err){
     return {
-      statusCode: 401,
-      body: JSON.stringify({ error: err.message })
+      statusCode: 500,
+      body: err.message
     }
-
   }
-
 }
