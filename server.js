@@ -33,3 +33,6 @@ app.all("/engine/:name", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on 3000")
 })
+
+app.use(express.static("public"))
+
