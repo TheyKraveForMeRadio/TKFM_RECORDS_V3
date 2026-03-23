@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deposit</title>
+</head>
+<body>
+
+<h1>Deposit Funds</h1>
+
+<input id="amount" placeholder="Amount USD" />
+<button onclick="deposit()">Deposit</button>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function deposit(){
+  const amount = document.getElementById("amount").value
+
+  const res = await fetch(API + "/stripe-deposit-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user:"testuser",
+      amount: parseFloat(amount)
+    })
+  })
+
+  const data = await res.json()
+
+  window.location = data.url
+}
+</script>
+
+</body>
+</html>

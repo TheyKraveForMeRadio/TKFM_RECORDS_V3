@@ -2,9 +2,7 @@ const Redis = require("ioredis")
 const jwt = require("jsonwebtoken")
 
 const redis = new Redis(process.env.REDIS_URL)
-
-// 🔥 SAME SECRET AS AUTH ENGINE
-const SECRET = process.env.TKFM_JWT_SECRET || "tkfm-dev-secret"
+const SECRET = process.env.TKFM_JWT_SECRET
 
 module.exports = async (event) => {
   try {
