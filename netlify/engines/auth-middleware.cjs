@@ -2,16 +2,21 @@ const jwt = require("jsonwebtoken")
 
 module.exports = (event) => {
   try {
-    const auth = event.headers.authorization
+    const authHeader = event.headers.authorization
+    if (!authHeader) throw new Error("no token")
 
-    if(!auth) throw new Error("no token")
+    const token = authHeader.split(" ")[1]
 
-    const token = auth.split(" ")[1]
-    const decoded = jwt.verify(token, process.env.TKFM_JWT_SECRET)
+    const secret = process.env.TKFM_JWT_SECRET
+    if (!secret) {
+      console.error("❌ JWT SECRET MISSING")
+      throw new Error("missing secret")
+    }
 
-    return decoded.user
+    return jwt.verify(token, secret).user
 
-  } catch(err){
+  } catch (err) {
+    console.error("AUTH ERROR:", err.message)
     return null
   }
 }
