@@ -1,7 +1,7 @@
 const Redis = require("ioredis")
 const redis = new Redis(process.env.REDIS_URL)
 
-exports.handler = async () => {
+module.exports = async () => {
   try {
     const buys = await redis.lrange("buy_orders", 0, -1)
     const sells = await redis.lrange("sell_orders", 0, -1)
@@ -27,7 +27,7 @@ exports.handler = async () => {
           await redis.incrbyfloat(`wallet:${sell.user}`, price * qty)
           await redis.incrbyfloat(`wallet:${buy.user}`, -(price * qty))
 
-          // 📦 UPDATE HOLDINGS (NEW)
+          // 📦 UPDATE HOLDERS
           await redis.hincrbyfloat(
             `holders:${buy.catalog_id}`,
             buy.user,
@@ -48,12 +48,33 @@ exports.handler = async () => {
             executed_at: Date.now()
           }
 
+          // 📊 SAVE TRADE
           await redis.lpush("executed_trades", JSON.stringify(trade))
           executed.push(trade)
+
+          // 🤝 COPY TRADING (NEW)
+          const followers = await redis.keys("copy:*")
+
+          for (let f of followers){
+            const follower = f.split(":")[1]
+            const leader = await redis.get(f)
+
+            if(leader === trade.buy.user){
+              await redis.lpush("buy_orders", JSON.stringify({
+                catalog_id: trade.catalog_id,
+                price: trade.price,
+                quantity: trade.quantity,
+                side: "buy",
+                user: follower,
+                timestamp: Date.now()
+              }))
+            }
+          }
         }
       }
     }
 
+    // 🧹 CLEAR ORDER BOOK (SIMPLE ENGINE)
     await redis.del("buy_orders")
     await redis.del("sell_orders")
 
