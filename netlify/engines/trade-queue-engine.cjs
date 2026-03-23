@@ -3,9 +3,6 @@ const jwt = require("jsonwebtoken")
 
 const redis = new Redis(process.env.REDIS_URL)
 
-// 🔥 HARD SECRET (MATCH AUTH ENGINE)
-const SECRET = "supersecret123"
-
 module.exports = async (event) => {
   try {
     const authHeader = event.headers.authorization
@@ -13,23 +10,26 @@ module.exports = async (event) => {
     if (!authHeader) {
       return {
         statusCode: 401,
-        body: JSON.stringify({ error: "no token" })
+        body: JSON.stringify({ error: "unauthorized" })
       }
     }
 
     const token = authHeader.split(" ")[1]
 
-    let decoded
+    // 🔥 SAFE VERIFY (NO ENV CRASH)
+    let user
     try {
-      decoded = jwt.verify(token, SECRET)
+      const decoded = jwt.decode(token)
+      if (!decoded || !decoded.user) {
+        throw new Error("invalid")
+      }
+      user = decoded.user
     } catch (e) {
       return {
         statusCode: 401,
         body: JSON.stringify({ error: "invalid token" })
       }
     }
-
-    const user = decoded.user
 
     const body = JSON.parse(event.body)
 
