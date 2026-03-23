@@ -1,13 +1,13 @@
 const Redis = require("ioredis")
 const redis = new Redis(process.env.REDIS_URL)
 
-// 🔐 AUTH
 const auth = require("./auth-middleware.cjs")
 
 module.exports = async (event) => {
   try {
-    // 🔐 GET USER FROM TOKEN
-    const user = auth(event)
+    const secret = process.env.TKFM_JWT_SECRET
+
+    const user = auth(event, secret)
     if(!user){
       return {
         statusCode: 401,
@@ -19,7 +19,7 @@ module.exports = async (event) => {
 
     const trade = {
       id: Date.now() + "-" + Math.floor(Math.random()*100000),
-      user: user, // 🔥 REPLACED
+      user,
       catalog_id: body.catalog_id,
       price: body.price,
       quantity: body.quantity,
