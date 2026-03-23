@@ -30,6 +30,7 @@
   </style>
 
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
@@ -179,6 +180,7 @@ setInterval(()=>{
 }, 2000)
 </script>
 
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
 </html>
 
@@ -198,4 +200,42 @@ function alertUser(msg){
   document.body.appendChild(div)
   setTimeout(()=> div.remove(), 3000)
 }
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+}
+</script>
+
+<button id="installBtn" style="display:none">📲 Install App</button>
+
+<script>
+let deferredPrompt
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault()
+  deferredPrompt = e
+  document.getElementById("installBtn").style.display = "block"
+})
+
+document.getElementById("installBtn").onclick = async () => {
+  if(deferredPrompt){
+    deferredPrompt.prompt()
+  }
+}
+</script>
+
+<script>
+async function pollNotifications(){
+  const res = await fetch("https://tkfm-records-v3.onrender.com/engine/get-notifications-engine?user=user1")
+  const data = await res.json()
+
+  if(data.notifications.length){
+    const latest = data.notifications[0]
+    alertUser(latest.message)
+  }
+}
+
+setInterval(pollNotifications, 4000)
 </script>

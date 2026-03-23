@@ -4,6 +4,7 @@
   <title>TKFM PNL</title>
   <link rel="stylesheet" href="css/tkfm-global.css">
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
@@ -62,5 +63,6 @@ setInterval(()=>{
 }, 3000)
 </script>
 
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
 </html>

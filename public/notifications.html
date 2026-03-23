@@ -14,6 +14,7 @@
     }
   </style>
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
@@ -41,5 +42,6 @@ async function load(){
 setInterval(load, 2000)
 </script>
 
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
 </html>

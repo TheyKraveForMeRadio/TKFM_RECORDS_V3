@@ -59,6 +59,7 @@
   <script src="/js/tkfm-global-shell.js" defer></script>
 <script src="/js/tkfm-master-autoload.js"></script>
 <link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
 </head>
 
 <body data-tkfm-theme="records">
@@ -100,5 +101,6 @@
   <script>window.TKFM_FX&&TKFM_FX.mount({ theme: 'records' });</script>
   <script type="module" src="/js/tkfm-launch-polish.js"></script>
   <script src="/js/tkfm-owner-override.js"></script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
 </html>
