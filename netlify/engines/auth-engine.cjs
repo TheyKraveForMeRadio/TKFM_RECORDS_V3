@@ -4,42 +4,65 @@ const jwt = require("jsonwebtoken")
 
 const redis = new Redis(process.env.REDIS_URL)
 
-// 🔥 FORCE SAME SECRET EVERYWHERE
 const SECRET = process.env.TKFM_JWT_SECRET || "tkfm-dev-secret"
 
 module.exports = async (event) => {
   try {
-    const { action, user, password } = JSON.parse(event.body)
+    const body = JSON.parse(event.body || "{}")
+    const { action, user, password } = body
 
-    if(action === "login"){
-      const hash = await redis.get(`user:${user}`)
-      if(!hash) return { statusCode:400, body:JSON.stringify({error:"user not found"}) }
-
-      const valid = await bcrypt.compare(password, hash)
-      if(!valid) return { statusCode:401, body:JSON.stringify({error:"invalid login"}) }
-
-      const token = jwt.sign({ user }, SECRET, { expiresIn:"7d" })
-
-      return {
-        statusCode:200,
-        body:JSON.stringify({ token })
-      }
-    }
-
-    if(action === "register"){
+    if (action === "register") {
       const exists = await redis.get(`user:${user}`)
-      if(exists) return { statusCode:400, body:JSON.stringify({error:"user exists"}) }
+      if (exists) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "user exists" })
+        }
+      }
 
-      const hash = await bcrypt.hash(password,10)
+      const hash = await bcrypt.hash(password, 10)
       await redis.set(`user:${user}`, hash)
 
       return {
-        statusCode:200,
-        body:JSON.stringify({status:"registered"})
+        statusCode: 200,
+        body: JSON.stringify({ status: "registered" })
       }
     }
 
-  } catch(err){
-    return { statusCode:500, body:err.message }
+    if (action === "login") {
+      const hash = await redis.get(`user:${user}`)
+      if (!hash) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({ error: "user not found" })
+        }
+      }
+
+      const valid = await bcrypt.compare(password, hash)
+      if (!valid) {
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ error: "invalid login" })
+        }
+      }
+
+      const token = jwt.sign({ user }, SECRET, { expiresIn: "7d" })
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ token })
+      }
+    }
+
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "invalid action" })
+    }
+
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    }
   }
 }
