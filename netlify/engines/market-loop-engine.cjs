@@ -1,80 +1,74 @@
-const { getRedis } = require("../functions/_redis")
-const orderBook = require("./order-book-engine.cjs")
-const matchEngine = require("./matching-engine.cjs")
-const priceOracle = require("./price-oracle-engine.cjs")
+const Redis = require("ioredis")
+const redis = new Redis(process.env.REDIS_URL)
 
-const FEE_RATE = 0.005
+exports.handler = async () => {
+  try {
+    const buys = await redis.lrange("buy_orders", 0, -1)
+    const sells = await redis.lrange("sell_orders", 0, -1)
 
-module.exports = async () => {
+    let executed = []
 
-  const redis = getRedis()
-  let processed = 0
+    for (let b of buys) {
+      let buy = JSON.parse(b)
 
-  while (true) {
+      for (let s of sells) {
+        let sell = JSON.parse(s)
 
-    const tradeRaw = await redis.rpop("trade_queue")
-    if (!tradeRaw) break
+        if (
+          buy.catalog_id === sell.catalog_id &&
+          buy.price >= sell.price &&
+          buy.quantity > 0 &&
+          sell.quantity > 0
+        ) {
+          const qty = Math.min(buy.quantity, sell.quantity)
+          const price = sell.price
 
-    const trade = JSON.parse(tradeRaw)
+          // 💸 UPDATE BALANCES
+          await redis.incrbyfloat(`wallet:${sell.user}`, price * qty)
+          await redis.incrbyfloat(`wallet:${buy.user}`, -(price * qty))
 
-    await orderBook(trade)
+          // 📦 UPDATE HOLDINGS (NEW)
+          await redis.hincrbyfloat(
+            `holders:${buy.catalog_id}`,
+            buy.user,
+            qty
+          )
 
-    const match = await matchEngine(trade.catalog_id)
+          // 📉 reduce quantities
+          buy.quantity -= qty
+          sell.quantity -= qty
 
-    if (match && match.matched) {
+          const trade = {
+            matched: true,
+            catalog_id: buy.catalog_id,
+            price,
+            quantity: qty,
+            buy,
+            sell,
+            executed_at: Date.now()
+          }
 
-      // 🔥 BLOCK SELF TRADES
-      if (match.buy.user === match.sell.user) {
-        console.log("⚠️ SELF TRADE BLOCKED")
-        continue
+          await redis.lpush("executed_trades", JSON.stringify(trade))
+          executed.push(trade)
+        }
       }
-
-      const fee = match.price * match.quantity * FEE_RATE
-
-      await redis.lpush("executed_trades", JSON.stringify({
-        ...match,
-        fee,
-        executed_at: Date.now()
-      }))
-
-      await priceOracle(match)
-
-      const buyerKey = `user:${match.buy.user}`
-      const sellerKey = `user:${match.sell.user}`
-      const treasuryKey = `treasury:fees`
-
-      const buyer = JSON.parse(await redis.get(buyerKey))
-      const seller = JSON.parse(await redis.get(sellerKey))
-
-      const cost = match.price * match.quantity
-
-      buyer.balance -= (cost + fee)
-      buyer.assets[match.buy.catalog_id] = (buyer.assets[match.buy.catalog_id] || 0) + match.quantity
-
-      seller.balance += (cost - fee)
-      seller.assets[match.sell.catalog_id] = (seller.assets[match.sell.catalog_id] || 0) - match.quantity
-
-      const treasury = parseFloat(await redis.get(treasuryKey) || "0")
-      await redis.set(treasuryKey, treasury + fee)
-
-      await redis.set(buyerKey, JSON.stringify(buyer))
-      await redis.set(sellerKey, JSON.stringify(seller))
-
-      console.log("💰 FEE COLLECTED:", fee)
-
     }
 
-    processed++
-  }
+    await redis.del("buy_orders")
+    await redis.del("sell_orders")
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ status: "market loop complete", processed })
-  }
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        status: "market loop complete",
+        processed: executed.length
+      })
+    }
 
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: err.message
+    }
+  }
 }
-
-// 📊 TRACK USER VOLUME
-await redis.incrbyfloat(`volume:${match.buy.user}`, match.price * match.quantity)
-await redis.incrbyfloat(`volume:${match.sell.user}`, match.price * match.quantity)
-
