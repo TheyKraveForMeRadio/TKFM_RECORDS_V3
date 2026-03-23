@@ -181,3 +181,43 @@ async function withdraw(){
 }
 </script>
 
+
+<button onclick="connectWallet()">Connect Wallet</button>
+<p id="walletDisplay"></p>
+
+<script>
+async function connectWallet(){
+
+  if(!window.ethereum){
+    alert("MetaMask not installed")
+    return
+  }
+
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    })
+
+    const wallet = accounts[0]
+
+    localStorage.setItem("wallet", wallet)
+
+    document.getElementById("walletDisplay").innerText =
+      "Wallet: " + wallet
+
+    // 🔗 send to backend
+    await fetch("https://tkfm-records-v3.onrender.com/engine/link-wallet-engine", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ wallet })
+    })
+
+  } catch(err){
+    console.log(err)
+  }
+}
+</script>
+
