@@ -3,7 +3,6 @@ const redis = new Redis(process.env.REDIS_URL)
 
 module.exports = async () => {
   try {
-    // 🔥 STEP 1: LOAD QUEUED TRADES
     const queue = await redis.lrange("trade_queue", 0, -1)
 
     let buys = []
@@ -18,7 +17,6 @@ module.exports = async () => {
 
     let executed = []
 
-    // 🔥 STEP 2: MATCH
     for (let buy of buys){
       for (let sell of sells){
 
@@ -31,13 +29,14 @@ module.exports = async () => {
           const qty = Math.min(buy.quantity, sell.quantity)
           const price = sell.price
 
-          // 💸 balances
+          // 💸 BALANCES
           await redis.incrbyfloat(`wallet:${sell.user}`, price * qty)
           await redis.incrbyfloat(`wallet:${buy.user}`, -(price * qty))
 
-          // 📦 holders
+          // 📦 HOLDERS
           await redis.hincrbyfloat(`holders:${buy.catalog_id}`, buy.user, qty)
 
+          // 📉 REDUCE
           buy.quantity -= qty
           sell.quantity -= qty
 
@@ -50,8 +49,12 @@ module.exports = async () => {
             executed_at: Date.now()
           }
 
+          // 📊 SAVE TRADE
           await redis.lpush("executed_trades", JSON.stringify(trade))
           executed.push(trade)
+
+          // 🎮 XP SYSTEM (NEW)
+          await redis.incrbyfloat(`xp:${buy.user}`, 10)
 
           // 🤝 COPY TRADING
           const followers = await redis.keys("copy:*")
