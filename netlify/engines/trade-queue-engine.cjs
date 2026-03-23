@@ -1,12 +1,14 @@
 const Redis = require("ioredis")
-const redis = new Redis(process.env.REDIS_URL)
-
 const jwt = require("jsonwebtoken")
 
-const SECRET = process.env.TKFM_JWT_SECRET || "abc123NEW" // 🔥 fallback
+const redis = new Redis(process.env.REDIS_URL)
+
+// 🔥 HARD SECRET (MATCH THIS WITH AUTH ENGINE)
+const SECRET = process.env.TKFM_JWT_SECRET || "supersecret123"
 
 module.exports = async (event) => {
   try {
+    // 🔐 AUTH HEADER
     const authHeader = event.headers.authorization
     if (!authHeader) {
       return { statusCode: 401, body: "no token" }
@@ -14,9 +16,16 @@ module.exports = async (event) => {
 
     const token = authHeader.split(" ")[1]
 
-    const decoded = jwt.verify(token, SECRET)
-    const user = decoded.user
+    // 🔐 VERIFY TOKEN (INLINE — NO MIDDLEWARE)
+    let user
+    try {
+      const decoded = jwt.verify(token, SECRET)
+      user = decoded.user
+    } catch (err) {
+      return { statusCode: 401, body: "invalid token" }
+    }
 
+    // 📦 PARSE BODY
     const body = JSON.parse(event.body)
 
     const trade = {
