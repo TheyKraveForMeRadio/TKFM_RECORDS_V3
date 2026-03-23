@@ -1,30 +1,30 @@
-const { getRedis } = require("../functions/_redis")
+const Redis = require("ioredis")
+const redis = new Redis(process.env.REDIS_URL)
 
 module.exports = async () => {
+  try {
+    const keys = await redis.keys("wallet:*")
 
-  const redis = getRedis()
+    let users = []
 
-  const keys = await redis.keys("user:*")
+    for (let key of keys){
+      const user = key.split(":")[1]
+      const balance = parseFloat(await redis.get(key)) || 0
 
-  const leaderboard = []
+      users.push({ user, balance })
+    }
 
-  for (const key of keys) {
+    users.sort((a,b)=> b.balance - a.balance)
 
-    const username = key.replace("user:","")
-    const volume = parseFloat(await redis.get(`volume:${username}`) || "0")
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ leaderboard: users.slice(0,20) })
+    }
 
-    leaderboard.push({
-      username,
-      volume
-    })
-
+  } catch(err){
+    return {
+      statusCode: 500,
+      body: err.message
+    }
   }
-
-  leaderboard.sort((a,b) => b.volume - a.volume)
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ leaderboard })
-  }
-
 }

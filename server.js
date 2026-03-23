@@ -2,49 +2,57 @@ const express = require("express")
 const http = require("http")
 const WebSocket = require("ws")
 const path = require("path")
+const jwt = require("jsonwebtoken")
 
 const app = express()
+const server = http.createServer(app)
 
-// ✅ ABSOLUTE PUBLIC PATH (CRITICAL FIX)
-const PUBLIC_DIR = path.join(__dirname, "public")
-app.use(express.static(PUBLIC_DIR))
-
-// ✅ JSON
 app.use(express.json())
+app.use(express.static(path.join(__dirname, "public")))
 
-// 🔥 FORCE ROUTES (NO 404 EVER AGAIN)
-app.get("/", (req,res)=>{
-  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
+// 🔐 SECURITY HEADERS
+app.use((req,res,next)=>{
+  res.setHeader("X-Frame-Options","DENY")
+  res.setHeader("X-Content-Type-Options","nosniff")
+  res.setHeader("X-XSS-Protection","1; mode=block")
+  next()
 })
 
-app.get("/trading-app", (req,res)=>{
-  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
-})
+// 🔐 AUTH
+function verify(req){
+  const auth = req.headers.authorization || ""
+  const token = auth.split(" ")[1]
+  if(!token) throw new Error("unauthorized")
+  return jwt.verify(token, process.env.JWT_SECRET)
+}
 
-app.get("/trading-app.html", (req,res)=>{
-  res.sendFile(path.join(PUBLIC_DIR, "trading-app.html"))
-})
-
-// 🔥 ENGINE ROUTER (KEEP YOUR SYSTEM WORKING)
+// 🔥 ENGINE ROUTER
 app.all("/engine/:name", async (req,res)=>{
   try{
+    if(req.params.name !== "auth-engine"){
+      verify(req)
+    }
+
     const engine = require(`./netlify/engines/${req.params.name}.cjs`)
+
     const result = await engine({
       body: JSON.stringify(req.body),
       queryStringParameters: req.query,
       headers: req.headers
     })
+
     res.status(result.statusCode).send(result.body)
+
   }catch(err){
-    res.status(500).json({ error: err.message })
+    res.status(401).json({ error: err.message })
   }
 })
 
-// 🔥 WEBSOCKET (OPTIONAL BUT SAFE)
-const server = http.createServer(app)
+app.get("/", (req,res)=>{
+  res.sendFile(path.join(__dirname,"public","trading-app.html"))
+})
+
 const wss = new WebSocket.Server({ server })
+wss.on("connection", ()=>console.log("⚡ WS LIVE"))
 
-wss.on("connection", ()=>console.log("⚡ WS Connected"))
-
-const PORT = 3000
-server.listen(PORT, ()=>console.log("🚀 TKFM LOCAL FIXED:", PORT))
+server.listen(3000, ()=>console.log("🚀 TKFM LIVE"))

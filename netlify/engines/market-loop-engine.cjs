@@ -10,7 +10,6 @@ module.exports = async () => {
 
     for (let t of queue){
       const trade = JSON.parse(t)
-
       if(trade.side === "buy") buys.push(trade)
       if(trade.side === "sell") sells.push(trade)
     }
@@ -49,12 +48,22 @@ module.exports = async () => {
             executed_at: Date.now()
           }
 
-          // 📊 SAVE TRADE
           await redis.lpush("executed_trades", JSON.stringify(trade))
           executed.push(trade)
 
-          // 🎮 XP SYSTEM (NEW)
+          // 🎮 XP
           await redis.incrbyfloat(`xp:${buy.user}`, 10)
+
+          // 🔔 NOTIFICATIONS (NEW)
+          await redis.lpush(`notifications:${buy.user}`, JSON.stringify({
+            message: `Bought ${qty} shares at $${price}`,
+            time: Date.now()
+          }))
+
+          await redis.lpush(`notifications:${sell.user}`, JSON.stringify({
+            message: `Sold ${qty} shares at $${price}`,
+            time: Date.now()
+          }))
 
           // 🤝 COPY TRADING
           const followers = await redis.keys("copy:*")
@@ -78,7 +87,6 @@ module.exports = async () => {
       }
     }
 
-    // 🧹 CLEAR QUEUE
     await redis.del("trade_queue")
 
     return {

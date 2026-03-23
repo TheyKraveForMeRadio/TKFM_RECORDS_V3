@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Top Traders</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<h1>🔥 Highest Volume Traders</h1>
+
+<div id="list"></div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function load(){
+  const res = await fetch(API + "/top-traders-engine")
+  const data = await res.json()
+
+  let html = ""
+
+  data.traders.forEach((u,i)=>{
+    html += `<div class="card">
+      #${i+1} ${u.user} — Volume: $${u.volume.toFixed(2)}
+    </div>`
+  })
+
+  document.getElementById("list").innerHTML = html
+}
+
+load()
+</script>
+
+</body>
+</html>

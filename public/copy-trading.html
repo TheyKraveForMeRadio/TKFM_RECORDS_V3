@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Copy Trading</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<h1>🤝 Copy Top Trader</h1>
+
+<input id="leader" placeholder="Enter trader username">
+<button onclick="copy()">Follow Trader</button>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function copy(){
+  const leader = document.getElementById("leader").value
+
+  await fetch(API + "/copy-trade-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      leader,
+      follower:"user1"
+    })
+  })
+
+  alert("Now copying " + leader)
+}
+</script>
+
+</body>
+</html>

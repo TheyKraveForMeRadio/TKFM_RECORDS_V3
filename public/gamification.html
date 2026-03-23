@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM Profile</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<h1>🎮 Trader Profile</h1>
+
+<div class="card">
+  <h2>XP: <span id="xp">0</span></h2>
+  <h2>Level: <span id="level">1</span></h2>
+</div>
+
+<div class="card">
+  <h2>🏅 Badges</h2>
+  <div id="badges"></div>
+</div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+const user = "user1"
+
+async function loadXP(){
+  const res = await fetch(API + "/xp-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, amount:0 })
+  })
+
+  const data = await res.json()
+
+  document.getElementById("xp").innerText = data.xp.toFixed(0)
+  document.getElementById("level").innerText = data.level
+}
+
+async function loadBadges(){
+  const res = await fetch(API + "/badge-engine?user=" + user)
+  const data = await res.json()
+
+  let html = ""
+  data.badges.forEach(b=>{
+    html += `<div class="card">${b}</div>`
+  })
+
+  document.getElementById("badges").innerHTML = html
+}
+
+setInterval(()=>{
+  loadXP()
+  loadBadges()
+}, 3000)
+</script>
+
+</body>
+</html>

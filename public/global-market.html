@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM MARKET</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<h1>🌍 GLOBAL MUSIC MARKET</h1>
+
+<div id="list"></div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function load(){
+  const res = await fetch(API + "/assets-engine")
+  const data = await res.json()
+
+  let html = ""
+
+  data.assets.forEach(a=>{
+    html += `
+      <div class="card">
+        <h3>${a.artist} - ${a.title}</h3>
+        <p>Start Price: $${a.price}</p>
+        <a href="trading-pro.html">Trade</a>
+      </div>
+    `
+  })
+
+  document.getElementById("list").innerHTML = html
+}
+
+load()
+</script>
+
+</body>
+</html>

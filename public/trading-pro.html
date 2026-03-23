@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM PRO TERMINAL</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+
+  <style>
+    body { margin:0; }
+
+    .layout {
+      display:grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      height:100vh;
+      gap:10px;
+      padding:10px;
+    }
+
+    .chart { grid-column:1; grid-row:1 / span 2; }
+    .orderbook { grid-column:2; grid-row:1; overflow:auto; }
+    .trades { grid-column:3; grid-row:1; overflow:auto; }
+    .controls { grid-column:2 / span 2; grid-row:2; }
+
+    .row { display:flex; justify-content:space-between; font-size:12px; }
+
+    .buy { color:#22c55e }
+    .sell { color:#ef4444 }
+
+    canvas { width:100%; height:100%; }
+  </style>
+
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<header style="display:flex;align-items:center;gap:15px;padding:10px;">
+  <img src="tkfm-records-logo.png" class="logo" height="50">
+  <h2>TKFM PRO TERMINAL</h2>
+  <h2 id="price">$0</h2>
+</header>
+
+<div class="layout">
+
+  <div class="card chart">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="card orderbook">
+    <h3>Order Book</h3>
+    <div id="orderbook"></div>
+  </div>
+
+  <div class="card trades">
+    <h3>Trades</h3>
+    <div id="trades"></div>
+  </div>
+
+  <div class="card controls">
+    <h3>Trade</h3>
+    <input id="priceInput" placeholder="Price">
+    <input id="qtyInput" placeholder="Qty">
+    <button onclick="buy()">BUY</button>
+    <button onclick="sell()">SELL</button>
+  </div>
+
+</div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+const TOKEN = localStorage.getItem("token")
+
+let candles = []
+const ctx = document.getElementById("chart").getContext("2d")
+
+async function loadPrice(){
+  const res = await fetch(API + "/price-stream-engine")
+  const data = await res.json()
+
+  document.getElementById("price").innerText = "$" + data.price
+
+  candles.push(data.price)
+  drawChart(candles.slice(-50))
+}
+
+function drawChart(data){
+  ctx.clearRect(0,0,800,400)
+
+  const max = Math.max(...data)
+  const min = Math.min(...data)
+
+  data.forEach((p,i)=>{
+    const x = i * 10
+    const y = 400 - ((p-min)/(max-min||1))*400
+    ctx.fillRect(x,y,5,5)
+  })
+}
+
+async function loadOrderBook(){
+  const res = await fetch(API + "/orderbook-engine?catalog_id=song123", {
+    headers:{ Authorization: "Bearer " + TOKEN }
+  })
+  const data = await res.json()
+
+  const bids = data.bids || []
+  const asks = data.asks || []
+
+  let html = ""
+
+  asks.slice(0,10).forEach(a=>{
+    html += `<div class="row sell">$${a.price} | ${a.quantity}</div>`
+  })
+
+  bids.slice(0,10).forEach(b=>{
+    html += `<div class="row buy">$${b.price} | ${b.quantity}</div>`
+  })
+
+  document.getElementById("orderbook").innerHTML = html
+}
+
+async function loadTrades(){
+  const res = await fetch(API + "/trade-feed-engine", {
+    headers:{ Authorization: "Bearer " + TOKEN }
+  })
+  const data = await res.json()
+
+  const trades = data.trades || []
+
+  let html = ""
+
+  trades.slice(0,20).forEach(t=>{
+    html += `<div class="row">$${t.price} | ${t.quantity}</div>`
+  })
+
+  document.getElementById("trades").innerHTML = html
+}
+
+async function buy(){
+  const price = document.getElementById("priceInput").value
+  const quantity = document.getElementById("qtyInput").value
+
+  await fetch(API + "/trade-queue-engine", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer " + TOKEN
+    },
+    body: JSON.stringify({
+      catalog_id:"song123",
+      price,
+      quantity,
+      side:"buy"
+    })
+  })
+}
+
+async function sell(){
+  const price = document.getElementById("priceInput").value
+  const quantity = document.getElementById("qtyInput").value
+
+  await fetch(API + "/trade-queue-engine", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      Authorization:"Bearer " + TOKEN
+    },
+    body: JSON.stringify({
+      catalog_id:"song123",
+      price,
+      quantity,
+      side:"sell"
+    })
+  })
+}
+
+setInterval(()=>{
+  loadPrice()
+  loadOrderBook()
+  loadTrades()
+}, 2000)
+</script>
+
+</body>
+</html>
+
+<script>
+function alertUser(msg){
+  const div = document.createElement("div")
+  div.innerText = msg
+  div.style.position = "fixed"
+  div.style.bottom = "20px"
+  div.style.right = "20px"
+  div.style.background = "#facc15"
+  div.style.color = "#000"
+  div.style.padding = "10px"
+  div.style.borderRadius = "8px"
+  div.style.zIndex = 9999
+
+  document.body.appendChild(div)
+  setTimeout(()=> div.remove(), 3000)
+}
+</script>

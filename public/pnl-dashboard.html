@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM PNL</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+
+<header style="display:flex;gap:20px;padding:20px;">
+  <h1>📈 Portfolio Performance</h1>
+</header>
+
+<div class="card">
+  <h2>Wallet: <span id="wallet">$0</span></h2>
+  <h2>Invested: <span id="invested">$0</span></h2>
+  <h2>PNL: <span id="pnl">$0</span></h2>
+  <h2>ROI: <span id="roi">0%</span></h2>
+</div>
+
+<div class="card">
+  <canvas id="chart" width="800" height="400"></canvas>
+</div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+const user = "user1"
+
+async function loadPNL(){
+  const res = await fetch(API + "/user-pnl-engine?user=" + user)
+  const data = await res.json()
+
+  document.getElementById("wallet").innerText = "$" + data.wallet.toFixed(2)
+  document.getElementById("invested").innerText = "$" + data.invested.toFixed(2)
+  document.getElementById("pnl").innerText = "$" + data.pnl.toFixed(2)
+  document.getElementById("roi").innerText = data.roi.toFixed(2) + "%"
+}
+
+async function loadChart(){
+  const res = await fetch(API + "/pnl-history-engine?user=" + user)
+  const data = await res.json()
+
+  const ctx = document.getElementById("chart").getContext("2d")
+
+  const points = data.history.map(h => h.balance)
+
+  ctx.clearRect(0,0,800,400)
+
+  const max = Math.max(...points)
+  const min = Math.min(...points)
+
+  points.forEach((p,i)=>{
+    const x = i * 8
+    const y = 400 - ((p-min)/(max-min||1))*400
+    ctx.fillRect(x,y,4,4)
+  })
+}
+
+setInterval(()=>{
+  loadPNL()
+  loadChart()
+}, 3000)
+</script>
+
+</body>
+</html>
