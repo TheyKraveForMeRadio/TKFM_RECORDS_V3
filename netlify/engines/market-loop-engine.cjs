@@ -3,16 +3,24 @@ const redis = new Redis(process.env.REDIS_URL)
 
 module.exports = async () => {
   try {
-    const buys = await redis.lrange("buy_orders", 0, -1)
-    const sells = await redis.lrange("sell_orders", 0, -1)
+    // 🔥 STEP 1: LOAD QUEUED TRADES
+    const queue = await redis.lrange("trade_queue", 0, -1)
+
+    let buys = []
+    let sells = []
+
+    for (let t of queue){
+      const trade = JSON.parse(t)
+
+      if(trade.side === "buy") buys.push(trade)
+      if(trade.side === "sell") sells.push(trade)
+    }
 
     let executed = []
 
-    for (let b of buys) {
-      let buy = JSON.parse(b)
-
-      for (let s of sells) {
-        let sell = JSON.parse(s)
+    // 🔥 STEP 2: MATCH
+    for (let buy of buys){
+      for (let sell of sells){
 
         if (
           buy.catalog_id === sell.catalog_id &&
@@ -23,23 +31,17 @@ module.exports = async () => {
           const qty = Math.min(buy.quantity, sell.quantity)
           const price = sell.price
 
-          // 💸 UPDATE BALANCES
+          // 💸 balances
           await redis.incrbyfloat(`wallet:${sell.user}`, price * qty)
           await redis.incrbyfloat(`wallet:${buy.user}`, -(price * qty))
 
-          // 📦 UPDATE HOLDERS
-          await redis.hincrbyfloat(
-            `holders:${buy.catalog_id}`,
-            buy.user,
-            qty
-          )
+          // 📦 holders
+          await redis.hincrbyfloat(`holders:${buy.catalog_id}`, buy.user, qty)
 
-          // 📉 reduce quantities
           buy.quantity -= qty
           sell.quantity -= qty
 
           const trade = {
-            matched: true,
             catalog_id: buy.catalog_id,
             price,
             quantity: qty,
@@ -48,22 +50,21 @@ module.exports = async () => {
             executed_at: Date.now()
           }
 
-          // 📊 SAVE TRADE
           await redis.lpush("executed_trades", JSON.stringify(trade))
           executed.push(trade)
 
-          // 🤝 COPY TRADING (NEW)
+          // 🤝 COPY TRADING
           const followers = await redis.keys("copy:*")
 
           for (let f of followers){
             const follower = f.split(":")[1]
             const leader = await redis.get(f)
 
-            if(leader === trade.buy.user){
-              await redis.lpush("buy_orders", JSON.stringify({
-                catalog_id: trade.catalog_id,
-                price: trade.price,
-                quantity: trade.quantity,
+            if(leader === buy.user){
+              await redis.lpush("trade_queue", JSON.stringify({
+                catalog_id: buy.catalog_id,
+                price,
+                quantity: qty,
                 side: "buy",
                 user: follower,
                 timestamp: Date.now()
@@ -74,9 +75,8 @@ module.exports = async () => {
       }
     }
 
-    // 🧹 CLEAR ORDER BOOK (SIMPLE ENGINE)
-    await redis.del("buy_orders")
-    await redis.del("sell_orders")
+    // 🧹 CLEAR QUEUE
+    await redis.del("trade_queue")
 
     return {
       statusCode: 200,
