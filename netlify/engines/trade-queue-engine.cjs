@@ -1,19 +1,21 @@
 const Redis = require("ioredis")
 const redis = new Redis(process.env.REDIS_URL)
 
-const auth = require("./auth-middleware.cjs")
+const jwt = require("jsonwebtoken")
+
+const SECRET = process.env.TKFM_JWT_SECRET || "abc123NEW" // 🔥 fallback
 
 module.exports = async (event) => {
   try {
-    const secret = process.env.TKFM_JWT_SECRET
-
-    const user = auth(event, secret)
-    if(!user){
-      return {
-        statusCode: 401,
-        body: "unauthorized"
-      }
+    const authHeader = event.headers.authorization
+    if (!authHeader) {
+      return { statusCode: 401, body: "no token" }
     }
+
+    const token = authHeader.split(" ")[1]
+
+    const decoded = jwt.verify(token, SECRET)
+    const user = decoded.user
 
     const body = JSON.parse(event.body)
 
