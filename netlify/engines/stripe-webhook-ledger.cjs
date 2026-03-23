@@ -12,6 +12,8 @@ module.exports = async (event) => {
       const amount = parseFloat(session.metadata.amount)
 
       await redis.incrbyfloat(`wallet:${user}`, amount)
+
+      console.log("💰 WALLET CREDITED:", user, amount)
     }
 
     return {
@@ -20,6 +22,9 @@ module.exports = async (event) => {
     }
 
   } catch(err){
-    return { statusCode:500, body: err.message }
+    return {
+      statusCode:500,
+      body:err.message
+    }
   }
 }
