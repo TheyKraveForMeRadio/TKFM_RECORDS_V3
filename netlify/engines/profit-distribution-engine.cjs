@@ -1,7 +1,7 @@
 const Redis = require("ioredis")
 const redis = new Redis(process.env.REDIS_URL)
 
-exports.handler = async () => {
+module.exports = async () => {
   try {
     const assets = await redis.lrange("assets", 0, -1)
 
