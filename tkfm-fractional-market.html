@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Fractional Market</title>
+</head>
+
+<body>
+
+<h1>Fractional Shares Market</h1>
+
+<input id="qty" placeholder="Shares to buy">
+
+<button onclick="buy()">Buy Shares</button>
+
+<pre id="result"></pre>
+
+<script type="module">
+
+import { buyShares } from "/js/tkfm-shares.js";
+
+async function buy(){
+
+ const qty = Number(document.getElementById("qty").value);
+
+ const result = await buyShares("demo", qty);
+
+ document.getElementById("result").innerText =
+ JSON.stringify(result,null,2);
+
+}
+
+window.buy = buy;
+
+</script>
+
+</body>
+
+</html>
