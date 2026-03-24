@@ -14,7 +14,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // 📥 GET LOWEST SELL ORDER
     const orders = await redis.zrange(`orderbook:${catalog_id}:sell`, 0, 0);
 
     if(!orders || orders.length === 0){
@@ -26,7 +25,6 @@ exports.handler = async (event) => {
 
     const sellOrder = JSON.parse(orders[0]);
 
-    // 💰 PRICE CHECK
     if(price < sellOrder.price){
       return {
         statusCode:400,
@@ -37,7 +35,6 @@ exports.handler = async (event) => {
     const seller = sellOrder.user;
     const token_id = sellOrder.token_id;
 
-    // 💳 WALLET TRANSFER (INTERNAL LEDGER)
     const buyerBalance = await redis.get(`wallet:${buyer}`) || 0;
     const sellerBalance = await redis.get(`wallet:${seller}`) || 0;
 
@@ -48,20 +45,18 @@ exports.handler = async (event) => {
       };
     }
 
+    // 💳 SETTLEMENT
     await redis.set(`wallet:${buyer}`, Number(buyerBalance) - sellOrder.price);
     await redis.set(`wallet:${seller}`, Number(sellerBalance) + sellOrder.price);
 
-    // 🔄 TRANSFER OWNERSHIP
+    // 🔄 REDIS OWNERSHIP
     await redis.set(`token:${token_id}:owner`, buyer);
 
-    // 📊 HOLDERS UPDATE
     await redis.hset(`holders:${catalog_id}`, buyer, 1);
     await redis.hdel(`holders:${catalog_id}`, seller);
 
-    // ❌ REMOVE SELL ORDER
     await redis.zrem(`orderbook:${catalog_id}:sell`, orders[0]);
 
-    // 📈 TRADE HISTORY
     const trade = {
       buyer,
       seller,
@@ -71,6 +66,17 @@ exports.handler = async (event) => {
     };
 
     await redis.lpush(`trades:${catalog_id}`, JSON.stringify(trade));
+
+    // 🔗 BLOCKCHAIN SYNC (ASYNC FIRE)
+    fetch(process.env.BLOCKCHAIN_SYNC_URL || "https://tkfm-records-v3.onrender.com/engine/blockchain-sync-engine", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        token_id,
+        from: seller,
+        to: buyer
+      })
+    }).catch(()=>{});
 
     return {
       statusCode:200,
