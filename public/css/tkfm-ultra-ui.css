@@ -1,0 +1,101 @@
+/* 🌌 GLOBAL */
+body{
+  margin:0;
+  font-family:Inter,Arial;
+  background:#020617;
+  color:#facc15;
+  overflow-x:hidden;
+}
+
+/* 🌈 GRADIENT BACKGROUND */
+.bg-animated{
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle at 20% 20%, #facc15 0%, transparent 25%),
+             radial-gradient(circle at 80% 80%, #f97316 0%, transparent 25%);
+  animation:bgMove 10s infinite alternate;
+  z-index:-1;
+}
+
+@keyframes bgMove{
+  from{transform:translate(0,0)}
+  to{transform:translate(-50px,-50px)}
+}
+
+/* 💎 GLASS CARD */
+.card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:20px;
+  margin:15px 0;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px) scale(1.01);
+  box-shadow:0 0 40px rgba(250,204,21,0.3);
+}
+
+/* ✨ GLOW TEXT */
+.glow{
+  text-shadow:0 0 10px #facc15, 0 0 25px #f97316;
+}
+
+/* 🚀 BUTTONS */
+.btn{
+  background:linear-gradient(45deg,#facc15,#f97316);
+  border:none;
+  padding:12px 20px;
+  border-radius:12px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 25px #facc15;
+}
+
+/* 📊 COUNTERS */
+.counter{
+  font-size:28px;
+  font-weight:bold;
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{opacity:0.6}
+  50%{opacity:1}
+  100%{opacity:0.6}
+}
+
+/* 🔥 TICKER */
+.ticker{
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.ticker span{
+  display:inline-block;
+  padding-left:100%;
+  animation:scroll 15s linear infinite;
+}
+
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
+}
+
+/* 🌟 FADE IN */
+.fade{
+  animation:fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px)}
+  to{opacity:1; transform:translateY(0)}
+}

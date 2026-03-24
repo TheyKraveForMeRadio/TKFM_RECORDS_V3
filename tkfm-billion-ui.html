@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Elite Market</title>
+
+<link rel="stylesheet" href="/css/tkfm-ultra-ui.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="fade">
+
+<div class="bg-animated"></div>
+
+<h1 class="glow">🚀 TKFM ELITE MARKET</h1>
+
+<div class="card">
+  <h2>Wallet</h2>
+  <div id="wallet" class="counter">$0</div>
+</div>
+
+<div class="card">
+  <h2>Live Chart</h2>
+  <canvas id="chart"></canvas>
+</div>
+
+<div class="card ticker">
+  <span id="ticker">Loading market...</span>
+</div>
+
+<button class="btn" onclick="trade()">Execute Trade</button>
+
+<script type="module">
+
+import { loadChart } from "/js/tkfm-charts.js";
+import { animateValue, initParticles, playClick } from "/js/tkfm-visual-engine.js";
+
+initParticles();
+
+// 📊 LOAD CHART
+loadChart("demo");
+
+// 💰 MOCK WALLET ANIMATION
+animateValue("wallet", 0, 1250, 1000);
+
+// 🔥 LIVE TICKER
+async function loadTicker(){
+  const res = await fetch("/.netlify/functions/engine/get-trades?catalog_id=demo");
+  const data = await res.json();
+
+  const text = data.trades.map(t =>
+    `BUY $${t.price} → `
+  ).join(" ");
+
+  document.getElementById("ticker").innerText = text;
+}
+
+loadTicker();
+setInterval(loadTicker,4000);
+
+// 🎯 TRADE ACTION
+window.trade = function(){
+  playClick();
+  alert("Trade Executed");
+}
+
+</script>
+
+</body>
+
+</html>
