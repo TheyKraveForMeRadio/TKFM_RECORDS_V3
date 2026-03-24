@@ -21,25 +21,53 @@
 
 async function upload(){
 
- const artist=document.getElementById("artist").value
- const title=document.getElementById("title").value
+ const artist = document.getElementById("artist").value;
+ const title = document.getElementById("title").value;
 
- const res = await fetch(
- "/.netlify/functions/api/upload-track",
- {
+ const token = localStorage.getItem("token");
+ const wallet = localStorage.getItem("walletAddress");
+
+ // 🔹 STEP 1: SAVE TRACK
+ const res = await fetch("/.netlify/functions/api/upload-track", {
   method:"POST",
+  headers:{ "Content-Type":"application/json" },
   body:JSON.stringify({
-   artist:artist,
-   title:title,
+   artist,
+   title,
    file_url:"pending"
   })
- }
- )
+ });
 
- const data = await res.json()
+ const data = await res.json();
+
+ // 🔹 STEP 2: BUILD METADATA
+ const metadataURI = JSON.stringify({
+   name:title,
+   artist:artist,
+   file:data.file_url || "pending"
+ });
+
+ // 🔹 STEP 3: MINT VIA ENGINE
+ const mintRes = await fetch("/.netlify/functions/engine/mint-song-nft", {
+  method:"POST",
+  headers:{
+    "Content-Type":"application/json",
+    "Authorization":"Bearer " + token
+  },
+  body:JSON.stringify({
+    metadataURI,
+    catalog_id: data.id || Date.now(),
+    wallet
+  })
+ });
+
+ const mintData = await mintRes.json();
 
  document.getElementById("result").innerText =
- JSON.stringify(data,null,2)
+ JSON.stringify({
+   upload:data,
+   mint:mintData
+ }, null, 2);
 
 }
 

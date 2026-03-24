@@ -32,3 +32,22 @@ return ethers.utils.formatEther(balance);
 
 window.connectWallet = connectWallet;
 window.getBalance = getBalance;
+
+// 🔗 LINK WALLET TO BACKEND USER
+async function linkWalletToUser(wallet){
+
+  const token = localStorage.getItem("token")
+
+  if(!token) return
+
+  await fetch("https://tkfm-records-v3.onrender.com/engine/link-wallet-engine", {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer " + token
+    },
+    body: JSON.stringify({ wallet })
+  })
+
+  console.log("Wallet linked to user:", wallet)
+}
