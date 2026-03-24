@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Revenue Dashboard</title>
+</head>
+
+<body>
+
+<h1>Your Earnings</h1>
+
+<button onclick="load()">Load Earnings</button>
+
+<pre id="output"></pre>
+
+<script type="module">
+
+import { getUserRevenue } from "/js/tkfm-revenue-dashboard.js";
+
+async function load(){
+
+ const user = localStorage.getItem("user_id");
+
+ const data = await getUserRevenue(user);
+
+ document.getElementById("output").innerText =
+ JSON.stringify(data,null,2);
+
+}
+
+window.load = load;
+
+</script>
+
+</body>
+
+</html>
