@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Link Streaming Data</title>
+</head>
+
+<body>
+
+<h1>Connect Streaming</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="spotify" placeholder="Spotify Track ID">
+<input id="apple" placeholder="Apple Music ID">
+
+<button onclick="link()">Link</button>
+
+<pre id="out"></pre>
+
+<script type="module">
+
+import { linkStreaming } from "/js/tkfm-streaming-link.js";
+
+async function link(){
+
+ const catalog_id = document.getElementById("catalog").value;
+ const spotify = document.getElementById("spotify").value;
+ const apple = document.getElementById("apple").value;
+
+ const res = await linkStreaming(catalog_id, spotify, apple);
+
+ document.getElementById("out").innerText =
+ JSON.stringify(res,null,2);
+
+}
+
+window.link = link;
+
+</script>
+
+</body>
+
+</html>
