@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM 3D AI MARKET</title>
+
+<link rel="stylesheet" href="/css/tkfm-ultra-ui.css">
+
+<style>
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1 class="glow">🌍 TKFM 3D AI MARKET</h1>
+
+<div class="card">
+  <h2>AI Trader</h2>
+  <div id="ai">Waiting...</div>
+</div>
+
+<button class="btn" onclick="runAI()">Run AI</button>
+
+<script type="module">
+
+import { init3DMarket, addSongNode } from "/js/tkfm-3d-market.js";
+import { runAITrader, speakAI } from "/js/tkfm-ai-trader.js";
+
+const scene = init3DMarket();
+
+// 📊 ADD RANDOM SONG NODES
+setInterval(()=>{
+  addSongNode(scene, Math.random()*2);
+},1000);
+
+// 🤖 RUN AI
+window.runAI = async function(){
+
+  const result = await runAITrader();
+
+  document.getElementById("ai").innerText =
+    JSON.stringify(result,null,2);
+
+  speakAI(result);
+
+};
+
+</script>
+
+</body>
+
+</html>
