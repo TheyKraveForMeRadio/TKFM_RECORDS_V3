@@ -1,62 +1,48 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-
-<title>Music Market</title>
-
-<style>
-
-body{
-background:#020617;
-color:white;
-font-family:Arial;
-padding:40px;
-}
-
-.card{
-background:#0f172a;
-padding:20px;
-margin-bottom:10px;
-}
-
-</style>
-
-<script src="/js/tkfm-master-autoload.js"></script>
+<title>TKFM Song Market</title>
 </head>
 
 <body>
 
-<h1>Music Market</h1>
+<h1>Song Market</h1>
 
 <div id="market"></div>
 
-<script>
+<script type="module">
 
-async function load(){
+import "/js/tkfm-market-actions.js";
 
-const res = await fetch("/.netlify/functions/api/catalog-market-data")
-const data = await res.json()
+async function loadMarket(){
 
-const el = document.getElementById("market")
-el.innerHTML=""
+ const res = await fetch("/.netlify/functions/engine/orderbook-engine?catalog_id=demo");
+ const data = await res.json();
 
-for(const item of data.market || []){
+ const marketDiv = document.getElementById("market");
 
-const div=document.createElement("div")
-div.className="card"
+ marketDiv.innerHTML = "";
 
-div.innerText=item.catalog_id+" price: "+item.price
+ (data.sells || []).forEach(order => {
 
-el.appendChild(div)
+   const el = document.createElement("div");
+
+   el.innerHTML = `
+     <p>Price: ${order.price}</p>
+     <button onclick="buyNow('demo', ${order.price})">Buy</button>
+   `;
+
+   marketDiv.appendChild(el);
+
+ });
 
 }
 
-}
-
-load()
-setInterval(load,5000)
+loadMarket();
 
 </script>
 
 </body>
+
 </html>
