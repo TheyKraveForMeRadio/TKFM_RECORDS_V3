@@ -4,7 +4,16 @@ const redis = new Redis(process.env.REDIS_URL);
 const { ethers } = require("ethers");
 
 const RPC_URL = process.env.RPC_URL;
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+let PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+if(PRIVATE_KEY.startsWith('"') || PRIVATE_KEY.startsWith("'")){
+  PRIVATE_KEY = PRIVATE_KEY.slice(1,-1);
+}
+
+if(!PRIVATE_KEY.startsWith("0x")){
+  PRIVATE_KEY = "0x" + PRIVATE_KEY;
+}
+
 const CONTRACT_ADDRESS = process.env.TKFM_CONTRACT_ADDRESS;
 
 const abi = [
@@ -39,7 +48,7 @@ exports.handler = async () => {
 
         await tx.wait();
 
-        console.log("Synced trade to blockchain:", trade);
+        console.log("Synced trade:", trade);
 
       } catch(err){
         console.log("Sync error:", err.message);
