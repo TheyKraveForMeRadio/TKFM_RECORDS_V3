@@ -4,30 +4,31 @@ let userAddress;
 
 async function connectWallet(){
 
-if(!window.ethereum){
-alert("Metamask not installed");
-return;
-}
+  if(window.ethereum){
 
-provider = new ethers.providers.Web3Provider(window.ethereum);
+    provider = new ethers.providers.Web3Provider(window.ethereum);
 
-await provider.send("eth_requestAccounts",[]);
+    await provider.send("eth_requestAccounts",[]);
 
-signer = provider.getSigner();
+    signer = provider.getSigner();
 
-userAddress = await signer.getAddress();
+    userAddress = await signer.getAddress();
 
-document.getElementById("walletAddress").innerText =
-"Wallet: "+userAddress;
+    document.getElementById("walletAddress").innerText =
+    "Wallet: "+userAddress;
 
+    await linkWalletToUser(userAddress);
+
+  } else {
+    alert("Metamask not installed");
+  }
 }
 
 async function getBalance(){
 
-const balance = await provider.getBalance(userAddress);
+  const balance = await provider.getBalance(userAddress);
 
-return ethers.utils.formatEther(balance);
-
+  return ethers.utils.formatEther(balance);
 }
 
 window.connectWallet = connectWallet;
@@ -36,9 +37,9 @@ window.getBalance = getBalance;
 // 🔗 LINK WALLET TO BACKEND USER
 async function linkWalletToUser(wallet){
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
-  if(!token) return
+  if(!token) return;
 
   await fetch("https://tkfm-records-v3.onrender.com/engine/link-wallet-engine", {
     method:"POST",
@@ -47,7 +48,7 @@ async function linkWalletToUser(wallet){
       "Authorization":"Bearer " + token
     },
     body: JSON.stringify({ wallet })
-  })
+  });
 
-  console.log("Wallet linked to user:", wallet)
+  console.log("Wallet linked:", wallet);
 }

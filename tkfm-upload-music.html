@@ -3,7 +3,9 @@
 
 <head>
 <title>Upload Music to TKFM</title>
-<script src="/js/tkfm-master-autoload.js"></script>
+<script type="module">
+import { mintSongNFT } from "/js/tkfm-contract.js";
+</script>
 </head>
 
 <body>
@@ -17,59 +19,50 @@
 
 <pre id="result"></pre>
 
-<script>
+<script type="module">
+
+import { mintSongNFT } from "/js/tkfm-contract.js";
 
 async function upload(){
 
- const artist = document.getElementById("artist").value;
- const title = document.getElementById("title").value;
+  const artist = document.getElementById("artist").value;
+  const title = document.getElementById("title").value;
 
- const token = localStorage.getItem("token");
- const wallet = localStorage.getItem("walletAddress");
+  const res = await fetch("/.netlify/functions/api/upload-track", {
+    method:"POST",
+    body:JSON.stringify({
+      artist,
+      title,
+      file_url:"pending"
+    })
+  });
 
- // 🔹 STEP 1: SAVE TRACK
- const res = await fetch("/.netlify/functions/api/upload-track", {
-  method:"POST",
-  headers:{ "Content-Type":"application/json" },
-  body:JSON.stringify({
-   artist,
-   title,
-   file_url:"pending"
-  })
- });
+  const data = await res.json();
 
- const data = await res.json();
+  document.getElementById("result").innerText =
+  JSON.stringify(data,null,2);
 
- // 🔹 STEP 2: BUILD METADATA
- const metadataURI = JSON.stringify({
-   name:title,
-   artist:artist,
-   file:data.file_url || "pending"
- });
+  const metadataURI = "https://tkfm-metadata/"+Date.now();
 
- // 🔹 STEP 3: MINT VIA ENGINE
- const mintRes = await fetch("/.netlify/functions/engine/mint-song-nft", {
-  method:"POST",
-  headers:{
-    "Content-Type":"application/json",
-    "Authorization":"Bearer " + token
-  },
-  body:JSON.stringify({
-    metadataURI,
-    catalog_id: data.id || Date.now(),
-    wallet
-  })
- });
+  // 🚀 1. MINT NFT
+  const receipt = await mintSongNFT(metadataURI);
 
- const mintData = await mintRes.json();
+  const catalog_id = Date.now();
 
- document.getElementById("result").innerText =
- JSON.stringify({
-   upload:data,
-   mint:mintData
- }, null, 2);
+  // 🚀 2. FRACTIONALIZE NFT
+  await fetch("/.netlify/functions/engine/fractionalize-nft-engine", {
+    method:"POST",
+    body:JSON.stringify({
+      catalog_id,
+      total_shares: 1000
+    })
+  });
+
+  console.log("NFT → Shares created");
 
 }
+
+window.upload = upload;
 
 </script>
 

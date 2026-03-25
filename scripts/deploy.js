@@ -1,26 +1,24 @@
-import hre from "hardhat";
+const hre = require("hardhat");
 
 async function main() {
 
-  console.log("🚀 Starting deployment...");
+  const provider = new hre.ethers.JsonRpcProvider(process.env.RPC_URL);
 
-  const [deployer] = await hre.ethers.getSigners();
+  const wallet = new hre.ethers.Wallet(process.env.PRIVATE_KEY, provider);
 
-  console.log("Deploying with wallet:", deployer.address);
+  console.log("🚀 DEPLOYING WITH:", wallet.address);
 
-  const balance = await hre.ethers.provider.getBalance(deployer.address);
-  console.log("Wallet balance:", hre.ethers.formatEther(balance), "ETH");
+  const balance = await provider.getBalance(wallet.address);
+  console.log("💰 BALANCE:", hre.ethers.formatEther(balance));
 
-  // Replace with your contract name if different
-  const Contract = await hre.ethers.getContractFactory("TKFMToken");
+  const Contract = await hre.ethers.getContractFactory("TKFMNFT", wallet);
 
   const contract = await Contract.deploy();
 
   await contract.waitForDeployment();
 
-  const address = await contract.getAddress();
-
-  console.log("✅ Contract deployed to:", address);
+  console.log("✅ CONTRACT DEPLOYED TO:");
+  console.log(await contract.getAddress());
 }
 
 main().catch((error) => {
