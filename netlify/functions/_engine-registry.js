@@ -1,50 +1,43 @@
-const fs = require('fs')
-const path = require('path')
-
-const registry = {}
-
-/**
- * Load all .js/.cjs engines in netlify/engines into memory.
- * Engines that fail to load are skipped (logged) to avoid crashing the gateway.
- */
-function loadEngines() {
-  try {
-    const enginesDir = path.join(__dirname, '../engines')
-    const files = fs.readdirSync(enginesDir)
-
-    for (const file of files) {
-      if (!file.endsWith('.js') && !file.endsWith('.cjs')) continue
-
-      const name = file.replace(/\.js$|\.cjs$/,'')
-      try {
-        // clear require cache for a predictable load during dev (harmless in lambda)
-        delete require.cache[require.resolve(path.join(enginesDir, file))]
-        registry[name] = require(path.join(enginesDir, file))
-      } catch (err) {
-        // Log and skip any engine that can't be required (ESM syntax, runtime error, etc.)
-        console.warn('[engine-registry] failed to load', name, ' — skipping. error:', err && err.message)
-      }
-    }
-
-    console.log('[engine-registry] loaded engines:', Object.keys(registry).length)
-  } catch (err) {
-    console.error('[engine-registry] failed to initialize:', err && err.message)
-  }
-}
-
-function getEngine(name) {
-  return registry[name]
-}
-
-function listEngines() {
-  return Object.keys(registry)
-}
-
-// initialize on module load
-loadEngines()
 
 module.exports = {
-  loadEngines,
-  getEngine,
-  listEngines
-}
+
+  // 🔐 AUTH / CORE
+  "auth-engine": "auth-engine.cjs",
+  "link-wallet-engine": "link-wallet-engine.cjs",
+
+  // 💰 WALLET / PAYMENTS
+  "wallet-engine": "wallet-engine.cjs",
+  "stripe-deposit-engine": "stripe-deposit-engine.cjs",
+  "stripe-payout-engine": "stripe-payout-engine.cjs",
+  "stripe-webhook-ledger": "stripe-webhook-ledger.cjs",
+
+  // 🎵 NFT / MUSIC
+  "mint-song-nft": "mint-song-nft.cjs",
+  "fractionalize-nft-engine": "fractionalize-nft-engine.cjs",
+
+  // 📊 MARKET CORE (🔥 THIS IS WHAT YOU NEED)
+  "place-order-engine": "place-order-engine.cjs",
+  "orderbook-engine": "orderbook-engine.cjs",
+  "market-loop-engine": "market-loop-engine.cjs",
+
+  // 📈 TRADING SYSTEM
+  "trade-queue-engine": "trade-queue-engine.cjs",
+  "matching-engine": "matching-engine.cjs",
+  "trade-settlement-engine": "trade-settlement-engine.cjs",
+  "trade-feed-engine": "trade-feed-engine.cjs",
+
+  // 💸 SHARES
+  "buy-shares-engine": "buy-shares-engine.cjs",
+  "sell-shares-engine": "sell-shares-engine.cjs",
+
+  // 📊 DATA / ANALYTICS
+  "price-oracle-engine": "price-oracle-engine.cjs",
+  "portfolio-engine": "portfolio-engine.cjs",
+  "user-pnl-engine": "user-pnl-engine.cjs",
+
+  // 💰 REVENUE
+  "streaming-revenue-engine": "streaming-revenue-engine.cjs",
+  "profit-distribution-engine": "profit-distribution-engine.cjs"
+
+};
+
