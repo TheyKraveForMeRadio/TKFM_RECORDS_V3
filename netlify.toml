@@ -123,12 +123,11 @@ path = "/.netlify/functions/api/tkfm-supernode"
 schedule = "*/2 * * * *"
 
 ############################################
-# BLOCKCHAIN SYNC ENGINE
+# BLOCKCHAIN SYNC ENGINE (DISABLED TO SAVE CREDITS)
 ############################################
-
-[[scheduled]]
-path = "/.netlify/functions/blockchain-sync-engine"
-schedule = "* * * * *"
+# [[scheduled]]
+# path = "/.netlify/functions/blockchain-sync-engine"
+# schedule = "* * * * *"
 
 ############################################
 # STRIPE WEBHOOK ROUTING
