@@ -6,3 +6,4 @@ const supabase = createClient(
 );
 
 module.exports = supabase;
+// FORCE REBUILD Fri Mar 27 11:47:32 EDT 2026
