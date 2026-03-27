@@ -1,62 +1,55 @@
-const { getRedis } = require("../functions/_redis")
+const supabase = require("./_supabase");
 
-module.exports = async (catalog_id) => {
+exports.handler = async () => {
 
-  const redis = getRedis()
-  const key = `orderbook:${catalog_id}`
+  const { data: buys } = await supabase
+    .from("order_book")
+    .select("*")
+    .eq("side","buy")
+    .order("price",{ ascending:false })
+    .limit(1);
 
-  const orders = await redis.hgetall(key)
-  if (!orders) return null
+  const { data: sells } = await supabase
+    .from("order_book")
+    .select("*")
+    .eq("side","sell")
+    .order("price",{ ascending:true })
+    .limit(1);
 
-  const list = Object.entries(orders).map(([id, val]) => {
-    const parsed = JSON.parse(val)
-    parsed._id = id
-    return parsed
-  })
-
-  const buys = list.filter(o => o.side === "buy").sort((a,b) => b.price - a.price)
-  const sells = list.filter(o => o.side === "sell").sort((a,b) => a.price - b.price)
-
-  if (!buys.length || !sells.length) return null
-
-  const buy = buys[0]
-  const sell = sells[0]
-
-  if (buy.price >= sell.price) {
-
-    const quantity = Math.min(buy.quantity, sell.quantity)
-
-    // UPDATE REMAINING QUANTITIES
-    const buyRemaining = buy.quantity - quantity
-    const sellRemaining = sell.quantity - quantity
-
-    if (buyRemaining > 0) {
-      await redis.hset(key, buy._id, JSON.stringify({
-        ...buy,
-        quantity: buyRemaining
-      }))
-    } else {
-      await redis.hdel(key, buy._id)
-    }
-
-    if (sellRemaining > 0) {
-      await redis.hset(key, sell._id, JSON.stringify({
-        ...sell,
-        quantity: sellRemaining
-      }))
-    } else {
-      await redis.hdel(key, sell._id)
-    }
-
+  if(!buys.length || !sells.length){
     return {
-      matched: true,
-      price: sell.price,
-      quantity,
-      buy,
-      sell
-    }
-
+      statusCode:200,
+      body: JSON.stringify({ no_match:true })
+    };
   }
 
-  return null
-}
+  const buy = buys[0];
+  const sell = sells[0];
+
+  if(buy.price >= sell.price){
+
+    const tradeShares = Math.min(buy.shares, sell.shares);
+
+    await supabase.from("trades").insert([{
+      buyer: buy.user_id,
+      seller: sell.user_id,
+      catalog_id: buy.catalog_id,
+      price: sell.price,
+      shares: tradeShares
+    }]);
+
+    await supabase.from("order_book").delete().eq("id", buy.id);
+    await supabase.from("order_book").delete().eq("id", sell.id);
+
+    return {
+      statusCode:200,
+      body: JSON.stringify({ matched:true })
+    };
+  }
+
+  return {
+    statusCode:200,
+    body: JSON.stringify({ no_match:true })
+  };
+
+};
