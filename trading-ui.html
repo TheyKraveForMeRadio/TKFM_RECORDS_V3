@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Market</title>
+<style>
+body{
+  background:#020617;
+  color:#facc15;
+  font-family:Arial;
+}
+.container{
+  display:flex;
+  gap:40px;
+}
+.box{
+  border:1px solid #facc15;
+  padding:20px;
+  width:300px;
+}
+h2{
+  color:#f97316;
+}
+</style>
+</head>
+
+<body>
+
+<h1>TKFM LIVE MARKET</h1>
+
+<div class="container">
+
+<div class="box">
+<h2>BUY ORDERS</h2>
+<div id="buys"></div>
+</div>
+
+<div class="box">
+<h2>SELL ORDERS</h2>
+<div id="sells"></div>
+</div>
+
+<div class="box">
+<h2>RECENT TRADES</h2>
+<div id="trades"></div>
+</div>
+
+</div>
+
+<script>
+
+async function loadMarket(){
+
+  const res = await fetch("/.netlify/functions/get-orderbook-engine");
+  const data = await res.json();
+
+  const buys = data.buys || [];
+  const sells = data.sells || [];
+
+  document.getElementById("buys").innerHTML =
+    buys.map(o => `${o.price} (${o.shares})`).join("<br>");
+
+  document.getElementById("sells").innerHTML =
+    sells.map(o => `${o.price} (${o.shares})`).join("<br>");
+
+  const tradesRes = await fetch("/.netlify/functions/get-trades");
+  const tradesData = await tradesRes.json();
+
+  document.getElementById("trades").innerHTML =
+    tradesData.map(t => `${t.price} (${t.shares})`).join("<br>");
+
+}
+
+setInterval(loadMarket, 2000);
+
+</script>
+
+</body>
+</html>
