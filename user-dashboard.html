@@ -16,7 +16,6 @@ body{
   padding:20px;
   margin-bottom:20px;
 }
-
 </style>
 </head>
 
@@ -42,6 +41,19 @@ body{
 <div id="trades"></div>
 </div>
 
+<!-- 🔥 NEW: DEPOSIT / WITHDRAW -->
+<div class="card">
+
+<h3>Deposit</h3>
+<input id="amount" placeholder="Amount"/>
+<button onclick="deposit()">Deposit</button>
+
+<h3>Withdraw</h3>
+<input id="withdrawAmount" placeholder="Amount"/>
+<button onclick="withdraw()">Withdraw</button>
+
+</div>
+
 <script>
 
 const API = "https://www.tkfmrecords.com/.netlify/functions";
@@ -61,7 +73,32 @@ async function load(){
 
   document.getElementById("trades").innerHTML =
     data.trades.map(t=>`${t.price} (${t.shares})`).join("<br>");
+}
 
+async function deposit(){
+  const user = document.getElementById("user").value;
+  const amount = document.getElementById("amount").value;
+
+  const res = await fetch(API + "/stripe-deposit", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, amount })
+  }).then(r=>r.json());
+
+  window.location = res.url;
+}
+
+async function withdraw(){
+  const user = document.getElementById("user").value;
+  const amount = document.getElementById("withdrawAmount").value;
+
+  const res = await fetch(API + "/withdraw", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, amount })
+  }).then(r=>r.json());
+
+  alert(JSON.stringify(res));
 }
 
 </script>
