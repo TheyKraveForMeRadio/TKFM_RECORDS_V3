@@ -1,25 +1,25 @@
-const { client, withTimeout } = require("./_supabase");
-const res = require("./_response");
+const { client } = require("./_supabase");
 
-exports.handler = async (event) => {
+exports.handler = async () => {
+  try {
 
-  if(event.httpMethod === "OPTIONS") return res.preflight();
-
-  try{
-
-    const query = client
+    const { data } = await client
       .from("trades")
       .select("*")
       .order("created_at",{ ascending:false })
       .limit(30);
 
-    const result = await withTimeout(query);
+    return {
+      statusCode: 200,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify(data || [])
+    };
 
-    return res.ok(result.data || []);
-
-  }catch(err){
-    console.log("TRADES ERROR:", err.message);
-    return res.error(err);
+  } catch(err){
+    return {
+      statusCode: 200,
+      headers: { "Access-Control-Allow-Origin": "*" },
+      body: JSON.stringify({ error: err.message })
+    };
   }
-
 };
