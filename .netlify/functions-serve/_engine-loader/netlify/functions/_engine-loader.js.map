@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/_engine-loader.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-12656-w2Z7QaVeGFRr",
-  "sourcesContent": ["const path = require(\"path\")\nconst fs = require(\"fs\")\n\nfunction getEngine(name) {\n\n  const base = path.join(process.cwd(), \"netlify/engines\")\n\n  const jsPath = path.join(base, name + \".js\")\n  const cjsPath = path.join(base, name + \".cjs\")\n\n  try {\n\n    let filePath = null\n\n    if (fs.existsSync(jsPath)) {\n      filePath = jsPath\n    } else if (fs.existsSync(cjsPath)) {\n      filePath = cjsPath\n    }\n\n    if (!filePath) {\n      throw new Error(\"engine file not found\")\n    }\n\n    const mod = require(filePath)\n\n    return mod.handler || mod.default || mod\n\n  } catch (err) {\n\n    console.log(\"Engine load failed:\", name, err.message)\n    return null\n\n  }\n\n}\n\nmodule.exports = { getEngine }\n"],
-  "mappings": ";AAAA,IAAM,OAAO,QAAQ,MAAM;AAC3B,IAAM,KAAK,QAAQ,IAAI;AAEvB,SAAS,UAAU,MAAM;AAEvB,QAAM,OAAO,KAAK,KAAK,QAAQ,IAAI,GAAG,iBAAiB;AAEvD,QAAM,SAAS,KAAK,KAAK,MAAM,OAAO,KAAK;AAC3C,QAAM,UAAU,KAAK,KAAK,MAAM,OAAO,MAAM;AAE7C,MAAI;AAEF,QAAI,WAAW;AAEf,QAAI,GAAG,WAAW,MAAM,GAAG;AACzB,iBAAW;AAAA,IACb,WAAW,GAAG,WAAW,OAAO,GAAG;AACjC,iBAAW;AAAA,IACb;AAEA,QAAI,CAAC,UAAU;AACb,YAAM,IAAI,MAAM,uBAAuB;AAAA,IACzC;AAEA,UAAM,MAAM,QAAQ,QAAQ;AAE5B,WAAO,IAAI,WAAW,IAAI,WAAW;AAAA,EAEvC,SAAS,KAAK;AAEZ,YAAQ,IAAI,uBAAuB,MAAM,IAAI,OAAO;AACpD,WAAO;AAAA,EAET;AAEF;AAEA,OAAO,UAAU,EAAE,UAAU;",
-  "names": []
-}

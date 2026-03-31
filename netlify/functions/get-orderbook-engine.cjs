@@ -1,30 +1,45 @@
-const { getRedis } = require("../functions/_redis")
+const { client, withTimeout } = require("./_supabase");
 
-module.exports = async (event) => {
+exports.handler = async () => {
 
-  const redis = getRedis()
-  const params = event.queryStringParameters || {}
-  const catalog_id = params.catalog_id
+  try{
 
-  if (!catalog_id) {
+    const [buysRes, sellsRes] = await Promise.all([
+      withTimeout(
+        client.from("order_book")
+        .select("*")
+        .eq("side","buy")
+        .order("price",{ ascending:false })
+        .limit(20)
+      ),
+      withTimeout(
+        client.from("order_book")
+        .select("*")
+        .eq("side","sell")
+        .order("price",{ ascending:true })
+        .limit(20)
+      )
+    ]);
+
     return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "catalog_id required" })
-    }
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify({
+        buys: buysRes.data || [],
+        sells: sellsRes.data || []
+      })
+    };
+
+  }catch(err){
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify({ error: err.message })
+    };
   }
 
-  const data = await redis.hgetall(`orderbook:${catalog_id}`)
-
-  const orders = data
-    ? Object.values(data).map(JSON.parse)
-    : []
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      catalog_id,
-      orders
-    })
-  }
-
-}
+};

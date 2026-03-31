@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/_redis.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-12656-FJH5A61J4Cvv",
-  "sourcesContent": ["const Redis = require(\"ioredis\")\n\nlet redisClient = null\n\nfunction getRedis() {\n\n  if (!redisClient) {\n\n    const url = process.env.REDIS_URL\n\n    if (!url) {\n      throw new Error(\"REDIS_URL environment variable is not set\")\n    }\n\n    redisClient = new Redis(url, {\n      maxRetriesPerRequest: null,\n      enableReadyCheck: false\n    })\n\n    redisClient.on(\"error\", (err) => {\n      console.error(\"Redis connection error:\", err)\n    })\n\n    console.log(\"TKFM Redis client initialized\")\n\n  }\n\n  return redisClient\n}\n\nmodule.exports = { getRedis }\n"],
-  "mappings": ";AAAA,IAAM,QAAQ,QAAQ,SAAS;AAE/B,IAAI,cAAc;AAElB,SAAS,WAAW;AAElB,MAAI,CAAC,aAAa;AAEhB,UAAM,MAAM,QAAQ,IAAI;AAExB,QAAI,CAAC,KAAK;AACR,YAAM,IAAI,MAAM,2CAA2C;AAAA,IAC7D;AAEA,kBAAc,IAAI,MAAM,KAAK;AAAA,MAC3B,sBAAsB;AAAA,MACtB,kBAAkB;AAAA,IACpB,CAAC;AAED,gBAAY,GAAG,SAAS,CAAC,QAAQ;AAC/B,cAAQ,MAAM,2BAA2B,GAAG;AAAA,IAC9C,CAAC;AAED,YAAQ,IAAI,+BAA+B;AAAA,EAE7C;AAEA,SAAO;AACT;AAEA,OAAO,UAAU,EAAE,SAAS;",
-  "names": []
-}

@@ -1,8 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../Desktop/TKFM_RECORDS_V3/netlify/functions/_event-bus.js"],
-  "sourceRoot": "C:/Users/djkra/AppData/Local/Temp/tmp-12656-FZVtuzz799mb",
-  "sourcesContent": ["\nconst listeners = {}\n\nfunction emit(event,payload){\n\nif(!listeners[event]) return\n\nlisteners[event].forEach(fn=>{\ntry{\nfn(payload)\n}catch(e){\nconsole.error(\"event handler error\",event,e)\n}\n})\n\n}\n\nfunction on(event,handler){\n\nif(!listeners[event]){\nlisteners[event]=[]\n}\n\nlisteners[event].push(handler)\n\n}\n\nmodule.exports = {\nemit,\non\n}\n\n"],
-  "mappings": ";AACA,IAAM,YAAY,CAAC;AAEnB,SAAS,KAAK,OAAM,SAAQ;AAE5B,MAAG,CAAC,UAAU,KAAK,EAAG;AAEtB,YAAU,KAAK,EAAE,QAAQ,QAAI;AAC7B,QAAG;AACH,SAAG,OAAO;AAAA,IACV,SAAO,GAAE;AACT,cAAQ,MAAM,uBAAsB,OAAM,CAAC;AAAA,IAC3C;AAAA,EACA,CAAC;AAED;AAEA,SAAS,GAAG,OAAM,SAAQ;AAE1B,MAAG,CAAC,UAAU,KAAK,GAAE;AACrB,cAAU,KAAK,IAAE,CAAC;AAAA,EAClB;AAEA,YAAU,KAAK,EAAE,KAAK,OAAO;AAE7B;AAEA,OAAO,UAAU;AAAA,EACjB;AAAA,EACA;AACA;",
-  "names": []
-}

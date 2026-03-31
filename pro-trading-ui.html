@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM LIVE EXCHANGE</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+  margin:0;
+  background:#020617;
+  color:#facc15;
+  font-family:Arial;
+}
+
+header{
+  padding:20px;
+  font-size:24px;
+  color:#f97316;
+}
+
+.container{
+  display:grid;
+  grid-template-columns: 3fr 1fr;
+  gap:20px;
+  padding:20px;
+}
+
+.card{
+  border:1px solid #facc15;
+  border-radius:12px;
+  padding:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🔥 TKFM LIVE MARKET</header>
+
+<div class="container">
+
+<div class="card">
+<canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+<h3>Order Book</h3>
+<div id="orderbook"></div>
+
+<h3>Trades</h3>
+<div id="trades"></div>
+</div>
+
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+let chart;
+
+function initChart(){
+  const ctx = document.getElementById('chart');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        data: [],
+        borderWidth:2,
+        tension:0.3
+      }]
+    },
+    options:{ plugins:{ legend:{ display:false } } }
+  });
+}
+
+async function loadLive(){
+
+  try{
+
+    // GET TRADES
+    const trades = await fetch(API + "/get-trades")
+      .then(r=>r.json());
+
+    // UPDATE CHART
+    chart.data.labels = trades.map(()=> "");
+    chart.data.datasets[0].data = trades.map(t=> t.price);
+    chart.update();
+
+    // ORDERBOOK
+    const ob = await fetch(API + "/get-orderbook-engine")
+      .then(r=>r.json());
+
+    document.getElementById("orderbook").innerHTML =
+      `
+      <div>
+        <b>BUY</b><br>
+        ${ (ob.buys||[]).map(o=>`${o.price}`).join("<br>") }
+      </div>
+      <br>
+      <div>
+        <b>SELL</b><br>
+        ${ (ob.sells||[]).map(o=>`${o.price}`).join("<br>") }
+      </div>
+      `;
+
+    // TRADES
+    document.getElementById("trades").innerHTML =
+      trades.map(t=>`${t.price} (${t.shares})`).join("<br>");
+
+  }catch(e){
+    console.log("LIVE ERROR:", e);
+  }
+
+}
+
+initChart();
+setInterval(loadLive, 2000);
+
+</script>
+
+</body>
+</html>
