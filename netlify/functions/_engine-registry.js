@@ -1,4 +1,3 @@
-
 module.exports = {
 
   // 🔐 AUTH / CORE
@@ -15,10 +14,14 @@ module.exports = {
   "mint-song-nft": "mint-song-nft.cjs",
   "fractionalize-nft-engine": "fractionalize-nft-engine.cjs",
 
-  // 📊 MARKET CORE (🔥 THIS IS WHAT YOU NEED)
+  // 📊 MARKET CORE
   "place-order-engine": "place-order-engine.cjs",
   "orderbook-engine": "orderbook-engine.cjs",
   "market-loop-engine": "market-loop-engine.cjs",
+
+  // ✅ ADD THIS (CRITICAL)
+  "get-orderbook-engine": "get-orderbook-engine.cjs",
+  "get-trades": "get-trades.cjs",
 
   // 📈 TRADING SYSTEM
   "trade-queue-engine": "trade-queue-engine.cjs",
@@ -30,7 +33,7 @@ module.exports = {
   "buy-shares-engine": "buy-shares-engine.cjs",
   "sell-shares-engine": "sell-shares-engine.cjs",
 
-  // 📊 DATA / ANALYTICS
+  // 📊 DATA
   "price-oracle-engine": "price-oracle-engine.cjs",
   "portfolio-engine": "portfolio-engine.cjs",
   "user-pnl-engine": "user-pnl-engine.cjs",
@@ -40,4 +43,3 @@ module.exports = {
   "profit-distribution-engine": "profit-distribution-engine.cjs"
 
 };
-
