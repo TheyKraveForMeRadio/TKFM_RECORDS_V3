@@ -17,6 +17,7 @@ header{
   padding:20px;
   font-size:24px;
   color:#f97316;
+  border-bottom:1px solid #222;
 }
 
 .container{
@@ -30,27 +31,91 @@ header{
   border:1px solid #facc15;
   border-radius:12px;
   padding:15px;
+  box-shadow:0 0 20px rgba(250,204,21,0.15);
 }
+
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.stat{
+  text-align:center;
+}
+
+.orderbook{
+  display:flex;
+  justify-content:space-between;
+}
+
+.column{
+  width:48%;
+}
+
+.trade{
+  animation:fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+.price-up{ color:#22c55e; }
+.price-down{ color:#ef4444; }
 
 </style>
 </head>
 
 <body>
 
-<header>🔥 TKFM LIVE MARKET</header>
+<header>🔥 TKFM LIVE EXCHANGE</header>
 
 <div class="container">
 
+<!-- LEFT -->
 <div class="card">
-<canvas id="chart"></canvas>
+
+<div class="stats">
+  <div class="stat">
+    <div>Price</div>
+    <div id="price">$0</div>
+  </div>
+  <div class="stat">
+    <div>Trades</div>
+    <div id="tradeCount">0</div>
+  </div>
+  <div class="stat">
+    <div>Status</div>
+    <div id="status">LIVE</div>
+  </div>
 </div>
 
+<canvas id="chart"></canvas>
+
+</div>
+
+<!-- RIGHT -->
 <div class="card">
+
 <h3>Order Book</h3>
-<div id="orderbook"></div>
+
+<div class="orderbook">
+  <div class="column">
+    <h4>BUY</h4>
+    <div id="buys"></div>
+  </div>
+
+  <div class="column">
+    <h4>SELL</h4>
+    <div id="sells"></div>
+  </div>
+</div>
 
 <h3>Trades</h3>
 <div id="trades"></div>
+
 </div>
 
 </div>
@@ -63,6 +128,7 @@ let chart;
 
 function initChart(){
   const ctx = document.getElementById('chart');
+
   chart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -73,52 +139,63 @@ function initChart(){
         tension:0.3
       }]
     },
-    options:{ plugins:{ legend:{ display:false } } }
+    options:{
+      plugins:{ legend:{ display:false } }
+    }
   });
 }
 
-async function loadLive(){
+async function loadMarket(){
 
   try{
 
-    // GET TRADES
-    const trades = await fetch(API + "/get-trades")
-      .then(r=>r.json());
+    // TRADES
+    const trades = await fetch(API + "/get-trades").then(r=>r.json());
 
-    // UPDATE CHART
-    chart.data.labels = trades.map(()=> "");
-    chart.data.datasets[0].data = trades.map(t=> t.price);
-    chart.update();
+    document.getElementById("tradeCount").innerText = trades.length;
+
+    document.getElementById("trades").innerHTML =
+      trades.map(t => `<div class="trade">${t.price} (${t.shares})</div>`).join("");
+
+    if(trades.length){
+      const prices = trades.map(t => t.price);
+      chart.data.labels = prices.map(()=> "");
+      chart.data.datasets[0].data = prices;
+      chart.update();
+
+      const last = trades[0];
+      document.getElementById("price").innerText = "$" + last.price;
+    }
 
     // ORDERBOOK
-    const ob = await fetch(API + "/get-orderbook-engine")
-      .then(r=>r.json());
+    const ob = await fetch(API + "/get-orderbook-engine").then(r=>r.json());
 
-    document.getElementById("orderbook").innerHTML =
-      `
-      <div>
-        <b>BUY</b><br>
-        ${ (ob.buys||[]).map(o=>`${o.price}`).join("<br>") }
-      </div>
-      <br>
-      <div>
-        <b>SELL</b><br>
-        ${ (ob.sells||[]).map(o=>`${o.price}`).join("<br>") }
-      </div>
-      `;
+    document.getElementById("buys").innerHTML =
+      (ob.buys || []).map(o => `<div class="trade price-up">${o.price} (${o.shares})</div>`).join("");
 
-    // TRADES
-    document.getElementById("trades").innerHTML =
-      trades.map(t=>`${t.price} (${t.shares})`).join("<br>");
+    document.getElementById("sells").innerHTML =
+      (ob.sells || []).map(o => `<div class="trade price-down">${o.price} (${o.shares})</div>`).join("");
 
   }catch(e){
-    console.log("LIVE ERROR:", e);
+    console.log("ERROR:", e);
+    document.getElementById("status").innerText = "ERROR";
   }
 
 }
 
+// run matching engine every cycle (keeps market active)
+async function runEngine(){
+  try{
+    await fetch(API + "/matching-engine");
+  }catch(e){}
+}
+
 initChart();
-setInterval(loadLive, 2000);
+
+setInterval(() => {
+  runEngine();
+  loadMarket();
+}, 2000);
 
 </script>
 

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM DASHBOARD</title>
+
+<style>
+body{
+  background:#020617;
+  color:#facc15;
+  font-family:Arial;
+  padding:20px;
+}
+
+.card{
+  border:1px solid #facc15;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🔥 TKFM USER DASHBOARD</h1>
+
+<input id="user" placeholder="Enter username"/>
+<button onclick="load()">Load</button>
+
+<div class="card">
+<h3>Balance</h3>
+<div id="balance"></div>
+</div>
+
+<div class="card">
+<h3>Portfolio</h3>
+<div id="portfolio"></div>
+</div>
+
+<div class="card">
+<h3>Trades</h3>
+<div id="trades"></div>
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const user = document.getElementById("user").value;
+
+  const data = await fetch(API + "/get-user-dashboard?user=" + user)
+    .then(r=>r.json());
+
+  document.getElementById("balance").innerText =
+    "$" + data.user.balance;
+
+  document.getElementById("portfolio").innerHTML =
+    data.portfolio.map(p=>`Asset ${p.catalog_id}: ${p.shares}`).join("<br>");
+
+  document.getElementById("trades").innerHTML =
+    data.trades.map(t=>`${t.price} (${t.shares})`).join("<br>");
+
+}
+
+</script>
+
+</body>
+</html>
