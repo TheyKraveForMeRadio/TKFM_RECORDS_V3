@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Email Campaign</title>
+</head>
+
+<body>
+
+<h1>📧 Send Campaign</h1>
+
+<button onclick="send()">Send Email Blast</button>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function send(){
+
+  await fetch(API + "/send-campaign");
+
+  alert("Emails sent 🚀");
+}
+
+</script>
+
+</body>
+</html>

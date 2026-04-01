@@ -7,299 +7,89 @@
 <title>TKFM — The Music Market</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+
 <style>
-
-:root{
---bg:#020617;
---panel:#0f172a;
---gold:#facc15;
---blue:#22d3ee;
---text:#e5e7eb;
-}
-
 body{
 margin:0;
 font-family:system-ui;
-background:radial-gradient(circle at center,#020617,#000);
-color:var(--text);
-}
-
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px;
-background:#000;
-border-bottom:1px solid rgba(250,204,21,0.2);
-}
-
-.logo{
-height:40px;
-}
-
-nav a{
-margin-left:20px;
+background:radial-gradient(circle,#020617,#000);
 color:#e5e7eb;
-text-decoration:none;
-transition:.3s;
-}
-
-nav a:hover{
-color:var(--gold);
+text-align:center;
 }
 
 .hero{
-text-align:center;
 padding:120px 20px;
 }
 
-.hero h1{
-font-size:52px;
-color:var(--gold);
-text-shadow:0 0 20px rgba(250,204,21,0.7);
+input{
+padding:15px;
+width:250px;
+border-radius:6px;
+border:1px solid #facc15;
+background:#020617;
+color:#fff;
 }
 
-.hero p{
-font-size:20px;
-margin-top:20px;
-opacity:.8;
-}
-
-.hero button{
-margin:15px;
-padding:18px 40px;
-font-size:18px;
+button{
+padding:15px 25px;
+background:#facc15;
 border:none;
-background:var(--gold);
-border-radius:8px;
+margin-left:10px;
 cursor:pointer;
-transition:.3s;
 }
-
-.hero button:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px rgba(250,204,21,0.8);
-}
-
-.section{
-padding:80px 20px;
-max-width:1100px;
-margin:auto;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-}
-
-.card{
-background:rgba(15,23,42,0.8);
-padding:30px;
-border-radius:12px;
-text-align:center;
-border:1px solid rgba(250,204,21,0.2);
-box-shadow:0 0 20px rgba(250,204,21,0.1);
-transition:.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-box-shadow:0 0 30px rgba(250,204,21,0.3);
-}
-
-.market{
-background:#000;
-padding:40px;
-margin-top:40px;
-border-radius:8px;
-border:1px solid rgba(250,204,21,0.2);
-}
-
-.row{
-display:flex;
-justify-content:space-between;
-padding:12px 0;
-border-bottom:1px solid #1e293b;
-}
-
-.badge{
-color:#22c55e;
-margin-top:20px;
-font-weight:bold;
-}
-
-footer{
-text-align:center;
-padding:40px;
-font-size:.8rem;
-color:#64748b;
-}
-
-.cta{
-margin-top:40px;
-text-align:center;
-}
-
 </style>
-
-<script src="/js/tkfm-theme.js"></script>
-<script src="/js/tkfm-animations.js"></script>
 
 </head>
 
 <body>
 
-<header>
+<div class="hero">
 
-<img src="/tkfm-records-logo.png" class="logo">
+<h1 style="color:#facc15">💰 Trade Music Like Stocks</h1>
 
-<nav>
-<a href="/tkfm-how-it-works.html">How It Works</a>
-<a href="/pro-trading-ui.html">Trade</a>
-<a href="/pricing.html">Pricing</a>
-<a href="/leaderboard.html">Leaderboard</a>
-</nav>
+<p>Join the first users of TKFM</p>
 
-</header>
+<br>
 
-<!-- 🔥 HERO (CONVERSION UPGRADED) -->
-<section class="hero">
+<input id="email" placeholder="Enter your email"/>
+<button onclick="join()">Join Waitlist</button>
 
-<h1>💰 Trade Music Like Stocks</h1>
+<p id="msg"></p>
 
-<p>
-Buy shares in songs.  
-Copy top traders.  
-Let AI trade for you.
-</p>
-
-<div>
-<button onclick="window.location.href='/pro-trading-ui.html'">
-🚀 Start Trading
-</button>
-
-<button onclick="window.location.href='/tkfm-how-it-works.html'">
-📊 How It Works
-</button>
-</div>
-
-<div class="badge">
-✔ Real Money Platform • ✔ AI Trading • ✔ Live Market
-</div>
-
-</section>
-
-<!-- 🔥 FEATURES -->
-<section class="section">
-
-<h2 style="text-align:center;color:var(--gold)">
-⚡ Why TKFM?
-</h2>
-
-<div class="grid">
-
-<div class="card">
-<h3>📈 Trade Music</h3>
-<p>Buy & sell songs like stocks</p>
-</div>
-
-<div class="card">
-<h3>🤖 AI Trading</h3>
-<p>Let AI trade automatically</p>
-</div>
-
-<div class="card">
-<h3>👥 Copy Traders</h3>
-<p>Follow top performers</p>
-</div>
-
-<div class="card">
-<h3>🏆 Win Money</h3>
-<p>Compete in tournaments</p>
-</div>
-
-</div>
-
-</section>
-
-<!-- 🔥 LIVE MARKET -->
-<section class="section">
-
-<h2 style="text-align:center;color:var(--gold)">
-📡 Live Market
-</h2>
-
-<div class="market" id="market">
-
-<div class="row"><span>Song123</span><span>$5.20</span></div>
-<div class="row"><span>Song456</span><span>$3.90</span></div>
-<div class="row"><span>Song789</span><span>$7.40</span></div>
-
-</div>
-
-</section>
-
-<!-- 🔥 PRICING HOOK -->
-<section class="section">
-
-<h2 style="text-align:center;color:var(--gold)">
-💎 Upgrade Your Trading
-</h2>
-
-<div class="grid">
-
-<div class="card">
-<h3>Basic</h3>
-<p>Free trading access</p>
-</div>
-
-<div class="card">
-<h3>Pro</h3>
-<p>$19/mo — AI + Copy Trading</p>
-</div>
-
-<div class="card">
-<h3>Elite</h3>
-<p>$49/mo — Auto Trading + VIP</p>
-</div>
-
-</div>
-
-<div class="cta">
-<button onclick="window.location.href='/pricing.html'">
-Upgrade Now
-</button>
-</div>
-
-</section>
-
-<!-- 🔥 FINAL CTA -->
-<section class="section" style="text-align:center">
-
-<h2 style="color:var(--gold)">
-🚀 Start Making Money Now
-</h2>
-
-<p>Join early users and start trading today</p>
-
-<button onclick="window.location.href='/pro-trading-ui.html'">
-Create Account
-</button>
-
-</section>
-
-<footer>
-
-TKFM Music Market · DJ KRAVE  
 <br><br>
-<a href="/terms.html">Terms</a> |
-<a href="/privacy.html">Privacy</a>
 
-</footer>
+<button onclick="go()">🚀 Enter Platform</button>
 
-<script src="/js/tkfm-master-autoload.js"></script>
-<script src="/js/tkfm-global-nav.js"></script>
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function join(){
+
+  const email = document.getElementById("email").value;
+
+  const res = await fetch(API + "/waitlist",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ email })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("msg").innerText =
+    data.success ? "You're on the list 🚀" : "Error";
+
+}
+
+function go(){
+  window.location = "/pro-trading-ui.html";
+}
+
+</script>
 
 </body>
 </html>
