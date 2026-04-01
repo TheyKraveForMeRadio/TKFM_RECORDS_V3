@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Leaderboard</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>🏆 Top Traders</h1>
+
+<div id="leaders"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const data = await fetch(API + "/leaderboard-engine")
+    .then(r=>r.json());
+
+  document.getElementById("leaders").innerHTML =
+    data.map((t,i)=>`
+      <div class="card">
+        <h3>#${i+1} ${t.user} ${t.verified ? "✔️" : ""}</h3>
+        <p>PNL: $${t.pnl}</p>
+        <p>Rank: ${t.rank || "Bronze"}</p>
+        <p>Badge: ${t.badge || "New Trader"}</p>
+        <button onclick="follow('${t.user}')">Follow</button>
+      </div>
+    `).join("");
+
+}
+
+async function follow(trader){
+
+  const follower = localStorage.getItem("tkfm_user");
+
+  await fetch(API + "/follow-trader",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ follower, trader })
+  });
+
+  alert("Now copying " + trader);
+}
+
+load();
+
+</script>
+
+</body>
+</html>

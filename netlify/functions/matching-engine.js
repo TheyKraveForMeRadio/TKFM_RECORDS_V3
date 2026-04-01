@@ -1,5 +1,7 @@
 const { client } = require("./_supabase");
 
+const FEE_RATE = 0.02; // 2%
+
 exports.handler = async () => {
   try {
 
@@ -29,7 +31,10 @@ exports.handler = async () => {
       const shares = Math.min(buy.shares, sell.shares);
       const total = shares * sell.price;
 
-      // 🔥 GET USERS
+      const fee = total * FEE_RATE;
+      const sellerReceives = total - fee;
+
+      // USERS
       const { data: buyerUser } = await client
         .from("users")
         .select("*")
@@ -42,25 +47,25 @@ exports.handler = async () => {
         .eq("username", sell.user)
         .single();
 
-      if(!buyerUser || !sellerUser){
-        return { statusCode:200, body: JSON.stringify({ error:"user missing" }) };
-      }
-
-      // 🔥 CHECK BALANCE
       if(buyerUser.balance < total){
         return { statusCode:200, body: JSON.stringify({ error:"insufficient funds" }) };
       }
 
-      // 🔥 UPDATE BALANCES
+      // UPDATE BALANCES
       await client.from("users").update({
         balance: buyerUser.balance - total
       }).eq("id", buyerUser.id);
 
       await client.from("users").update({
-        balance: sellerUser.balance + total
+        balance: sellerUser.balance + sellerReceives
       }).eq("id", sellerUser.id);
 
-      // 🔥 UPDATE PORTFOLIO (BUYER)
+      // SAVE FEE (🔥 YOUR MONEY)
+      await client.from("fees").insert([{
+        amount: fee
+      }]);
+
+      // PORTFOLIO
       const { data: existing } = await client
         .from("portfolios")
         .select("*")
@@ -80,23 +85,28 @@ exports.handler = async () => {
         }]);
       }
 
-      // 🔥 SELLER REMOVE SHARES (optional simple version: skip strict check)
-
-      // 🔥 INSERT TRADE
-      await client.from("trades").insert([{
+      // TRADE RECORD
+      const { data: trade } = await client.from("trades").insert([{
         buyer: buy.user,
         seller: sell.user,
         catalog_id: buy.catalog_id,
         price: sell.price,
         shares,
         total
-      }]);
+      }]).select().single();
 
-      // 🔥 REMOVE ORDERS
+      // REMOVE ORDERS
       await client.from("order_book").delete().eq("id", buy.id);
       await client.from("order_book").delete().eq("id", sell.id);
 
-      return { statusCode:200, body: JSON.stringify({ matched:true }) };
+      return {
+        statusCode:200,
+        body: JSON.stringify({
+          matched:true,
+          fee,
+          revenue: fee
+        })
+      };
     }
 
     return { statusCode:200, body: JSON.stringify({ no_match:true }) };

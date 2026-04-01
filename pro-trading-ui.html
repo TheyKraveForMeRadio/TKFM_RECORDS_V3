@@ -1,203 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>TKFM LIVE EXCHANGE</title>
+<title>TKFM PRO TRADING</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
 
 <style>
-body{
-  margin:0;
-  background:#020617;
-  color:#facc15;
-  font-family:Arial;
-}
+body{ padding:20px; }
 
-header{
-  padding:20px;
-  font-size:24px;
-  color:#f97316;
-  border-bottom:1px solid #222;
-}
-
-.container{
+.grid{
   display:grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap:20px;
-  padding:20px;
 }
 
-.card{
-  border:1px solid #facc15;
-  border-radius:12px;
-  padding:15px;
-  box-shadow:0 0 20px rgba(250,204,21,0.15);
+#chart{
+  height:300px;
 }
-
-.stats{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
-}
-
-.stat{
-  text-align:center;
-}
-
-.orderbook{
-  display:flex;
-  justify-content:space-between;
-}
-
-.column{
-  width:48%;
-}
-
-.trade{
-  animation:fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;}
-  to{opacity:1;}
-}
-
-.price-up{ color:#22c55e; }
-.price-down{ color:#ef4444; }
-
 </style>
+
 </head>
 
 <body>
 
-<header>🔥 TKFM LIVE EXCHANGE</header>
+<h1>📊 TKFM PRO TRADING</h1>
 
-<div class="container">
+<div class="loading">LIVE</div>
 
-<!-- LEFT -->
+<!-- 🔥 CANDLE CHART -->
 <div class="card">
-
-<div class="stats">
-  <div class="stat">
-    <div>Price</div>
-    <div id="price">$0</div>
-  </div>
-  <div class="stat">
-    <div>Trades</div>
-    <div id="tradeCount">0</div>
-  </div>
-  <div class="stat">
-    <div>Status</div>
-    <div id="status">LIVE</div>
-  </div>
+  <h3>📈 Price Chart</h3>
+  <div id="chart"></div>
 </div>
 
-<canvas id="chart"></canvas>
+<div class="grid">
 
-</div>
-
-<!-- RIGHT -->
+<!-- LIVE MARKET -->
 <div class="card">
-
-<h3>Order Book</h3>
-
-<div class="orderbook">
-  <div class="column">
-    <h4>BUY</h4>
-    <div id="buys"></div>
-  </div>
-
-  <div class="column">
-    <h4>SELL</h4>
-    <div id="sells"></div>
-  </div>
+  <h3>📡 Live Market</h3>
+  <h2 id="live-price">$0</h2>
+  <div id="live-trades"></div>
 </div>
 
-<h3>Trades</h3>
-<div id="trades"></div>
+<!-- ORDERBOOK -->
+<div class="card">
+  <h3>📚 Orderbook Depth</h3>
+
+  <div class="orderbook">
+    <div>
+      <h4>🟢 Bids</h4>
+      <div id="bids"></div>
+    </div>
+
+    <div>
+      <h4>🔴 Asks</h4>
+      <div id="asks"></div>
+    </div>
+  </div>
 
 </div>
+
+</div>
+
+<script src="/js/tkfm-live.js"></script>
+<script src="/js/tkfm-orderbook-live.js"></script>
+<script src="/js/tkfm-chart.js"></script>
+
+</body>
+</html>
+
+<div class="card">
+  <h3>⚡ Advanced Orders</h3>
+
+  <select id="type">
+    <option value="limit">Limit Order</option>
+    <option value="stop">Stop Loss</option>
+  </select><br><br>
+
+  <input id="adv-user" placeholder="User"/><br><br>
+  <input id="adv-catalog" placeholder="Catalog ID"/><br><br>
+  <input id="adv-price" placeholder="Limit Price"/><br><br>
+  <input id="adv-stop" placeholder="Stop Price"/><br><br>
+  <input id="adv-shares" placeholder="Shares"/><br><br>
+
+  <button onclick="placeAdvanced('buy')">Buy</button>
+  <button onclick="placeAdvanced('sell')">Sell</button>
 
 </div>
 
 <script>
 
-const API = "https://www.tkfmrecords.com/.netlify/functions";
+async function placeAdvanced(side){
 
-let chart;
-
-function initChart(){
-  const ctx = document.getElementById('chart');
-
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        data: [],
-        borderWidth:2,
-        tension:0.3
-      }]
-    },
-    options:{
-      plugins:{ legend:{ display:false } }
-    }
+  await fetch(API + "/advanced-order-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user: document.getElementById("adv-user").value,
+      catalog_id: document.getElementById("adv-catalog").value,
+      type: document.getElementById("type").value,
+      side,
+      price: Number(document.getElementById("adv-price").value),
+      stop_price: Number(document.getElementById("adv-stop").value),
+      shares: Number(document.getElementById("adv-shares").value)
+    })
   });
+
+  alert("Advanced Order Placed");
 }
-
-async function loadMarket(){
-
-  try{
-
-    // TRADES
-    const trades = await fetch(API + "/get-trades").then(r=>r.json());
-
-    document.getElementById("tradeCount").innerText = trades.length;
-
-    document.getElementById("trades").innerHTML =
-      trades.map(t => `<div class="trade">${t.price} (${t.shares})</div>`).join("");
-
-    if(trades.length){
-      const prices = trades.map(t => t.price);
-      chart.data.labels = prices.map(()=> "");
-      chart.data.datasets[0].data = prices;
-      chart.update();
-
-      const last = trades[0];
-      document.getElementById("price").innerText = "$" + last.price;
-    }
-
-    // ORDERBOOK
-    const ob = await fetch(API + "/get-orderbook-engine").then(r=>r.json());
-
-    document.getElementById("buys").innerHTML =
-      (ob.buys || []).map(o => `<div class="trade price-up">${o.price} (${o.shares})</div>`).join("");
-
-    document.getElementById("sells").innerHTML =
-      (ob.sells || []).map(o => `<div class="trade price-down">${o.price} (${o.shares})</div>`).join("");
-
-  }catch(e){
-    console.log("ERROR:", e);
-    document.getElementById("status").innerText = "ERROR";
-  }
-
-}
-
-// run matching engine every cycle (keeps market active)
-async function runEngine(){
-  try{
-    await fetch(API + "/matching-engine");
-  }catch(e){}
-}
-
-initChart();
-
-setInterval(() => {
-  runEngine();
-  loadMarket();
-}, 2000);
 
 </script>
 
-</body>
-</html>
+
+<div class="card">
+  <h3>🧠 Pro Trader</h3>
+
+  <select id="type">
+    <option value="limit">Limit</option>
+    <option value="stop">Stop Loss</option>
+  </select><br><br>
+
+  <input id="adv-user" placeholder="User"/><br><br>
+  <input id="adv-catalog" placeholder="Catalog ID"/><br><br>
+  <input id="adv-price" placeholder="Limit Price"/><br><br>
+  <input id="adv-stop" placeholder="Stop Price"/><br><br>
+  <input id="adv-tp" placeholder="Take Profit"/><br><br>
+  <input id="adv-trail" placeholder="Trailing %"/><br><br>
+  <input id="adv-shares" placeholder="Shares"/><br><br>
+
+  <button onclick="placeAdvanced('buy')">Buy</button>
+  <button onclick="placeAdvanced('sell')">Sell</button>
+</div>
+
+<script>
+async function placeAdvanced(side){
+
+  await fetch(API + "/advanced-order-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user: document.getElementById("adv-user").value,
+      catalog_id: document.getElementById("adv-catalog").value,
+      type: document.getElementById("type").value,
+      side,
+      price: Number(document.getElementById("adv-price").value),
+      stop_price: Number(document.getElementById("adv-stop").value),
+      take_profit: Number(document.getElementById("adv-tp").value),
+      trailing_percent: Number(document.getElementById("adv-trail").value),
+      shares: Number(document.getElementById("adv-shares").value)
+    })
+  });
+
+  alert("Pro Order Placed 🚀");
+}
+</script>
+
+
+<div class="card">
+  <h3>🤖 AI Trading Assistant</h3>
+
+  <div id="ai-signal">Loading...</div>
+
+  <button onclick="runAI()">Run AI Trade</button>
+</div>
+
+<script>
+
+async function loadAI(){
+
+  const res = await fetch(API + "/ai-signal-engine");
+  const data = await res.json();
+
+  document.getElementById("ai-signal").innerHTML =
+    `Signal: <b>${data.signal.toUpperCase()}</b> <br>
+     Price: $${data.price}`;
+}
+
+async function runAI(){
+
+  await fetch(API + "/ai-auto-trade");
+  alert("AI Trade Executed 🤖");
+}
+
+setInterval(loadAI,3000);
+loadAI();
+
+</script>
+

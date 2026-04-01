@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Revenue</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>💰 Platform Revenue</h1>
+
+<div id="revenue"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const data = await fetch(API + "/get-platform-fees")
+    .then(r=>r.json());
+
+  const total = data.reduce((sum,f)=>sum+f.amount,0);
+
+  document.getElementById("revenue").innerHTML =
+    `<div class="card">
+      Total Revenue: $${total}
+    </div>`;
+}
+
+load();
+
+</script>
+
+</body>
+</html>

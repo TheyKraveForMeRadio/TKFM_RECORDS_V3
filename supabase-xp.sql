@@ -1,0 +1,4 @@
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS xp numeric DEFAULT 0,
+ADD COLUMN IF NOT EXISTS last_daily timestamp,
+ADD COLUMN IF NOT EXISTS streak numeric DEFAULT 0;

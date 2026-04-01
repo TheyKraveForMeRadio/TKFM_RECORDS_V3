@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VIP Upgrade</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>💎 Become VIP Trader</h1>
+
+<div class="card">
+  <h2>$19/month</h2>
+
+  <ul>
+    <li>✔ Lower trading fees</li>
+    <li>✔ Access to high-stakes rooms</li>
+    <li>✔ Copy top traders</li>
+    <li>✔ VIP badge</li>
+  </ul>
+
+  <button onclick="subscribe()">Upgrade to VIP</button>
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function subscribe(){
+
+  const user = localStorage.getItem("tkfm_user");
+
+  const res = await fetch(API + "/create-vip-checkout",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user })
+  });
+
+  const data = await res.json();
+
+  window.location = data.url;
+}
+
+</script>
+
+</body>
+</html>

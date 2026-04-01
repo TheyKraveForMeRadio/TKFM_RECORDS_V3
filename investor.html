@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Investor Mode</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>📈 Invest in Top Traders</h1>
+
+<div id="traders"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const leaders = await fetch(API + "/leaderboard-engine")
+    .then(r=>r.json());
+
+  document.getElementById("traders").innerHTML =
+    leaders.map(t=>`
+      <div class="card">
+        <h3>${t.user}</h3>
+        PNL: $${t.pnl}
+        <br><br>
+        <input id="amt-${t.user}" placeholder="Amount"/>
+        <button onclick="invest('${t.user}')">Invest</button>
+      </div>
+    `).join("");
+
+}
+
+async function invest(trader){
+
+  const investor = localStorage.getItem("tkfm_user");
+  const amount = document.getElementById("amt-"+trader).value;
+
+  await fetch(API + "/invest-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      investor,
+      trader,
+      amount: Number(amount)
+    })
+  });
+
+  alert("Invested 🚀");
+}
+
+load();
+
+</script>
+
+</body>
+</html>

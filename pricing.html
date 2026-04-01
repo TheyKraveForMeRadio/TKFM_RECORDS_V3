@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Pricing</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>💰 Choose Your Plan</h1>
+
+<div class="grid">
+
+<div class="card">
+  <h2>Basic (Free)</h2>
+  <p>✔ Trade access</p>
+  <p>✔ Limited features</p>
+  <button onclick="selectPlan('basic')">Start Free</button>
+</div>
+
+<div class="card">
+  <h2>Pro ($19/mo)</h2>
+  <p>✔ Lower fees</p>
+  <p>✔ Copy trading</p>
+  <p>✔ Advanced tools</p>
+  <button onclick="selectPlan('pro')">Upgrade</button>
+</div>
+
+<div class="card">
+  <h2>Elite ($49/mo)</h2>
+  <p>✔ VIP badge</p>
+  <p>✔ High stakes rooms</p>
+  <p>✔ Priority execution</p>
+  <button onclick="selectPlan('elite')">Go Elite</button>
+</div>
+
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function selectPlan(plan){
+
+  const user = localStorage.getItem("tkfm_user");
+
+  if(plan === "basic"){
+    alert("You are on free plan");
+    return;
+  }
+
+  const res = await fetch(API + "/create-plan-checkout",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, plan })
+  });
+
+  const data = await res.json();
+
+  window.location = data.url;
+}
+
+</script>
+
+</body>
+</html>

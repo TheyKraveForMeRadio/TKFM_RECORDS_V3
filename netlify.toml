@@ -150,3 +150,42 @@ X-Frame-Options = "DENY"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "strict-origin-when-cross-origin"
 
+
+[[scheduled]]
+path = "/.netlify/functions/advanced-trigger-engine"
+schedule = "* * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/copy-trade-engine"
+schedule = "* * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/rank-engine"
+schedule = "*/5 * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/tournament-engine"
+schedule = "*/2 * * * *"
+
+[[scheduled]]
+path = "/.netlify/functions/tournament-payout"
+schedule = "*/5 * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/jackpot-engine"
+schedule = "*/10 * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/ai-auto-trade"
+schedule = "*/2 * * * *"
+
+
+[[scheduled]]
+path = "/.netlify/functions/ai-portfolio-manager"
+schedule = "*/3 * * * *"
+

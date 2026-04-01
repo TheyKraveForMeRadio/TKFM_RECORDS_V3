@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Withdrawals</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>💸 Withdrawals</h1>
+
+<div id="list"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const data = await fetch(API + "/get-withdrawals")
+    .then(r=>r.json());
+
+  document.getElementById("list").innerHTML =
+    data.map(w=>`
+      <div class="card">
+        ${w.username} — $${w.amount}
+        <button onclick="approve('${w.id}')">Approve</button>
+      </div>
+    `).join("");
+
+}
+
+async function approve(id){
+
+  await fetch(API + "/process-withdrawal",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ withdrawal_id:id })
+  });
+
+  alert("Paid ✅");
+  load();
+}
+
+load();
+
+</script>
+
+</body>
+</html>

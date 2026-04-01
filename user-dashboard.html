@@ -17,6 +17,8 @@ body{
   margin-bottom:20px;
 }
 </style>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
 </head>
 
 <body>
@@ -41,7 +43,6 @@ body{
 <div id="trades"></div>
 </div>
 
-<!-- 🔥 NEW: DEPOSIT / WITHDRAW -->
 <div class="card">
 
 <h3>Deposit</h3>
@@ -53,6 +54,16 @@ body{
 <button onclick="withdraw()">Withdraw</button>
 
 </div>
+
+<!-- 🔥 NFT SIMULATION -->
+<div class="card">
+<h3>My NFTs (Simulated)</h3>
+<button onclick="fakeMint()">Mint NFT</button>
+<button onclick="loadMyNFTs()">Load NFTs</button>
+<div id="nfts"></div>
+</div>
+
+<script src="/js/tkfm-fake-web3.js"></script>
 
 <script>
 
@@ -105,3 +116,119 @@ async function withdraw(){
 
 </body>
 </html>
+
+<div class="card">
+  <h3>🎮 Game Progress</h3>
+  <div id="xp"></div>
+  <div id="streak"></div>
+
+  <button onclick="claimDaily()">Claim Daily Reward</button>
+</div>
+
+<script>
+
+async function loadGame(){
+
+  const user = document.getElementById("user").value;
+
+  const data = await fetch(API + "/get-user-dashboard?user=" + user)
+    .then(r=>r.json());
+
+  document.getElementById("xp").innerText =
+    "XP: " + (data.user.xp || 0);
+
+  document.getElementById("streak").innerText =
+    "Streak: " + (data.user.streak || 0);
+
+}
+
+async function claimDaily(){
+
+  const user = document.getElementById("user").value;
+
+  const res = await fetch(API + "/daily-reward-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user })
+  });
+
+  const data = await res.json();
+
+  alert(JSON.stringify(data));
+  loadGame();
+}
+
+</script>
+
+
+<div class="card">
+  <h3>🧠 AI Portfolio Manager</h3>
+
+  <button onclick="runPortfolioAI()">Rebalance Portfolio</button>
+
+  <div id="ai-status"></div>
+</div>
+
+<script>
+
+async function runPortfolioAI(){
+
+  const res = await fetch(API + "/ai-portfolio-manager");
+  const data = await res.json();
+
+  document.getElementById("ai-status").innerText =
+    "AI Rebalanced Portfolio ✅";
+}
+
+</script>
+
+
+<div class="card">
+  <h3>🧠 AI Portfolio Manager</h3>
+
+  <button onclick="runPortfolioAI()">Rebalance Portfolio</button>
+
+  <div id="ai-status"></div>
+</div>
+
+<script>
+
+async function runPortfolioAI(){
+
+  const res = await fetch(API + "/ai-portfolio-manager");
+  const data = await res.json();
+
+  document.getElementById("ai-status").innerText =
+    "AI Rebalanced Portfolio ✅";
+}
+
+</script>
+
+
+<div class="card">
+  <h3>💸 Withdraw Funds</h3>
+
+  <input id="withdrawAmount" placeholder="Amount"/>
+  <button onclick="withdrawFunds()">Withdraw</button>
+</div>
+
+<script>
+
+async function withdrawFunds(){
+
+  const user = document.getElementById("user").value;
+  const amount = document.getElementById("withdrawAmount").value;
+
+  const res = await fetch(API + "/request-withdrawal",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, amount: Number(amount) })
+  });
+
+  const data = await res.json();
+
+  alert(JSON.stringify(data));
+}
+
+</script>
+

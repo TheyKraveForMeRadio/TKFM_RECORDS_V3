@@ -1,0 +1,4 @@
+ALTER TABLE users
+ADD COLUMN IF NOT EXISTS rank text DEFAULT 'Bronze',
+ADD COLUMN IF NOT EXISTS badge text DEFAULT 'New Trader',
+ADD COLUMN IF NOT EXISTS verified boolean DEFAULT false;
