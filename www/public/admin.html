@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM Admin</title>
+</head>
+<body>
+
+<h1>Withdraw Requests</h1>
+<button onclick="load()">Load</button>
+<div id="list"></div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+
+async function load(){
+  const res = await fetch(API + "/withdraw-request-engine")
+  const data = await res.json()
+  document.getElementById("list").innerText = JSON.stringify(data,null,2)
+}
+
+async function pay(id){
+  await fetch(API + "/stripe-payout-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({request_id:id})
+  })
+}
+</script>
+
+</body>
+</html>

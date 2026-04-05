@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>TKFM Owner War Room</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+margin:0;
+}
+
+header{
+background:#000;
+padding:20px;
+color:#facc15;
+font-size:22px;
+font-weight:bold;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:20px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:6px;
+}
+
+.stat{
+font-size:28px;
+color:#22d3ee;
+}
+
+.engine{
+font-size:12px;
+padding:4px 0;
+border-bottom:1px solid #1e293b;
+}
+
+.alert{
+color:#ef4444;
+}
+
+</style>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<header>
+TKFM OWNER WAR ROOM
+</header>
+
+<div class="grid">
+
+<div class="panel">
+<div>Global Market Cap</div>
+<div class="stat" id="marketCap">$0</div>
+</div>
+
+<div class="panel">
+<div>Trade Volume</div>
+<div class="stat" id="tradeVolume">0</div>
+</div>
+
+<div class="panel">
+<div>Active Engines</div>
+<div class="stat" id="engineCount">0</div>
+</div>
+
+<div class="panel">
+<div>System Alerts</div>
+<div id="alerts"></div>
+</div>
+
+</div>
+
+<div class="panel" style="margin:20px">
+
+<div>Engine Status</div>
+
+<div id="engineList"></div>
+
+</div>
+
+<script>
+
+async function loadMetrics(){
+
+const res =
+await fetch("/.netlify/functions/api/tkfm-public-metrics")
+
+const data =
+await res.json()
+
+document.getElementById("marketCap")
+.innerText =
+"$"+Number(data.market_cap||0).toLocaleString()
+
+document.getElementById("tradeVolume")
+.innerText =
+data.trade_volume || 0
+
+document.getElementById("engineCount")
+.innerText =
+data.active_engines || 0
+
+}
+
+async function loadEngines(){
+
+const res =
+await fetch("/.netlify/functions/api/tkfm-system-monitor")
+
+const data =
+await res.json()
+
+const container =
+document.getElementById("engineList")
+
+container.innerHTML=""
+
+(data.engines||[]).slice(0,100).forEach(e=>{
+
+const row=document.createElement("div")
+
+row.className="engine"
+
+row.innerText=e.engine+" ✓"
+
+container.appendChild(row)
+
+})
+
+}
+
+loadMetrics()
+loadEngines()
+
+setInterval(loadMetrics,5000)
+setInterval(loadEngines,10000)
+
+</script>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

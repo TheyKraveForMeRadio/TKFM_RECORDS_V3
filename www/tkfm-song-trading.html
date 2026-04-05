@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Song Market</title>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+margin:0;
+padding:20px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+margin-bottom:20px;
+}
+
+.price{
+font-size:28px;
+color:#22d3ee;
+}
+
+button{
+background:#f97316;
+border:none;
+padding:12px 20px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.orderbook{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.row{
+padding:6px 0;
+border-bottom:1px solid #1e293b;
+}
+
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1 id="song">Song</h1>
+
+<div class="panel">
+
+Price
+<div class="price" id="price">$0</div>
+
+</div>
+
+<div class="panel">
+
+<canvas id="chart" height="200"></canvas>
+
+</div>
+
+<div class="panel">
+
+<div class="orderbook">
+
+<div>
+<h3>Buy Orders</h3>
+<div id="buy"></div>
+</div>
+
+<div>
+<h3>Sell Orders</h3>
+<div id="sell"></div>
+</div>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Trade</h3>
+
+<input id="shares" placeholder="shares"/>
+
+<button onclick="buy()">Buy</button>
+<button onclick="sell()">Sell</button>
+
+</div>
+
+<script>
+
+const url = new URLSearchParams(window.location.search)
+const token = url.get("token_id")
+
+document.getElementById("song").innerText = token
+
+async function loadBook(){
+
+const res =
+await fetch("/.netlify/functions/api/orderbook-view?token_id="+token)
+
+const data = await res.json()
+
+const buy = document.getElementById("buy")
+const sell = document.getElementById("sell")
+
+buy.innerHTML=""
+sell.innerHTML=""
+
+(data.buys||[]).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="row"
+row.innerText=o.price+" ("+o.quantity+")"
+
+buy.appendChild(row)
+
+})
+
+(data.sells||[]).forEach(o=>{
+
+const row=document.createElement("div")
+row.className="row"
+row.innerText=o.price+" ("+o.quantity+")"
+
+sell.appendChild(row)
+
+})
+
+}
+
+async function buy(){
+
+const shares = document.getElementById("shares").value
+
+await fetch("/.netlify/functions/api/create-buy-order",{
+method:"POST",
+body:JSON.stringify({
+token_id:token,
+shares
+})
+})
+
+}
+
+async function sell(){
+
+const shares = document.getElementById("shares").value
+
+await fetch("/.netlify/functions/api/create-sell-order",{
+method:"POST",
+body:JSON.stringify({
+token_id:token,
+shares
+})
+})
+
+}
+
+loadBook()
+
+setInterval(loadBook,3000)
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

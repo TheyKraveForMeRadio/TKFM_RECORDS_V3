@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM TERMINAL</title>
+
+  <link rel="stylesheet" href="css/tkfm-global.css?v=8">
+
+  <style>
+    body { margin:0; }
+
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:15px 25px;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .container {
+      display:grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap:15px;
+      padding:15px;
+    }
+
+    .chart { height:300px; }
+    .orderbook { height:300px; overflow:auto; }
+    .trades { height:300px; overflow:auto; }
+
+    .card { padding:15px; }
+
+    .bid { color:#22c55e }
+    .ask { color:#ef4444 }
+
+    .trade {
+      font-size:12px;
+      padding:5px;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    canvas {
+      width:100%;
+      height:100%;
+      border-radius:10px;
+    }
+  </style>
+
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+
+<header>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <img src="tkfm-records-logo.png" class="logo" height="50">
+    <h2>TKFM EXCHANGE</h2>
+  </div>
+  <div>
+    <span id="price">$0</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="card chart">
+    <canvas id="chart"></canvas>
+  </div>
+
+  <div class="card orderbook">
+    <h3>Order Book</h3>
+    <div id="orderbook"></div>
+  </div>
+
+  <div class="card trades">
+    <h3>Live Trades</h3>
+    <div id="trades"></div>
+  </div>
+
+</div>
+
+<!-- 💰 DEPOSIT -->
+<div class="card" style="margin:20px;">
+  <h3>💰 Deposit Funds</h3>
+  <input id="amount" placeholder="Amount USD" />
+  <button onclick="deposit()">Deposit</button>
+</div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+const ws = new WebSocket("wss://tkfm-records-v3.onrender.com")
+
+async function loadOrderBook(){
+  const res = await authFetch( + "/orderbook-engine?catalog_id=song123")
+  const data = await res.json()
+
+  // ✅ SAFE FIX
+  const asks = data.asks || []
+  const bids = data.bids || []
+
+  let html = ""
+
+  asks.slice(0,10).forEach(a=>{
+    html += `<div class="ask">SELL $${a.price} (${a.quantity})</div>`
+  })
+
+  bids.slice(0,10).forEach(b=>{
+    html += `<div class="bid">BUY $${b.price} (${b.quantity})</div>`
+  })
+
+  document.getElementById("orderbook").innerHTML = html
+}
+
+async function loadTrades(){
+  const res = await authFetch( + "/trade-feed-engine")
+  const data = await res.json()
+
+  // ✅ SAFE FIX
+  const trades = data.trades || []
+
+  let html = ""
+
+  trades.slice(0,20).forEach(t=>{
+    html += `<div class="trade">$${t.price} | ${t.quantity}</div>`
+  })
+
+  document.getElementById("trades").innerHTML = html
+}
+
+async function deposit(){
+  const amount = document.getElementById("amount").value
+
+  const res = await authFetch( + "/stripe-deposit-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      amount,
+      user:"user1"
+    })
+  })
+
+  const data = await res.json()
+  window.location = data.url
+}
+
+ws.onmessage = ()=>{
+  loadOrderBook()
+  loadTrades()
+}
+
+loadOrderBook()
+loadTrades()
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>
+
+<div class="card" style="margin:20px;">
+  <h3>💸 Withdraw Funds</h3>
+  <input id="withdrawAmount" placeholder="Amount USD" />
+  <button onclick="withdraw()">Withdraw</button>
+</div>
+
+<script>
+async function withdraw(){
+  const amount = document.getElementById("withdrawAmount").value
+
+  const res = await authFetch( + "/withdraw-engine", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user:"user1",
+      amount
+    })
+  })
+
+  const data = await res.json()
+  alert(JSON.stringify(data))
+}
+</script>
+
+
+<button onclick="connectWallet()">Connect Wallet</button>
+<p id="walletDisplay"></p>
+
+<script>
+async function connectWallet(){
+
+  if(!window.ethereum){
+    alert("MetaMask not installed")
+    return
+  }
+
+  try {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts"
+    })
+
+    const wallet = accounts[0]
+
+    localStorage.setItem("wallet", wallet)
+
+    document.getElementById("walletDisplay").innerText =
+      "Wallet: " + wallet
+
+    // 🔗 send to backend
+    await fetch("https://tkfm-records-v3.onrender.com/engine/link-wallet-engine", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ wallet })
+    })
+
+  } catch(err){
+    console.log(err)
+  }
+}
+</script>
+

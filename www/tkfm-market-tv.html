@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Market TV</title>
+
+<style>
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+}
+
+.trade{
+padding:8px;
+border-bottom:1px solid #1e293b;
+}
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM MARKET TV</h1>
+
+<div class="panel">
+
+<h3>Live Trades</h3>
+
+<div id="trades"></div>
+
+</div>
+
+<script>
+
+const source = new EventSource("/.netlify/functions/api/tkfm-market-terminal-engine")
+
+source.onmessage = function(event){
+
+const data = JSON.parse(event.data)
+
+const container = document.getElementById("trades")
+
+container.innerHTML=""
+
+for(const trade of data.recent_trades){
+
+const div=document.createElement("div")
+
+div.className="trade"
+
+div.innerText=`Trade ${trade.id} | Price ${trade.price} | Qty ${trade.quantity}`
+
+container.appendChild(div)
+
+}
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

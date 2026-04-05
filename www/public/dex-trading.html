@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Royalty Token Exchange</h1>
+
+<input id="amount" placeholder="Amount">
+
+<button onclick="trade()">Swap</button>
+
+<script>
+
+async function trade(){
+
+ await fetch(
+ '/.netlify/functions/api/dex-trade',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   amount:
+   document.getElementById("amount").value
+  })
+ });
+
+ alert("Trade executed");
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

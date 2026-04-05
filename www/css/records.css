@@ -1,0 +1,19 @@
+﻿:root{
+  --bg:#020617;
+  --gold:#facc15;
+  --gold-dark:#eab308;
+  --orange:#f97316;
+}
+
+body{
+  background:var(--bg);
+  color:var(--gold);
+  font-family:system-ui,Arial;
+  margin:0;
+  padding:40px;
+}
+
+a{
+  color:var(--orange);
+  text-decoration:none;
+}

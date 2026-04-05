@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>TKFM Investor Terminal</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+border-radius:8px;
+}
+
+input{
+padding:10px;
+margin-top:10px;
+width:100%;
+}
+
+button{
+margin-top:10px;
+padding:10px;
+background:#facc15;
+border:none;
+cursor:pointer;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #1e293b;
+}
+
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM TRADING TERMINAL</h1>
+
+<div class="grid">
+
+<div class="panel">
+
+<h3>Order Book</h3>
+
+<table id="orderbook">
+
+<thead>
+<tr>
+<th>Side</th>
+<th>Price</th>
+<th>Qty</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<div class="panel">
+
+<h3>Place Order</h3>
+
+<input id="token" placeholder="Token ID">
+
+<input id="price" placeholder="Price">
+
+<input id="qty" placeholder="Quantity">
+
+<button onclick="buy()">BUY</button>
+<button onclick="sell()">SELL</button>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Live Trades</h3>
+
+<table id="trades">
+
+<thead>
+<tr>
+<th>Price</th>
+<th>Qty</th>
+</tr>
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+/* -------------------------
+ORDER BOOK
+------------------------- */
+
+async function loadOrderbook(){
+
+const res = await fetch("/.netlify/functions/api/orderbook-view")
+
+const data = await res.json()
+
+const table = document.querySelector("#orderbook tbody")
+
+table.innerHTML=""
+
+for(const o of data.orders || []){
+
+const row=document.createElement("tr")
+
+row.innerHTML=`
+<td>${o.side}</td>
+<td>${o.price}</td>
+<td>${o.quantity}</td>
+`
+
+table.appendChild(row)
+
+}
+
+}
+
+loadOrderbook()
+
+/* -------------------------
+TRADE FEED
+------------------------- */
+
+const source = new EventSource("/.netlify/functions/api/trade-feed")
+
+source.onmessage = function(event){
+
+const trade = JSON.parse(event.data)
+
+const table=document.querySelector("#trades tbody")
+
+const row=document.createElement("tr")
+
+row.innerHTML=`
+<td>${trade.price}</td>
+<td>${trade.quantity}</td>
+`
+
+table.prepend(row)
+
+}
+
+/* -------------------------
+BUY ORDER
+------------------------- */
+
+async function buy(){
+
+await fetch("/.netlify/functions/api/create-buy-order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+token_id:document.getElementById("token").value,
+price:document.getElementById("price").value,
+quantity:document.getElementById("qty").value
+
+})
+
+})
+
+}
+
+/* -------------------------
+SELL ORDER
+------------------------- */
+
+async function sell(){
+
+await fetch("/.netlify/functions/api/create-sell-order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+token_id:document.getElementById("token").value,
+price:document.getElementById("price").value,
+quantity:document.getElementById("qty").value
+
+})
+
+})
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

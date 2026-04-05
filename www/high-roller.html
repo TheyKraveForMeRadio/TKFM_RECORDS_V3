@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM High Stakes</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>💰 High Stakes Rooms</h1>
+
+<div id="rooms"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const rooms = await fetch(API + "/get-rooms")
+    .then(r=>r.json());
+
+  document.getElementById("rooms").innerHTML =
+    rooms.map(r=>`
+      <div class="card">
+        <h3>${r.name}</h3>
+        Entry: $${r.entry_fee} <br>
+        Pool: $${r.prize_pool}
+        <br><br>
+        <button onclick="join('${r.id}')">Join</button>
+      </div>
+    `).join("");
+
+}
+
+async function join(id){
+
+  const user = localStorage.getItem("tkfm_user");
+
+  await fetch(API + "/join-room",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ user, room_id:id })
+  });
+
+  alert("Entered High Stakes Room 💰");
+}
+
+load();
+
+</script>
+
+</body>
+</html>

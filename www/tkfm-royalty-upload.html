@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Upload Royalty Report</title>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Royalty Upload</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="revenue" placeholder="Revenue (USD)">
+<input id="period" placeholder="Period (YYYY-MM)">
+
+<button onclick="send()">Submit</button>
+
+<pre id="out"></pre>
+
+<script type="module">
+
+import { uploadRoyaltyReport } from "/js/tkfm-royalty-upload.js";
+
+async function send(){
+
+ const catalog_id = document.getElementById("catalog").value;
+ const revenue = Number(document.getElementById("revenue").value);
+ const period = document.getElementById("period").value;
+
+ const res = await uploadRoyaltyReport({
+   catalog_id,
+   gross_revenue: revenue,
+   period,
+   source:"manual"
+ });
+
+ document.getElementById("out").innerText =
+ JSON.stringify(res,null,2);
+
+}
+
+window.send = send;
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

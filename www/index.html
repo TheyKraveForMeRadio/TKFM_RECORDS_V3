@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM</title>
+  <style>
+    body {
+      background: #020617;
+      color: #facc15;
+      font-family: Arial;
+      text-align: center;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #facc15;
+    }
+
+    p {
+      color: #ccc;
+    }
+
+    input {
+      padding: 15px;
+      width: 80%;
+      border-radius: 10px;
+      border: 1px solid #facc15;
+      background: transparent;
+      color: white;
+      margin-top: 20px;
+    }
+
+    button {
+      background: #facc15;
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 20px;
+      width: 80%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>💰 Trade Music Like Stocks</h1>
+
+<p>Join the first users of TKFM</p>
+
+<input type="email" id="email" placeholder="Enter your email">
+
+<button onclick="join()">🚀 Join Now</button>
+
+<br><br>
+
+<button onclick="enterApp()">Enter App</button>
+
+<script>
+function join() {
+  let email = document.getElementById("email").value;
+
+  if (!email) {
+    alert("Enter your email");
+    return;
+  }
+
+  alert("Welcome to TKFM 🚀");
+}
+
+function enterApp() {
+  window.location.href = "trading.html";
+}
+</script>
+
+</body>
+</html>

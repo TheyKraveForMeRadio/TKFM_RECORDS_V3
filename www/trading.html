@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM LIVE MARKET</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<style>
+body { background:#020617; color:#facc15; text-align:center; }
+h1 { color:#22d3ee; }
+
+.card {
+  border:2px solid #facc15;
+  margin:20px;
+  padding:20px;
+  border-radius:20px;
+}
+
+button {
+  background:#facc15;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin:5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🚀 TKFM LIVE MARKET</h1>
+
+<div id="market"></div>
+
+<div class="card">
+<h2>Your Balance</h2>
+<p id="balance">$0</p>
+</div>
+
+<div class="card">
+<h2>📦 Your Portfolio</h2>
+<div id="portfolio"></div>
+</div>
+
+<script>
+
+// 🔥 USER SYSTEM (FIXED)
+if (!localStorage.getItem("tkfm_user")) {
+  localStorage.setItem("tkfm_user", "djkrave_main_user");
+}
+const userId = localStorage.getItem("tkfm_user");
+
+const SUPABASE_URL = "https://jgopbtuteqzooomxaulx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+
+const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 🔥 ENSURE USER EXISTS
+async function ensureUser(){
+  await client.rpc('ensure_user', { u: userId });
+}
+
+// 🔥 LOAD BALANCE (NEW SYSTEM)
+async function loadBalance(){
+  const { data } = await client
+    .from("balances")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  document.getElementById("balance").innerText =
+    "$" + (data?.balance || 0);
+}
+
+// 🔥 LOAD MARKET
+async function loadMarket(){
+  const { data } = await client.from("market").select("*");
+
+  const el = document.getElementById("market");
+  el.innerHTML = "";
+
+  data.forEach(song => {
+    el.innerHTML += `
+      <div class="card">
+        <h2>${song.title}</h2>
+        <p>Price: $${song.price.toFixed(2)}</p>
+        <button onclick="buy('${song.id}')">BUY</button>
+        <button onclick="sell('${song.id}')">SELL</button>
+      </div>
+    `;
+  });
+}
+
+// 🔥 BUY (USES SQL FUNCTION)
+async function buy(trackId){
+  await client.rpc('buy_track', {
+    u: userId,
+    t: trackId
+  });
+  refresh();
+}
+
+// 🔥 SELL (USES SQL FUNCTION)
+async function sell(trackId){
+  await client.rpc('sell_track', {
+    u: userId,
+    t: trackId
+  });
+  refresh();
+}
+
+// 🔥 LOAD PORTFOLIO
+async function loadPortfolio(){
+  const { data } = await client
+    .from("portfolio")
+    .select("*")
+    .eq("user_id", userId);
+
+  const el = document.getElementById("portfolio");
+  el.innerHTML = "";
+
+  for(const item of data || []){
+
+    if(item.shares > 0){
+
+      const { data:song } = await client
+        .from("market")
+        .select("*")
+        .eq("id", item.track_id)
+        .single();
+
+      el.innerHTML += `
+        <div>
+          <strong>${song.title}</strong><br>
+          Shares: ${item.shares}<br>
+          Value: $${(song.price * item.shares).toFixed(2)}<br>
+          <button onclick="sell('${song.id}')">Sell 1</button>
+        </div>
+      `;
+    }
+  }
+}
+
+// 🔥 REFRESH UI
+async function refresh(){
+  await loadBalance();
+  await loadPortfolio();
+  await loadMarket();
+}
+
+// 🚀 LIVE UPDATES
+client
+  .channel('market-live')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'market' },
+    () => refresh()
+  )
+  .subscribe();
+
+// 🔥 AUTO PRICE ENGINE
+setInterval(async () => {
+  await client.rpc('update_prices');
+}, 5000);
+
+// 🚀 START
+async function start(){
+  await ensureUser();
+  await refresh();
+}
+
+start();
+
+</script>
+
+</body>
+</html>

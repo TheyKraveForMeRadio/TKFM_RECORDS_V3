@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
+  <title>Executive Control Center</title>
+  <style>
+    h1 { color:#facc15; }
+  </style>
+<script src="/js/tkfm-master-autoload.js"></script>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+<header style="display:flex;align-items:center;gap:15px;padding:20px;">
+<img src="public/tkfm-records-logo.png" class="logo" height="60">
+<h1>TKFM EXCHANGE</h1>
+</header>
+
+<h1>Executive Control Center</h1>
+
+<div class="card">
+  <h3>Core Metrics</h3>
+  <pre id="metrics"></pre>
+</div>
+
+<div class="card">
+  <h3>Pipeline Forecast</h3>
+  <pre id="pipeline"></pre>
+</div>
+
+<div class="card">
+  <h3>Revenue Quality</h3>
+  <pre id="quality"></pre>
+</div>
+
+<script>
+
+async function load() {
+
+  const metrics =
+    await fetch('/.netlify/functions/api/metrics-engine');
+  document.getElementById("metrics").textContent =
+    JSON.stringify(await metrics.json(),null,2);
+
+  const pipeline =
+    await fetch('/.netlify/functions/api/pipeline-forecast');
+  document.getElementById("pipeline").textContent =
+    JSON.stringify(await pipeline.json(),null,2);
+
+  const quality =
+    await fetch('/.netlify/functions/api/revenue-quality');
+  document.getElementById("quality").textContent =
+    JSON.stringify(await quality.json(),null,2);
+}
+
+load();
+setInterval(load,30000);
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

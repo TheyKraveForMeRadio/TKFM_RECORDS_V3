@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Web3 Login</title>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body style="background:#020617;color:#facc15;font-family:Arial;padding:40px;">
+
+<h1>🪙 Connect Wallet</h1>
+
+<button onclick="connectWallet()">Connect MetaMask</button>
+
+<div id="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.min.js"></script>
+
+<script>
+
+async function connectWallet(){
+
+  if(!window.ethereum){
+    alert("Install MetaMask");
+    return;
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+
+  const accounts = await provider.send("eth_requestAccounts", []);
+  const address = accounts[0];
+
+  document.getElementById("status").innerText =
+    "Connected: " + address;
+
+  // SAVE USER
+  localStorage.setItem("tkfm_user", address);
+
+  // SEND TO BACKEND (AUTO CREATE USER)
+  await fetch("/.netlify/functions/web3-login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ address })
+  });
+
+  window.location = "/tkfm-hub.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
+<title>Secondary Market</title>
+<script src="/js/tkfm-master-autoload.js"></script>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+
+
+<h1>Investor Secondary Market</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="shares" placeholder="Shares">
+<input id="price" placeholder="Price">
+
+<button onclick="sell()">Create Sell Order</button>
+
+<script>
+
+async function sell(){
+
+ const catalog =
+ document.getElementById("catalog").value;
+
+ const shares =
+ document.getElementById("shares").value;
+
+ const price =
+ document.getElementById("price").value;
+
+ await fetch(
+ '/.netlify/functions/api/create-sell-order',
+ {
+  method:"POST",
+  body:JSON.stringify({
+   catalog,
+   shares,
+   price
+  })
+ }
+ );
+
+ alert("Sell order created");
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

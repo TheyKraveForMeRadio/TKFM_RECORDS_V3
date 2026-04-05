@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Live Market</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+  background:#020617;
+  color:#facc15;
+  font-family:Arial;
+  padding:20px;
+}
+
+/* ✨ Glow Effects */
+.glow{
+  text-shadow:0 0 10px #facc15, 0 0 20px #eab308;
+}
+
+/* 💎 Cards */
+.card{
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(10px);
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:15px;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.02);
+  box-shadow:0 0 25px rgba(250,204,21,0.3);
+}
+
+/* 🚀 Buttons */
+button{
+  background:linear-gradient(45deg,#facc15,#f97316);
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  color:#000;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px #facc15;
+}
+
+/* 🔥 Animations */
+.fade-in{
+  animation:fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* 📊 Chart Container */
+#chart{
+  max-height:300px;
+}
+
+</style>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body class="fade-in">
+
+<h1 class="glow">📈 TKFM LIVE MARKET</h1>
+
+<div class="card">
+  <canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+  <h2>Market Actions</h2>
+  <button onclick="refresh()">Refresh Chart</button>
+</div>
+
+<script type="module">
+
+import { loadChart } from "/js/tkfm-charts.js";
+
+async function refresh(){
+  await loadChart("demo");
+}
+
+window.refresh = refresh;
+
+// AUTO LOAD
+loadChart("demo");
+
+// 🔄 AUTO REFRESH EVERY 5s
+setInterval(()=>loadChart("demo"),5000);
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

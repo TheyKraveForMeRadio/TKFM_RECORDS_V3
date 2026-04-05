@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notifications</title>
+  <link rel="stylesheet" href="css/tkfm-global.css">
+
+  <style>
+    body { padding:10px }
+    .notif {
+      margin:10px;
+      padding:10px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.05);
+    }
+  </style>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<h2>🔔 Notifications</h2>
+
+<div id="list"></div>
+
+<script>
+const API = "https://tkfm-records-v3.onrender.com/engine"
+const user = "user1"
+
+async function load(){
+  const res = await authFetch( + "/get-notifications-engine?user=" + user)
+  const data = await res.json()
+
+  let html = ""
+
+  data.notifications.forEach(n=>{
+    html += `<div class="notif">${n.message}</div>`
+  })
+
+  document.getElementById("list").innerHTML = html
+}
+
+setInterval(load, 2000)
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM PRO TRADING</title>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<style>
+body{ padding:20px; }
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:20px;
+}
+
+#chart{
+  height:300px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>📊 TKFM PRO TRADING</h1>
+
+<div class="loading">LIVE</div>
+
+<!-- 🔥 CANDLE CHART -->
+<div class="card">
+  <h3>📈 Price Chart</h3>
+  <div id="chart"></div>
+</div>
+
+<div class="grid">
+
+<!-- LIVE MARKET -->
+<div class="card">
+  <h3>📡 Live Market</h3>
+  <h2 id="live-price">$0</h2>
+  <div id="live-trades"></div>
+</div>
+
+<!-- ORDERBOOK -->
+<div class="card">
+  <h3>📚 Orderbook Depth</h3>
+
+  <div class="orderbook">
+    <div>
+      <h4>🟢 Bids</h4>
+      <div id="bids"></div>
+    </div>
+
+    <div>
+      <h4>🔴 Asks</h4>
+      <div id="asks"></div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<script src="/js/tkfm-live.js"></script>
+<script src="/js/tkfm-orderbook-live.js"></script>
+<script src="/js/tkfm-chart.js"></script>
+
+</body>
+</html>
+
+<div class="card">
+  <h3>⚡ Advanced Orders</h3>
+
+  <select id="type">
+    <option value="limit">Limit Order</option>
+    <option value="stop">Stop Loss</option>
+  </select><br><br>
+
+  <input id="adv-user" placeholder="User"/><br><br>
+  <input id="adv-catalog" placeholder="Catalog ID"/><br><br>
+  <input id="adv-price" placeholder="Limit Price"/><br><br>
+  <input id="adv-stop" placeholder="Stop Price"/><br><br>
+  <input id="adv-shares" placeholder="Shares"/><br><br>
+
+  <button onclick="placeAdvanced('buy')">Buy</button>
+  <button onclick="placeAdvanced('sell')">Sell</button>
+
+</div>
+
+<script>
+
+async function placeAdvanced(side){
+
+  await fetch(API + "/advanced-order-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user: document.getElementById("adv-user").value,
+      catalog_id: document.getElementById("adv-catalog").value,
+      type: document.getElementById("type").value,
+      side,
+      price: Number(document.getElementById("adv-price").value),
+      stop_price: Number(document.getElementById("adv-stop").value),
+      shares: Number(document.getElementById("adv-shares").value)
+    })
+  });
+
+  alert("Advanced Order Placed");
+}
+
+</script>
+
+
+<div class="card">
+  <h3>🧠 Pro Trader</h3>
+
+  <select id="type">
+    <option value="limit">Limit</option>
+    <option value="stop">Stop Loss</option>
+  </select><br><br>
+
+  <input id="adv-user" placeholder="User"/><br><br>
+  <input id="adv-catalog" placeholder="Catalog ID"/><br><br>
+  <input id="adv-price" placeholder="Limit Price"/><br><br>
+  <input id="adv-stop" placeholder="Stop Price"/><br><br>
+  <input id="adv-tp" placeholder="Take Profit"/><br><br>
+  <input id="adv-trail" placeholder="Trailing %"/><br><br>
+  <input id="adv-shares" placeholder="Shares"/><br><br>
+
+  <button onclick="placeAdvanced('buy')">Buy</button>
+  <button onclick="placeAdvanced('sell')">Sell</button>
+</div>
+
+<script>
+async function placeAdvanced(side){
+
+  await fetch(API + "/advanced-order-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user: document.getElementById("adv-user").value,
+      catalog_id: document.getElementById("adv-catalog").value,
+      type: document.getElementById("type").value,
+      side,
+      price: Number(document.getElementById("adv-price").value),
+      stop_price: Number(document.getElementById("adv-stop").value),
+      take_profit: Number(document.getElementById("adv-tp").value),
+      trailing_percent: Number(document.getElementById("adv-trail").value),
+      shares: Number(document.getElementById("adv-shares").value)
+    })
+  });
+
+  alert("Pro Order Placed 🚀");
+}
+</script>
+
+
+<div class="card">
+  <h3>🤖 AI Trading Assistant</h3>
+
+  <div id="ai-signal">Loading...</div>
+
+  <button onclick="runAI()">Run AI Trade</button>
+</div>
+
+<script>
+
+async function loadAI(){
+
+  const res = await fetch(API + "/ai-signal-engine");
+  const data = await res.json();
+
+  document.getElementById("ai-signal").innerHTML =
+    `Signal: <b>${data.signal.toUpperCase()}</b> <br>
+     Price: $${data.price}`;
+}
+
+async function runAI(){
+
+  await fetch(API + "/ai-auto-trade");
+  alert("AI Trade Executed 🤖");
+}
+
+setInterval(loadAI,3000);
+loadAI();
+
+</script>
+

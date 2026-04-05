@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Invest in Catalog</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="amount" placeholder="Investment Amount">
+
+<button onclick="invest()">Invest</button>
+
+<script>
+
+async function invest(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/stripe-investor-checkout',
+ {
+  method:"POST",
+
+  body:JSON.stringify({
+
+   catalog:
+   document.getElementById("catalog").value,
+
+   amount:
+   document.getElementById("amount").value
+
+  })
+
+ });
+
+ const data =
+ await res.json();
+
+ window.location =
+ data.url;
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TKFM Risk Command Center</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { background:#020617; color:#e5e7eb; font-family:system-ui; padding:30px; }
+h1 { color:#facc15; }
+h2 { color:#eab308; margin-top:30px; }
+
+.card {
+  background:rgba(250,204,21,0.06);
+  border:1px solid #eab308;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.metric-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+
+.metric-box {
+  background:rgba(250,204,21,0.12);
+  padding:12px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.heatmap {
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.heatbox {
+  height:26px;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+button {
+  background:#facc15;
+  border:none;
+  padding:6px 12px;
+  cursor:pointer;
+}
+
+button:hover { background:#eab308; }
+
+canvas {
+  background:#0f172a;
+  border-radius:8px;
+  padding:10px;
+}
+</style>
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+<body>
+
+<h1>TKFM — Risk Command Center</h1>
+
+<h2>Live Risk Overview</h2>
+<div class="card">
+  <div id="metrics" class="metric-grid"></div>
+</div>
+
+<h2>Entity Risk Heatmap</h2>
+<div class="card">
+  <div id="heatmap" class="heatmap"></div>
+</div>
+
+<h2>Entity Timeline Risk Graph</h2>
+<div class="card">
+  <canvas id="riskChart" height="120"></canvas>
+</div>
+
+<h2>Freeze / Unfreeze Event Timeline</h2>
+<div class="card">
+  <canvas id="eventChart" height="120"></canvas>
+</div>
+
+<h2>Risk Audit Export</h2>
+<div class="card">
+  <button onclick="downloadPDF()">Download Risk Audit PDF</button>
+</div>
+
+<script>
+
+let selectedEntity = null;
+let riskChart = null;
+let eventChart = null;
+
+async function loadOverview() {
+  const res = await fetch('/.netlify/functions/api/risk-dashboard');
+  const data = await res.json();
+
+  const metrics = document.getElementById("metrics");
+  metrics.innerHTML = `
+    <div class="metric-box">Total Entities<br><strong>${data.total_entities}</strong></div>
+    <div class="metric-box">Frozen<br><strong>${data.frozen_entities}</strong></div>
+    <div class="metric-box">Average Risk<br><strong>${Math.round(data.average_risk)}</strong></div>
+    <div class="metric-box">High Risk<br><strong>${data.highRiskEntities.length}</strong></div>
+  `;
+
+  renderHeatmap(data.highRiskEntities, data.total_entities);
+}
+
+function renderHeatmap(highRiskList,total) {
+
+  const container = document.getElementById("heatmap");
+  container.innerHTML = "";
+
+  fetch('/.netlify/functions/api/risk-dashboard')
+    .then(res=>res.json())
+    .then(data=>{
+
+      data.highRiskEntities.forEach(e=>{
+        const box = document.createElement("div");
+        box.className="heatbox";
+
+        const intensity = e.risk_score || 0;
+        box.style.background =
+          `rgba(255,0,0,${intensity/100})`;
+
+        box.title = e.entity_id+" ("+intensity+")";
+
+        box.onclick = () => {
+          selectedEntity = e.entity_id;
+          loadTimeline(e.entity_id);
+        };
+
+        container.appendChild(box);
+      });
+    });
+}
+
+async function loadTimeline(entity_id) {
+
+  const riskRes = await fetch(
+    '/.netlify/functions/api/risk-timeseries?entity_id='+entity_id
+  );
+  const riskData = await riskRes.json();
+
+  const labels = riskData.map(d =>
+    new Date(d.created_at).toLocaleDateString()
+  );
+
+  const scores = riskData.map(d => d.risk_score);
+
+  const ctx = document.getElementById('riskChart').getContext('2d');
+
+  if (riskChart) riskChart.destroy();
+
+  riskChart = new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Risk Score',
+        data:scores,
+        borderColor:'#facc15',
+        backgroundColor:'rgba(250,204,21,0.3)',
+        tension:0.3
+      }]
+    },
+    options:{
+      scales:{ y:{ min:0, max:100 } }
+    }
+  });
+
+  loadEventTimeline(entity_id);
+}
+
+async function loadEventTimeline(entity_id) {
+
+  const res = await fetch(
+    '/.netlify/functions/api/risk-event-timeline?entity_id='+entity_id
+  );
+  const events = await res.json();
+
+  const labels = events.map(e =>
+    new Date(e.created_at).toLocaleDateString()
+  );
+
+  const values = events.map(e =>
+    e.event_type.includes("FREEZE") ? 100 : 0
+  );
+
+  const ctx = document.getElementById('eventChart').getContext('2d');
+
+  if (eventChart) eventChart.destroy();
+
+  eventChart = new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'Freeze Events',
+        data:values,
+        backgroundColor:'#ef4444'
+      }]
+    },
+    options:{
+      scales:{ y:{ min:0, max:100 } }
+    }
+  });
+}
+
+function downloadPDF() {
+  if (!selectedEntity) {
+    alert("Select entity from heatmap first.");
+    return;
+  }
+  window.location =
+    '/.netlify/functions/api/risk-audit-pdf?entity_id='+selectedEntity;
+}
+
+loadOverview();
+setInterval(loadOverview,30000);
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

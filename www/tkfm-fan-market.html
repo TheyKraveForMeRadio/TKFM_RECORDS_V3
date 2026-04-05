@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Royalty Market</title>
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Invest In Music Royalties</h1>
+
+<button onclick="load()">View Catalog Market</button>
+
+<pre id="market"></pre>
+
+<script>
+
+async function load(){
+
+const res = await fetch(
+"/.netlify/functions/api/fan-royalty-market"
+)
+
+const data = await res.json()
+
+document.getElementById("market").innerText =
+JSON.stringify(data,null,2)
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

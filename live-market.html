@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>TKFM LIVE MARKET</title>
+  <style>
+    body {
+      background:#020617;
+      color:#facc15;
+      font-family:Arial;
+      text-align:center;
+      padding:20px;
+    }
+    .card {
+      border:2px solid #facc15;
+      border-radius:20px;
+      padding:20px;
+      margin:20px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🚀 TKFM LIVE MARKET</h1>
+
+<div class="card">
+  <h2>Your Balance</h2>
+  <div id="balance">$0</div>
+</div>
+
+<div class="card">
+  <h2>📦 Your Portfolio</h2>
+  <div id="portfolio"></div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://jgopbtuteqzooomxaulx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+
+async function loadBalance() {
+  const user = localStorage.getItem("tkfm_user") || "djkrave_main_user";
+
+  // FORCE CREATE USER
+  await fetch(`${SUPABASE_URL}/rest/v1/rpc/ensure_user`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ u: user })
+  });
+
+  // GET BALANCE
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/balances?user_id=eq.${user}`,
+    {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  document.getElementById("balance").innerText =
+    "$" + (data[0]?.balance || 0);
+}
+
+loadBalance();
+</script>
+
+</body>
+</html>

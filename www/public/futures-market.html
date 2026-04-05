@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Catalog Futures Market</h1>
+
+<pre id="futures"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/futures-engine'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("futures")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

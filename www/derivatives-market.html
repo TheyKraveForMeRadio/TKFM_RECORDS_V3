@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Music Derivatives Market</title>
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Music Revenue Futures</h1>
+
+<div id="contracts"></div>
+
+<script>
+
+async function loadContracts(){
+
+ const res = await fetch(
+  "/.netlify/functions/api/derivatives-market"
+ );
+
+ const data = await res.json();
+
+ document.getElementById("contracts").innerHTML =
+  JSON.stringify(data,null,2);
+
+}
+
+loadContracts();
+
+setInterval(loadContracts,60000);
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

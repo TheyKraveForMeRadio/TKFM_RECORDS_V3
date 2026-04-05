@@ -93,3 +93,14 @@ function go(){
 
 </body>
 </html>
+
+<script>
+// 🔥 SAVE REF CODE
+const params = new URLSearchParams(window.location.search);
+const ref = params.get("ref");
+
+if(ref){
+  localStorage.setItem("tkfm_ref", ref);
+}
+</script>
+

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload Track</title>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>🎤 Upload Track</h1>
+
+<div class="card">
+
+<input id="artist" placeholder="Artist Name"/>
+<br><br>
+
+<input id="title" placeholder="Track Title"/>
+<br><br>
+
+<button onclick="upload()">Upload</button>
+
+<div id="status"></div>
+
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function upload(){
+
+  const artist = document.getElementById("artist").value;
+  const title = document.getElementById("title").value;
+
+  const res = await fetch(API + "/artist-upload-engine",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ artist, title })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("status").innerText =
+    "Uploaded 🚀";
+}
+
+</script>
+
+</body>
+</html>

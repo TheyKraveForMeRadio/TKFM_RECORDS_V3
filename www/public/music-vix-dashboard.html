@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>MUSIC-VIX Volatility Index</h1>
+
+<pre id="vix"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/music-vix-engine'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("vix")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

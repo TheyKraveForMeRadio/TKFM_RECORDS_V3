@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KYC Verification</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>🪪 Verify Your Identity</h1>
+
+<div class="card">
+
+<input id="name" placeholder="Full Name"/><br><br>
+<input id="doc" placeholder="Document URL"/><br><br>
+
+<button onclick="submitKYC()">Submit KYC</button>
+
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function submitKYC(){
+
+  const user = localStorage.getItem("tkfm_user");
+
+  await fetch(API + "/kyc-submit",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      user,
+      full_name: document.getElementById("name").value,
+      document_url: document.getElementById("doc").value
+    })
+  });
+
+  alert("KYC Submitted ✅");
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Tournament</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>🏆 Live Tournament</h1>
+
+<div id="season"></div>
+<div id="leaders"></div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const season = await fetch(API + "/get-active-season")
+    .then(r=>r.json());
+
+  document.getElementById("season").innerHTML =
+    `<div class="card">
+      Season: ${season.name} <br>
+      Prize Pool: $${season.prize_pool}
+    </div>`;
+
+  const leaders = await fetch(API + "/tournament-leaderboard")
+    .then(r=>r.json());
+
+  document.getElementById("leaders").innerHTML =
+    leaders.map((l,i)=>`
+      <div class="card">
+        #${i+1} ${l.username} — $${l.pnl}
+      </div>
+    `).join("");
+
+}
+
+setInterval(load,3000);
+load();
+
+</script>
+
+</body>
+</html>

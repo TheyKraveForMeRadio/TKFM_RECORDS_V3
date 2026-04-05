@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
+  <title>Growth Intelligence</title>
+  <style>
+  </style>
+<script src="/js/tkfm-master-autoload.js"></script>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body>
+<header style="display:flex;align-items:center;gap:15px;padding:20px;">
+<img src="public/tkfm-records-logo.png" class="logo" height="60">
+<h1>TKFM EXCHANGE</h1>
+</header>
+
+<h1>Real-Time Growth Dashboard</h1>
+
+<div class="card">
+  <h3>Revenue Metrics</h3>
+  <pre id="revenue"></pre>
+</div>
+
+<div class="card">
+  <h3>NRR</h3>
+  <pre id="nrr"></pre>
+</div>
+
+<div class="card">
+  <h3>Churn Risk</h3>
+  <pre id="churn"></pre>
+</div>
+
+<script>
+
+async function load() {
+
+  const rev = await fetch('/.netlify/functions/api/revenue-forecast-dashboard');
+  document.getElementById("revenue").textContent =
+    JSON.stringify(await rev.json(),null,2);
+
+  const nrr = await fetch('/.netlify/functions/api/net-revenue-retention');
+  document.getElementById("nrr").textContent =
+    JSON.stringify(await nrr.json(),null,2);
+
+  const churn = await fetch('/.netlify/functions/api/churn-prediction');
+  document.getElementById("churn").textContent =
+    JSON.stringify(await churn.json(),null,2);
+}
+
+load();
+setInterval(load,30000);
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

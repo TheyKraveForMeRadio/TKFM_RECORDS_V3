@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Investor Dashboard</title>
+<style>
+body{font-family:Arial;background:#020617;color:#facc15;padding:20px}
+.card{background:#111827;padding:15px;margin-bottom:10px;border-radius:10px}
+h1{color:#facc15}
+</style>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>📊 Investor Dashboard</h1>
+
+<div class="card">
+  <h2>Wallet Balance</h2>
+  <div id="balance">$0</div>
+</div>
+
+<div class="card">
+  <h2>Total Portfolio Value</h2>
+  <div id="total">$0</div>
+</div>
+
+<div class="card">
+  <h2>Holdings</h2>
+  <div id="holdings"></div>
+</div>
+
+<div class="card">
+  <h2>PnL History</h2>
+  <div id="pnl"></div>
+</div>
+
+<button onclick="load()">Refresh</button>
+
+<script type="module">
+
+import { getPortfolio } from "/js/tkfm-portfolio.js";
+
+async function load(){
+
+ const data = await getPortfolio();
+
+ document.getElementById("balance").innerText = "$" + data.balance.toFixed(2);
+ document.getElementById("total").innerText = "$" + data.totalValue.toFixed(2);
+
+ // 📊 HOLDINGS
+ const holdingsDiv = document.getElementById("holdings");
+ holdingsDiv.innerHTML = "";
+
+ data.holdings.forEach(h => {
+   const el = document.createElement("div");
+   el.innerHTML = `
+     <p>Catalog: ${h.catalog_id}</p>
+     <p>Shares: ${h.shares}</p>
+     <p>Ownership: ${(h.percent*100).toFixed(2)}%</p>
+     <hr/>
+   `;
+   holdingsDiv.appendChild(el);
+ });
+
+ // 📈 PNL
+ const pnlDiv = document.getElementById("pnl");
+ pnlDiv.innerHTML = "";
+
+ data.pnlHistory.forEach(p => {
+   const el = document.createElement("div");
+   el.innerHTML = `
+     <p>${p.type} — $${p.amount.toFixed(2)}</p>
+   `;
+   pnlDiv.appendChild(el);
+ });
+
+}
+
+window.load = load;
+
+load();
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

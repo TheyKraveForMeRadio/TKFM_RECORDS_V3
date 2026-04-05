@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Artist Payouts</h1>
+
+<button onclick="connect()">Connect Stripe</button>
+
+<script>
+
+async function connect(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/stripe-connect-onboard'
+ );
+
+ const data =
+ await res.json();
+
+ window.location =
+ data.url;
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

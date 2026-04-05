@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
+
+<title>TKFM Music Asset Exchange</title>
+
+<style>
+
+body{
+color:#e5e7eb;
+font-family:system-ui;
+padding:30px;
+}
+
+.card{
+border:1px solid #22d3ee;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+button{
+border:none;
+padding:8px 16px;
+cursor:pointer;
+}
+
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+<header style="display:flex;align-items:center;gap:15px;padding:20px;">
+<img src="public/tkfm-records-logo.png" class="logo" height="60">
+<h1>TKFM EXCHANGE</h1>
+</header>
+
+<h1>TKFM Music Asset Exchange</h1>
+
+<div class="card">
+
+<h2>Global Catalog Listings</h2>
+
+<a href="/catalog-listings.html">
+<button>Browse Catalogs</button>
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>Investor Portfolio</h2>
+
+<a href="/investor-portfolio.html">
+<button>View Portfolio</button>
+</a>
+
+</div>
+
+<div class="card">
+
+<h2>Trading Terminal</h2>
+
+<a href="/trading-terminal.html">
+<button>Open Terminal</button>
+</a>
+
+</div>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

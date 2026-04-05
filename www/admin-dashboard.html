@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM ADMIN</title>
+
+<style>
+body{
+  background:#020617;
+  color:#facc15;
+  font-family:Arial;
+  padding:20px;
+}
+
+.card{
+  border:1px solid #facc15;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.big{
+  font-size:32px;
+  color:#22c55e;
+}
+
+.lock{
+  color:#ef4444;
+  font-size:18px;
+}
+</style>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>🔐 TKFM ADMIN (SECURE)</h1>
+
+<input id="key" placeholder="Enter admin key"/>
+<button onclick="login()">Unlock</button>
+
+<div id="locked" class="lock">LOCKED</div>
+
+<div id="panel" style="display:none">
+
+<button onclick="load()">Refresh</button>
+
+<div class="card">
+<h3>Total Revenue</h3>
+<div id="revenue" class="big">$0</div>
+</div>
+
+<div class="card">
+<h3>Total Trades</h3>
+<div id="tradesCount" class="big">0</div>
+</div>
+
+<div class="card">
+<h3>Recent Fees</h3>
+<div id="fees"></div>
+</div>
+
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+let ADMIN_KEY = "";
+
+function login(){
+  ADMIN_KEY = document.getElementById("key").value;
+
+  if(!ADMIN_KEY){
+    alert("Enter key");
+    return;
+  }
+
+  document.getElementById("locked").innerText = "UNLOCKED";
+  document.getElementById("panel").style.display = "block";
+}
+
+async function load(){
+
+  const res = await fetch(API + "/get-admin-revenue", {
+    headers: {
+      "x-admin-key": ADMIN_KEY
+    }
+  });
+
+  const data = await res.json();
+
+  if(data.error){
+    alert("ACCESS DENIED");
+    return;
+  }
+
+  document.getElementById("revenue").innerText =
+    "$" + Number(data.totalRevenue || 0).toFixed(2);
+
+  document.getElementById("tradesCount").innerText =
+    data.tradeCount || 0;
+
+  document.getElementById("fees").innerHTML =
+    (data.recentFees || [])
+      .map(f => `$${Number(f.amount).toFixed(2)}`)
+      .join("<br>");
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

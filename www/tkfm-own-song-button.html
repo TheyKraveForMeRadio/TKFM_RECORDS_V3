@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Own Your Song — TKFM</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+text-align:center;
+padding:80px;
+}
+
+button{
+background:#facc15;
+border:none;
+padding:20px 40px;
+font-size:20px;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+</style>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Turn Your Song Into an Asset</h1>
+
+<p>
+Upload a track and launch it as a financial asset on TKFM.
+</p>
+
+<button onclick="launchIPO()">
+OWN YOUR SONG
+</button>
+
+<script>
+
+async function launchIPO(){
+
+const res =
+await fetch("/.netlify/functions/api/song-ipo-engine",{
+method:"POST"
+})
+
+const data =
+await res.json()
+
+alert("Song IPO launched!")
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

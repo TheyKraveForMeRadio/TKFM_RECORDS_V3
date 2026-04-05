@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Payment Rail</title>
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM Global Creator Payment Rail</h1>
+
+<pre id="data"></pre>
+
+<script>
+
+async function load(){
+
+ const res = await fetch("/.netlify/functions/api/payment-rail-api")
+
+ const data = await res.json()
+
+ document.getElementById("data").innerText =
+  JSON.stringify(data,null,2)
+
+}
+
+load()
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

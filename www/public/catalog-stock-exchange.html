@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Global Catalog Stock Exchange</h1>
+
+<pre id="stocks"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/catalog-stock-market'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("stocks")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

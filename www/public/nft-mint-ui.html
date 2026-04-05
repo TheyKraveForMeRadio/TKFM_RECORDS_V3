@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Mint Catalog NFT</h1>
+
+<input id="wallet" placeholder="Wallet Address"><br><br>
+<input id="uri" placeholder="Metadata URI"><br><br>
+
+<button onclick="mint()">Mint</button>
+
+<script>
+
+async function mint(){
+
+ await fetch(
+  '/.netlify/functions/api/mint-catalog',
+  {
+   method:"POST",
+   body:JSON.stringify({
+
+    wallet:
+    document.getElementById("wallet").value,
+
+    uri:
+    document.getElementById("uri").value
+
+   })
+  }
+ );
+
+ alert("NFT Minted");
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

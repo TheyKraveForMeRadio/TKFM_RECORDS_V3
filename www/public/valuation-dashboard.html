@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Live Catalog Valuations</h1>
+
+<pre id="valuation"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/catalog-live-valuation'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("valuation")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

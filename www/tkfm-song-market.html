@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM Song Market</title>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Song Market</h1>
+
+<div id="market"></div>
+
+<script type="module">
+
+import "/js/tkfm-market-actions.js";
+
+async function loadMarket(){
+
+ const res = await fetch("/.netlify/functions/engine/orderbook-engine?catalog_id=demo");
+ const data = await res.json();
+
+ const marketDiv = document.getElementById("market");
+
+ marketDiv.innerHTML = "";
+
+ (data.sells || []).forEach(order => {
+
+   const el = document.createElement("div");
+
+   el.innerHTML = `
+     <p>Price: ${order.price}</p>
+     <button onclick="buyNow('demo', ${order.price})">Buy</button>
+   `;
+
+   marketDiv.appendChild(el);
+
+ });
+
+}
+
+loadMarket();
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>

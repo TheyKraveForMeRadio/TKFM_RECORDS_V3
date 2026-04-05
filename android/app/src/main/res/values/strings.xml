@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">TKFM PRO TRADING</string>
+    <string name="title_activity_main">TKFM PRO TRADING</string>
+    <string name="package_name">com.tkfm.app</string>
+    <string name="custom_url_scheme">com.tkfm.app</string>
+</resources>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TKFM Market Terminal</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:Arial;
+margin:0;
+padding:40px;
+}
+
+h1{
+color:#facc15;
+}
+
+.panel{
+background:#0f172a;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+}
+
+.value{
+font-size:24px;
+color:#22c55e;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #1e293b;
+}
+
+</style>
+
+<script src="/js/tkfm-master-autoload.js"></script>
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>TKFM MARKET TERMINAL</h1>
+
+<div class="panel">
+
+<h3>Market Cap</h3>
+<div id="marketCap" class="value">Loading...</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Catalog Count</h3>
+<div id="catalogCount" class="value">Loading...</div>
+
+</div>
+
+<div class="panel">
+
+<h3>Recent Trades</h3>
+
+<table id="tradeTable">
+
+<thead>
+<tr>
+<th>Trade ID</th>
+<th>Price</th>
+<th>Quantity</th>
+</tr>
+</thead>
+
+<tbody>
+
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+/* -----------------------------
+LIVE MARKET FEED
+----------------------------- */
+
+const source = new EventSource("/.netlify/functions/api/tkfm-market-terminal-engine")
+
+source.onmessage = function(event){
+
+const data = JSON.parse(event.data)
+
+console.log("Market Data",data)
+
+/* -----------------------------
+UPDATE MARKET CAP
+----------------------------- */
+
+document.getElementById("marketCap").innerText =
+"$"+Number(data.market_cap).toLocaleString()
+
+document.getElementById("catalogCount").innerText =
+data.catalog_count
+
+/* -----------------------------
+UPDATE TRADES
+----------------------------- */
+
+const tbody = document.querySelector("#tradeTable tbody")
+
+tbody.innerHTML=""
+
+for(const trade of data.recent_trades){
+
+const row = document.createElement("tr")
+
+row.innerHTML=`
+<td>${trade.id}</td>
+<td>${trade.price}</td>
+<td>${trade.quantity}</td>
+`
+
+tbody.appendChild(row)
+
+}
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

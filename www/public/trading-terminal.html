@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="css/tkfm-global.css?v=3">
+<link rel="stylesheet" href="css/tkfm-global.css?v=2">
+<link rel="stylesheet" href="css/tkfm-global.css">
+<title>Trading Terminal</title>
+<script src="/js/tkfm-master-autoload.js"></script>
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
+</head>
+
+
+<h1>TKFM Trading Terminal</h1>
+
+<input id="catalog" placeholder="Catalog ID">
+<input id="amount" placeholder="Amount">
+
+<button onclick="trade()">Trade</button>
+
+<script>
+
+async function trade(){
+
+ const catalog =
+ document.getElementById("catalog").value;
+
+ const amount =
+ document.getElementById("amount").value;
+
+ await fetch(
+ '/.netlify/functions/api/execute-trade',
+ {
+  method:"POST",
+  body:JSON.stringify({
+
+   catalog,
+   amount
+
+  })
+ }
+ );
+
+ alert("Trade submitted");
+
+}
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

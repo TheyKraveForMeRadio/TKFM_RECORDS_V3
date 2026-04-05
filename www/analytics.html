@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TKFM Analytics</title>
+<script src="/js/tkfm-theme.js"></script>
+</head>
+
+<body>
+
+<h1>📊 Trading Analytics</h1>
+
+<div class="card">
+  <h3>Performance</h3>
+  <div id="pnl"></div>
+  <div id="winrate"></div>
+  <div id="trades"></div>
+</div>
+
+<div class="card">
+  <h3>Risk Metrics</h3>
+  <div id="avg"></div>
+  <div id="wins"></div>
+  <div id="losses"></div>
+</div>
+
+<script>
+
+const API = "https://www.tkfmrecords.com/.netlify/functions";
+
+async function load(){
+
+  const user = localStorage.getItem("tkfm_user");
+
+  const data = await fetch(API + "/analytics-engine?user=" + user)
+    .then(r=>r.json());
+
+  document.getElementById("pnl").innerText =
+    "PNL: $" + data.pnl;
+
+  document.getElementById("winrate").innerText =
+    "Win Rate: " + data.winRate + "%";
+
+  document.getElementById("trades").innerText =
+    "Total Trades: " + data.totalTrades;
+
+  document.getElementById("avg").innerText =
+    "Avg Trade: $" + data.avgTrade;
+
+  document.getElementById("wins").innerText =
+    "Wins: " + data.wins;
+
+  document.getElementById("losses").innerText =
+    "Losses: " + data.losses;
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

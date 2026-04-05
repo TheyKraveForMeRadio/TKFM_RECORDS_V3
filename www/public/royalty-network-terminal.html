@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+
+<h1>Worldwide Royalty Settlement Network</h1>
+
+<pre id="network"></pre>
+
+<script>
+
+async function load(){
+
+ const res =
+ await fetch(
+ '/.netlify/functions/api/global-royalty-network'
+ );
+
+ const data =
+ await res.json();
+
+ document.getElementById("network")
+ .textContent =
+ JSON.stringify(data,null,2);
+
+}
+
+load();
+
+</script>
+
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
+</body>
+</html>

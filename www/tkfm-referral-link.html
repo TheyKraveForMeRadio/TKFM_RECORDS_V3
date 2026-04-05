@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>Share Your Song — TKFM</title>
+
+<style>
+
+body{
+background:#020617;
+color:#e5e7eb;
+font-family:system-ui;
+text-align:center;
+padding:80px;
+}
+
+input{
+width:80%;
+padding:10px;
+margin-top:20px;
+}
+
+button{
+margin-top:20px;
+padding:15px 30px;
+background:#facc15;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+</style>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1>Share Your Song Investment Link</h1>
+
+<p>Your fans can invest directly in your music.</p>
+
+<input id="link" value="https://tkfmrecords.com/invest/song123?ref=artist">
+
+<br>
+
+<button onclick="copyLink()">Copy Link</button>
+
+<script>
+
+function copyLink(){
+
+const input=document.getElementById("link")
+
+input.select()
+
+document.execCommand("copy")
+
+alert("Link copied!")
+
+}
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+</html>

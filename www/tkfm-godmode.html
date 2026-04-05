@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>TKFM GOD MODE</title>
+
+<link rel="stylesheet" href="/css/tkfm-ultra-ui.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+#heatmap{
+  display:flex;
+  flex-wrap:wrap;
+}
+</style>
+
+<script src="/js/tkfm-theme.js"></script>
+<script src="/js/tkfm-animations.js"></script>
+</head>
+
+<body>
+
+<h1 class="glow">⚡ TKFM GOD MODE</h1>
+
+<div class="card">
+  <h2>Portfolio Value</h2>
+  <div id="value" class="counter">$0</div>
+</div>
+
+<div class="card">
+  <canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+  <h2>🔥 Heatmap</h2>
+  <div id="heatmap"></div>
+</div>
+
+<button class="btn" onclick="announce()">AI Voice Update</button>
+
+<script type="module">
+
+import { loadChart } from "/js/tkfm-charts.js";
+import { initCursor, initGrid, liveCounter, loadHeatmap, speak, playSound } from "/js/tkfm-godmode-ui.js";
+
+// INIT GOD MODE
+initCursor();
+initGrid();
+loadChart("demo");
+loadHeatmap();
+
+// 💰 LIVE PORTFOLIO
+liveCounter("value", 1000);
+
+// 🔊 VOICE
+window.announce = ()=>{
+  speak("Your portfolio is growing. Keep trading.");
+  playSound("success");
+};
+
+// AUTO REFRESH
+setInterval(()=>{
+  loadChart("demo");
+  loadHeatmap();
+},5000);
+
+</script>
+
+<script src="/js/tkfm-global-nav.js"></script>
+</body>
+
+</html>
