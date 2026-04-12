@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TKFM Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#020617;
+  color:#fff;
+  text-align:center;
+}
+h1{
+  color:#facc15;
+  margin-top:40px;
+}
+.card{
+  max-width:500px;
+  margin:30px auto;
+  padding:20px;
+  border:1px solid #facc15;
+  border-radius:12px;
+}
+.stat{
+  font-size:22px;
+  margin:10px 0;
+}
+.reward{
+  color:#22c55e;
+  font-weight:bold;
+}
+button{
+  padding:12px 20px;
+  background:#facc15;
+  border:none;
+  margin-top:20px;
+  cursor:pointer;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 My Dashboard</h1>
+
+<div class="card">
+  <div class="stat">Your Code:</div>
+  <div id="refcode"></div>
+
+  <div class="stat">Invites:</div>
+  <div id="count">0</div>
+
+  <div class="stat">Reward:</div>
+  <div id="reward" class="reward"></div>
+
+  <button onclick="copyLink()">Copy Invite Link</button>
+</div>
+
+<script>
+const supabase = window.supabase.createClient(
+  "https://jgopbtuteqzooomxaulx.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k"
+);
+
+const myRef = localStorage.getItem("tkfm_my_ref");
+
+document.getElementById("refcode").innerText = myRef || "N/A";
+
+function getReward(count){
+  if(count >= 50) return "💎 VIP Access + 1000 Credits";
+  if(count >= 25) return "🚀 Early Access + 500 Credits";
+  if(count >= 10) return "🔥 Beta Access + 100 Credits";
+  if(count >= 5) return "🎧 Priority Access";
+  return "No rewards yet";
+}
+
+async function loadStats(){
+  if(!myRef) return;
+
+  const { data } = await supabase
+    .from("waitlist")
+    .select("ref_by")
+    .eq("ref_by", myRef);
+
+  const count = data.length;
+
+  document.getElementById("count").innerText = count;
+  document.getElementById("reward").innerText = getReward(count);
+}
+
+function copyLink(){
+  const link = window.location.origin + "?ref=" + myRef;
+  navigator.clipboard.writeText(link);
+  alert("Copied 🚀");
+}
+
+loadStats();
+</script>
+
+</body>
+</html>
