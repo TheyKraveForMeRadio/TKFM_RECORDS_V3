@@ -1,35 +1,66 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#020617;color:#facc15;font-family:Arial;padding:40px;">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TKFM Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<h1>🔐 Login</h1>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<input id="user" placeholder="Username"/>
-<button onclick="login()">Login</button>
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#020617;
+  color:#fff;
+  text-align:center;
+  padding-top:120px;
+}
+input{
+  padding:15px;
+  width:250px;
+  border-radius:6px;
+  border:1px solid #facc15;
+  background:#020617;
+  color:#fff;
+}
+button{
+  padding:15px 25px;
+  background:#facc15;
+  border:none;
+  margin-top:15px;
+  cursor:pointer;
+  font-weight:bold;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<h1 style="color:#facc15">🔐 Login to TKFM</h1>
+
+<input id="email" placeholder="Enter your email" />
+<br>
+<button onclick="login()">Send Magic Link</button>
+
+<p id="msg"></p>
 
 <script>
+const supabase = window.supabase.createClient(
+  "YOUR_SUPABASE_URL",
+  "YOUR_SUPABASE_KEY"
+);
+
 async function login(){
+  const email = document.getElementById("email").value;
 
-  const username = document.getElementById("user").value;
-
-  const res = await fetch("/.netlify/functions/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ username })
+  const { error } = await supabase.auth.signInWithOtp({
+    email: email
   });
 
-  const data = await res.json();
-
-  if(data.error){
-    alert("User not found");
-    return;
-  }
-
-  localStorage.setItem("tkfm_user", data.user);
-
-  alert("Logged in as " + data.role);
-
-  window.location = "/tkfm-hub.html";
+  document.getElementById("msg").innerText =
+    error ? "Error sending link" : "Check your email 🚀";
 }
 </script>
 
