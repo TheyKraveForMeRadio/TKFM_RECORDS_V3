@@ -67,6 +67,13 @@ display:none;
 <br>
 
 <button onclick="go()">🚀 Enter Platform</button>
+
+<br>
+
+<button onclick="window.location='/leaderboard.html'">
+🏆 View Leaderboard
+</button>
+
 </div>
 
 <script>
@@ -88,16 +95,13 @@ async function join(){
     if(data.success){
       document.getElementById("msg").innerText = "You're on the list 🚀";
 
-      // 🔥 BUILD REF LINK
       const link = window.location.origin + "?ref=" + data.ref_code;
 
       document.getElementById("reflink").innerText = link;
       document.getElementById("refbox").style.display = "block";
 
-      // SAVE OWN REF
       localStorage.setItem("tkfm_my_ref", data.ref_code);
 
-      // 🚀 AUTO ENTER
       setTimeout(() => {
         window.location.href = "/pro-trading-ui.html";
       }, 2000);
@@ -121,7 +125,6 @@ function go(){
   window.location.href = "/pro-trading-ui.html";
 }
 
-// 🔥 SAVE REF FROM URL
 const params = new URLSearchParams(window.location.search);
 const ref = params.get("ref");
 if(ref){
