@@ -134,3 +134,18 @@ if(ref){
 
 </body>
 </html>
+<script>
+function getReward(count){
+  if(count >= 50) return "💎 VIP Access";
+  if(count >= 25) return "🚀 Early Access";
+  if(count >= 10) return "🔥 Beta Access";
+  if(count >= 5) return "🎧 Priority Access";
+  return "No rewards yet";
+}
+
+// OPTIONAL: display basic reward preview
+const myRef = localStorage.getItem("tkfm_my_ref");
+if(myRef){
+  console.log("User ref:", myRef);
+}
+</script>
