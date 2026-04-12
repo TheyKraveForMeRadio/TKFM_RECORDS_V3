@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -7,47 +7,39 @@ const supabase = createClient(
 
 exports.handler = async (event) => {
   try {
-    const body = JSON.parse(event.body);
-    const { email, ref } = body;
+    // ✅ SAFE PARSE (fixes your error)
+    const body = event.body ? JSON.parse(event.body) : {};
+    const email = body.email;
+    const ref = body.ref || null;
 
     if (!email) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ success: false, error: "Missing email" })
+        body: JSON.stringify({ success: false, error: "Email required" }),
       };
     }
 
-    // Save waitlist
-    const { error } = await supabase
-      .from('waitlist')
-      .insert([{ email }]);
+    // ✅ SAVE WAITLIST
+    await supabase.from("waitlist").insert([{ email }]);
 
-    if (error) throw error;
-
-    // Save referral if exists
+    // ✅ SAVE REFERRAL (if exists)
     if (ref) {
-      await supabase.from('referrals').insert([
+      await supabase.from("referrals").insert([
         {
           referrer: ref,
-          referred: email
-        }
+          referred: email,
+        },
       ]);
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true })
+      body: JSON.stringify({ success: true }),
     };
-
   } catch (err) {
-    console.error("WAITLIST ERROR:", err);
-
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        success: false,
-        error: err.message
-      })
+      body: JSON.stringify({ success: false, error: err.message }),
     };
   }
 };
