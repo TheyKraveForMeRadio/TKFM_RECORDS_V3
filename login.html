@@ -1,44 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>TKFM Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Login TKFM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body{
+      background:#020617;
+      color:white;
+      font-family:sans-serif;
+      text-align:center;
+      padding:40px;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#020617;
-  color:#fff;
-  text-align:center;
-  padding-top:120px;
-}
-input{
-  padding:15px;
-  width:250px;
-  border-radius:6px;
-  border:1px solid #facc15;
-  background:#020617;
-  color:#fff;
-}
-button{
-  padding:15px 25px;
-  background:#facc15;
-  border:none;
-  margin-top:15px;
-  cursor:pointer;
-  font-weight:bold;
-  border-radius:8px;
-}
-</style>
+    h1{
+      color:#facc15;
+    }
+
+    input{
+      padding:15px;
+      width:80%;
+      max-width:300px;
+      margin:20px 0;
+      border-radius:8px;
+      border:1px solid #facc15;
+    }
+
+    button{
+      padding:15px 25px;
+      background:#facc15;
+      border:none;
+      margin:10px 0;
+      cursor:pointer;
+      border-radius:8px;
+      font-weight:bold;
+      color:#000;
+    }
+  </style>
 </head>
-
 <body>
 
-<h1 style="color:#facc15">🔐 Login to TKFM</h1>
+<h1>🔐 Login to TKFM</h1>
 
 <input id="email" placeholder="Enter your email" />
 <br>
@@ -46,24 +49,29 @@ button{
 
 <p id="msg"></p>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const supabase = window.supabase.createClient(
-  "https://jgopbtuteqzooomxaulx.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k"
-);
+const SUPABASE_URL = "https://jgopbtuteqzooomxaulx.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function login(){
   const email = document.getElementById("email").value;
 
   const { error } = await supabase.auth.signInWithOtp({
-    email: email,
+    email,
     options: {
       emailRedirectTo: window.location.origin
     }
   });
 
-  document.getElementById("msg").innerText =
-    error ? "Error sending link" : "Check your email 🚀";
+  if(error){
+    document.getElementById("msg").innerText = "Error sending link";
+  } else {
+    document.getElementById("msg").innerText = "Check your email 🚀";
+  }
 }
 </script>
 

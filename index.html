@@ -1,62 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>TKFM — The Music Market</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>TKFM Waitlist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="/js/tkfm-theme.js"></script>
-<script src="/js/tkfm-animations.js"></script>
+  <style>
+    body{
+      background:#020617;
+      color:white;
+      font-family:sans-serif;
+      text-align:center;
+      padding:40px;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:radial-gradient(circle,#020617,#000);
-  color:#e5e7eb;
-  text-align:center;
-}
-.hero{
-  padding:120px 20px;
-}
-input{
-  padding:15px;
-  width:260px;
-  border-radius:6px;
-  border:1px solid #facc15;
-  background:#020617;
-  color:#fff;
-}
-button{
-  padding:15px 25px;
-  background:#facc15;
-  border:none;
-  margin:10px 0;
-  cursor:pointer;
-  border-radius:8px;
-  font-weight:bold;
-}
-#refBox{
-  display:none;
-  margin-top:20px;
-  border-top:1px solid #facc15;
-  padding-top:20px;
-}
-</style>
+    h1{
+      color:#facc15;
+    }
+
+    input{
+      padding:15px;
+      width:80%;
+      max-width:300px;
+      margin:20px 0;
+      border-radius:8px;
+      border:1px solid #facc15;
+    }
+
+    /* ✅ FIXED BUTTON TEXT */
+    button{
+      padding:15px 25px;
+      background:#facc15;
+      border:none;
+      margin:10px 0;
+      cursor:pointer;
+      border-radius:8px;
+      font-weight:bold;
+      color:#000;
+    }
+
+    #refBox{
+      display:none;
+      margin-top:20px;
+      padding:15px;
+      border:1px solid #facc15;
+      border-radius:10px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="hero">
-
-<h1 style="color:#facc15">💰 Trade Music Like Stocks</h1>
+<h1>💰 Trade Music Like Stocks</h1>
 <p>Join the first users of TKFM</p>
 
+<input id="email" placeholder="Enter your email" />
+
 <br>
-
-<input id="email" placeholder="Enter your email"/>
-<br><br>
-
 <button onclick="join()">Join Waitlist</button>
 
 <p id="msg"></p>
@@ -68,42 +67,29 @@ button{
 </div>
 
 <br>
-
-<button onclick="go()">🚀 Enter Platform</button><br>
-<button onclick="window.location='/leaderboard.html'">🏆 View Leaderboard</button><br>
-<button onclick="window.location='/dashboard.html'">📊 My Dashboard</button><br>
+<button onclick="window.location='/pro-trading-ui.html'">🚀 Enter Platform</button>
+<button onclick="window.location='/leaderboard.html'">🏆 View Leaderboard</button>
+<button onclick="window.location='/dashboard.html'">📊 My Dashboard</button>
 <button onclick="window.location='/login.html'">🔐 Login</button>
-
-</div>
 
 <script>
 const API = "/.netlify/functions";
 
-// 🔥 SAVE REF CODE
-const params = new URLSearchParams(window.location.search);
-const refParam = params.get("ref");
-if(refParam){
-  localStorage.setItem("tkfm_ref", refParam);
-}
-
 async function join(){
   const email = document.getElementById("email").value;
-  const ref = localStorage.getItem("tkfm_ref");
 
-  const res = await fetch(API + "/waitlist",{
+  const res = await fetch(API + "/waitlist", {
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ email, ref })
+    body: JSON.stringify({ email }),
   });
 
   const data = await res.json();
 
-  // ✅ UPDATED SUCCESS BLOCK
   if(data.success){
     document.getElementById("msg").innerText = "You're on the list 🚀";
 
-    const refCode = btoa(email);
-    const link = window.location.origin + "?ref=" + refCode;
+    const ref = btoa(email);
+    const link = window.location.origin + "?ref=" + ref;
 
     document.getElementById("refBox").style.display = "block";
     document.getElementById("refLink").innerText = link;
@@ -116,13 +102,8 @@ async function join(){
     document.getElementById("msg").innerText = "Error submitting";
   }
 }
-
-function go(){
-  window.location = "/pro-trading-ui.html";
-}
 </script>
 
-<!-- ✅ REQUIRED FOR AUTH -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/auth.js"></script>
 

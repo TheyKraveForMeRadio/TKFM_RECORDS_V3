@@ -3,15 +3,17 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 HANDLE LOGIN ON PAGE LOAD
+// 🔥 HANDLE MAGIC LINK SESSION
 (async () => {
-  const { data } = await supabase.auth.getSession();
+  // This line is the missing piece 👇
+  const { data, error } = await supabase.auth.getSession();
 
   if (data.session) {
     const user = data.session.user.email;
+
     localStorage.setItem("tkfm_user", user);
 
-    // ✅ ONLY redirect if NOT already on dashboard
+    // ✅ redirect AFTER login
     if (!window.location.pathname.includes("dashboard")) {
       window.location.href = "/dashboard.html";
     }
