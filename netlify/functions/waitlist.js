@@ -12,22 +12,20 @@ exports.handler = async (event) => {
     if (!email) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ success: false, error: "No email" }),
+        body: JSON.stringify({ success: false }),
       };
     }
 
-    // 🔥 GENERATE USER REF CODE
-    const user_ref = Math.random().toString(36).substring(2, 8);
+    const ref_code = Math.random().toString(36).substring(2, 8);
 
     const { error } = await supabase
       .from("waitlist")
       .insert([
         {
           email,
-          ref_by: ref || null,
-          ref_code: user_ref,
-          created_at: new Date().toISOString(),
-        },
+          ref_code,
+          ref_by: ref || null
+        }
       ]);
 
     if (error) {
@@ -41,14 +39,14 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        ref_code: user_ref,
+        ref_code
       }),
     };
 
-  } catch (err) {
+  } catch (e) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ success: false, error: "Server error" }),
+      body: JSON.stringify({ success: false }),
     };
   }
 };
