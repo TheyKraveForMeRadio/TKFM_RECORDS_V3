@@ -63,16 +63,28 @@ async function join(){
   try{
     const email = document.getElementById("email").value;
 
+    // 🔥 GET REFERRAL
+    const ref = localStorage.getItem("tkfm_ref");
+
     const res = await fetch(API + "/waitlist",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, ref })
     });
 
     const data = await res.json();
 
-    document.getElementById("msg").innerText =
-      data.success ? "You're on the list 🚀" : "Error submitting";
+    if(data.success){
+      document.getElementById("msg").innerText = "You're on the list 🚀";
+
+      // 🚀 AUTO ENTER PLATFORM
+      setTimeout(() => {
+        window.location.href = "/pro-trading-ui.html";
+      }, 1200);
+
+    } else {
+      document.getElementById("msg").innerText = "Error submitting";
+    }
 
   } catch(e){
     document.getElementById("msg").innerText = "Network error";
