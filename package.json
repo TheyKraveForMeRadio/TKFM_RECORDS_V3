@@ -27,7 +27,7 @@
     "@capacitor/splash-screen": "^8.0.1",
     "@ethereumjs/wallet": "^10.0.0",
     "@openzeppelin/contracts": "^4.9.6",
-    "@supabase/supabase-js": "^2.100.1",
+    "@supabase/supabase-js": "^2.103.0",
     "bcryptjs": "^2.4.3",
     "busboy": "^1.6.0",
     "cloudinary": "^2.9.0",
@@ -43,5 +43,17 @@
     "stripe": "^15.12.0",
     "uuid": "^13.0.0",
     "ws": "^8.18.0"
-  }
+  },
+  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheyKraveForMeRadio/TKFM_RECORDS_V3.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheyKraveForMeRadio/TKFM_RECORDS_V3/issues"
+  },
+  "homepage": "https://github.com/TheyKraveForMeRadio/TKFM_RECORDS_V3#readme"
 }
