@@ -31,12 +31,12 @@ border:none;
 margin:10px;
 cursor:pointer;
 font-weight:bold;
+border-radius:8px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="hero">
 <h1 style="color:#facc15">💰 Trade Music Like Stocks</h1>
 <p>Join the first users of TKFM</p>
@@ -57,17 +57,12 @@ font-weight:bold;
 </div>
 
 <script>
-const API = "https://www.tkfmrecords.com/.netlify/functions";
+const API = "/.netlify/functions";
 
 async function join(){
-  const email = document.getElementById("email").value;
+  try{
+    const email = document.getElementById("email").value;
 
-  if(!email){
-    document.getElementById("msg").innerText = "Enter email";
-    return;
-  }
-
-  try {
     const res = await fetch(API + "/waitlist",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
@@ -77,7 +72,8 @@ async function join(){
     const data = await res.json();
 
     document.getElementById("msg").innerText =
-      data.success ? "You're on the list 🚀" : "Error";
+      data.success ? "You're on the list 🚀" : "Error submitting";
+
   } catch(e){
     document.getElementById("msg").innerText = "Network error";
   }
@@ -86,8 +82,10 @@ async function join(){
 function go(){
   window.location.href = "/pro-trading-ui.html";
 }
+</script>
 
-// 🔥 REF TRACKING
+<script>
+// 🔥 SAVE REF CODE
 const params = new URLSearchParams(window.location.search);
 const ref = params.get("ref");
 if(ref){
