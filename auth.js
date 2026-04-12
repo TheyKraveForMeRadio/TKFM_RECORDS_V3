@@ -3,29 +3,17 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 HANDLE REDIRECT SESSION (CRITICAL)
-async function handleLogin() {
-  const { data, error } = await supabase.auth.getSession();
+// 🔥 HANDLE LOGIN ON PAGE LOAD
+(async () => {
+  const { data } = await supabase.auth.getSession();
 
   if (data.session) {
     const user = data.session.user.email;
-
     localStorage.setItem("tkfm_user", user);
 
-    window.location.href = "/dashboard.html";
+    // ✅ ONLY redirect if NOT already on dashboard
+    if (!window.location.pathname.includes("dashboard")) {
+      window.location.href = "/dashboard.html";
+    }
   }
-}
-
-// 🔥 RUN ON PAGE LOAD
-handleLogin();
-
-// 🔥 ALSO LISTEN FOR CHANGES
-supabase.auth.onAuthStateChange((event, session) => {
-  if (session) {
-    const user = session.user.email;
-
-    localStorage.setItem("tkfm_user", user);
-
-    window.location.href = "/dashboard.html";
-  }
-});
+})();
