@@ -1,13 +1,11 @@
 <resources>
 
-    <!-- MAIN APP THEME -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.TKFM" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">#020617</item>
         <item name="android:navigationBarColor">#020617</item>
     </style>
 
-    <!-- LAUNCH THEME (FIXED - NO SplashScreen) -->
-    <style name="AppTheme.NoActionBarLaunch" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.TKFM.Splash" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 

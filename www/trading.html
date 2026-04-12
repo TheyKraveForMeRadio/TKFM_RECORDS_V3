@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <style>
-body { background:#020617; color:#facc15; text-align:center; }
+body { background:#020617; color:#facc15; text-align:center; font-family:sans-serif; }
 h1 { color:#22d3ee; }
 
 .card {
@@ -19,10 +19,11 @@ h1 { color:#22d3ee; }
 
 button {
   background:#facc15;
-  padding:10px;
+  padding:10px 15px;
   border:none;
   border-radius:10px;
   margin:5px;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -36,6 +37,10 @@ button {
 <div class="card">
 <h2>Your Balance</h2>
 <p id="balance">$0</p>
+
+<button onclick="deposit('tkfm_deposit_10')">Deposit $10</button>
+<button onclick="deposit('tkfm_deposit_25')">Deposit $25</button>
+<button onclick="deposit('tkfm_deposit_50')">Deposit $50</button>
 </div>
 
 <div class="card">
@@ -45,72 +50,84 @@ button {
 
 <script>
 
-// 🔥 USER SYSTEM (FIXED)
-if (!localStorage.getItem("tkfm_user")) {
-  localStorage.setItem("tkfm_user", "djkrave_main_user");
-}
+// USER
+localStorage.setItem("tkfm_user", "djkrave_main_user");
 const userId = localStorage.getItem("tkfm_user");
 
-const SUPABASE_URL = "https://jgopbtuteqzooomxaulx.supabase.co";
+// 🔥 YOUR REAL KEYS
+const SUPABASE_URL = "https://https://jgopbtuteqzooomxaulx.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 ENSURE USER EXISTS
+// ENSURE USER
 async function ensureUser(){
   await client.rpc('ensure_user', { u: userId });
 }
 
-// 🔥 LOAD BALANCE (NEW SYSTEM)
+// BALANCE
 async function loadBalance(){
   const { data } = await client
     .from("balances")
     .select("*")
-    .eq("user_id", userId)
-    .single();
+    .eq("user_id", userId);
 
   document.getElementById("balance").innerText =
-    "$" + (data?.balance || 0);
+    "$" + (data?.length ? data[0].balance : 0);
 }
 
-// 🔥 LOAD MARKET
+// MARKET
 async function loadMarket(){
-  const { data } = await client.from("market").select("*");
+  const { data } = await client
+    .from("market")
+    .select("*");
 
   const el = document.getElementById("market");
   el.innerHTML = "";
 
-  data.forEach(song => {
+  data.forEach(track => {
     el.innerHTML += `
       <div class="card">
-        <h2>${song.title}</h2>
-        <p>Price: $${song.price.toFixed(2)}</p>
-        <button onclick="buy('${song.id}')">BUY</button>
-        <button onclick="sell('${song.id}')">SELL</button>
+        <h2>${track.title}</h2>
+        <p>Price: $${track.price.toFixed(2)}</p>
+        <button onclick="buy('${track.id}')">BUY</button>
+        <button onclick="sell('${track.id}')">SELL</button>
       </div>
     `;
   });
 }
 
-// 🔥 BUY (USES SQL FUNCTION)
+// BUY
 async function buy(trackId){
-  await client.rpc('buy_track', {
+  const { error } = await client.rpc('buy_track', {
     u: userId,
     t: trackId
   });
+
+  if(error){
+    console.log(error);
+    alert("BUY FAILED");
+  }
+
   refresh();
 }
 
-// 🔥 SELL (USES SQL FUNCTION)
+// SELL
 async function sell(trackId){
-  await client.rpc('sell_track', {
+  const { error } = await client.rpc('sell_track', {
     u: userId,
     t: trackId
   });
+
+  if(error){
+    console.log(error);
+    alert("SELL FAILED");
+  }
+
   refresh();
 }
 
-// 🔥 LOAD PORTFOLIO
+// PORTFOLIO
 async function loadPortfolio(){
   const { data } = await client
     .from("portfolio")
@@ -120,57 +137,28 @@ async function loadPortfolio(){
   const el = document.getElementById("portfolio");
   el.innerHTML = "";
 
-  for(const item of data || []){
-
-    if(item.shares > 0){
-
-      const { data:song } = await client
-        .from("market")
-        .select("*")
-        .eq("id", item.track_id)
-        .single();
-
-      el.innerHTML += `
-        <div>
-          <strong>${song.title}</strong><br>
-          Shares: ${item.shares}<br>
-          Value: $${(song.price * item.shares).toFixed(2)}<br>
-          <button onclick="sell('${song.id}')">Sell 1</button>
-        </div>
-      `;
-    }
-  }
+  data.forEach(item => {
+    el.innerHTML += `
+      <div>${item.track_id} — ${item.shares} shares</div>
+    `;
+  });
 }
 
-// 🔥 REFRESH UI
+// DEPOSIT (leave as is)
+async function deposit(key){
+  alert("Deposit system needs Stripe function fix");
+}
+
+// REFRESH
 async function refresh(){
-  await loadBalance();
-  await loadPortfolio();
-  await loadMarket();
-}
-
-// 🚀 LIVE UPDATES
-client
-  .channel('market-live')
-  .on(
-    'postgres_changes',
-    { event: '*', schema: 'public', table: 'market' },
-    () => refresh()
-  )
-  .subscribe();
-
-// 🔥 AUTO PRICE ENGINE
-setInterval(async () => {
-  await client.rpc('update_prices');
-}, 5000);
-
-// 🚀 START
-async function start(){
   await ensureUser();
-  await refresh();
+  await loadBalance();
+  await loadMarket();
+  await loadPortfolio();
 }
 
-start();
+// START
+refresh();
 
 </script>
 
