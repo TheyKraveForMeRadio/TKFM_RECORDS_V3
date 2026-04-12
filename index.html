@@ -33,6 +33,13 @@ cursor:pointer;
 font-weight:bold;
 border-radius:8px;
 }
+.refbox{
+margin-top:20px;
+padding:15px;
+background:#020617;
+border:1px solid #facc15;
+display:none;
+}
 </style>
 </head>
 
@@ -51,6 +58,12 @@ border-radius:8px;
 
 <p id="msg"></p>
 
+<div id="refbox" class="refbox">
+<p>🔥 Your Invite Link:</p>
+<p id="reflink"></p>
+<button onclick="copyRef()">Copy Link</button>
+</div>
+
 <br>
 
 <button onclick="go()">🚀 Enter Platform</button>
@@ -62,8 +75,6 @@ const API = "/.netlify/functions";
 async function join(){
   try{
     const email = document.getElementById("email").value;
-
-    // 🔥 GET REFERRAL
     const ref = localStorage.getItem("tkfm_ref");
 
     const res = await fetch(API + "/waitlist",{
@@ -77,10 +88,19 @@ async function join(){
     if(data.success){
       document.getElementById("msg").innerText = "You're on the list 🚀";
 
-      // 🚀 AUTO ENTER PLATFORM
+      // 🔥 BUILD REF LINK
+      const link = window.location.origin + "?ref=" + data.ref_code;
+
+      document.getElementById("reflink").innerText = link;
+      document.getElementById("refbox").style.display = "block";
+
+      // SAVE OWN REF
+      localStorage.setItem("tkfm_my_ref", data.ref_code);
+
+      // 🚀 AUTO ENTER
       setTimeout(() => {
         window.location.href = "/pro-trading-ui.html";
-      }, 1200);
+      }, 2000);
 
     } else {
       document.getElementById("msg").innerText = "Error submitting";
@@ -91,13 +111,17 @@ async function join(){
   }
 }
 
+function copyRef(){
+  const text = document.getElementById("reflink").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied 🚀");
+}
+
 function go(){
   window.location.href = "/pro-trading-ui.html";
 }
-</script>
 
-<script>
-// 🔥 SAVE REF CODE
+// 🔥 SAVE REF FROM URL
 const params = new URLSearchParams(window.location.search);
 const ref = params.get("ref");
 if(ref){
