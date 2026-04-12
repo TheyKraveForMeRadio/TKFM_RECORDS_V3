@@ -3,19 +3,31 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 HANDLE MAGIC LINK SESSION
-(async () => {
-  // This line is the missing piece 👇
+// ✅ HANDLE LOGIN + REDIRECT
+async function handleAuth() {
   const { data, error } = await supabase.auth.getSession();
 
   if (data.session) {
     const user = data.session.user.email;
 
+    // SAVE USER
     localStorage.setItem("tkfm_user", user);
 
-    // ✅ redirect AFTER login
-    if (!window.location.pathname.includes("dashboard")) {
+    // REDIRECT AFTER LOGIN
+    if (window.location.pathname !== "/dashboard.html") {
       window.location.href = "/dashboard.html";
     }
   }
-})();
+}
+
+// RUN ON LOAD
+handleAuth();
+
+// ALSO LISTEN FOR CHANGES
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    const user = session.user.email;
+    localStorage.setItem("tkfm_user", user);
+    window.location.href = "/dashboard.html";
+  }
+});
