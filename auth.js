@@ -3,27 +3,42 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ✅ HANDLE LOGIN + REDIRECT
-async function handleAuth() {
-  const { data, error } = await supabase.auth.getSession();
+// 🔥 HANDLE MAGIC LINK HASH (CRITICAL)
+async function handleMagicLink() {
+  const hash = window.location.hash;
 
-  if (data.session) {
-    const user = data.session.user.email;
+  if (hash && hash.includes("access_token")) {
+    const { data, error } = await supabase.auth.getSession();
 
-    // SAVE USER
-    localStorage.setItem("tkfm_user", user);
+    if (data.session) {
+      const user = data.session.user.email;
 
-    // REDIRECT AFTER LOGIN
-    if (window.location.pathname !== "/dashboard.html") {
+      localStorage.setItem("tkfm_user", user);
+
+      // CLEAN URL (remove ugly token)
+      window.history.replaceState({}, document.title, "/");
+
+      // REDIRECT
       window.location.href = "/dashboard.html";
     }
   }
 }
 
-// RUN ON LOAD
-handleAuth();
+// 🔥 NORMAL SESSION CHECK
+async function handleSession() {
+  const { data } = await supabase.auth.getSession();
 
-// ALSO LISTEN FOR CHANGES
+  if (data.session) {
+    const user = data.session.user.email;
+    localStorage.setItem("tkfm_user", user);
+  }
+}
+
+// RUN BOTH
+handleMagicLink();
+handleSession();
+
+// 🔥 LISTENER (backup)
 supabase.auth.onAuthStateChange((event, session) => {
   if (session) {
     const user = session.user.email;
