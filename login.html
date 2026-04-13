@@ -19,7 +19,7 @@ input{
   padding:15px;
   width:80%;
   max-width:300px;
-  margin:20px 0;
+  margin:10px 0;
   border-radius:8px;
   border:1px solid #facc15;
 }
@@ -43,7 +43,13 @@ button{
 
 <input id="email" placeholder="Enter your email" />
 <br>
-<button onclick="login()">Send Magic Link</button>
+<button onclick="sendCode()">Send Code</button>
+
+<br><br>
+
+<input id="code" placeholder="Enter 6-digit code" />
+<br>
+<button onclick="verifyCode()">Verify & Login</button>
 
 <p id="msg"></p>
 
@@ -55,25 +61,47 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 🔥 FORCE LOGIN HANDLER
-async function login(){
+// 🔥 STEP 1: SEND CODE
+async function sendCode(){
   const email = document.getElementById("email").value;
 
-  // SAVE EMAIL LOCALLY (FALLBACK LOGIN)
-  localStorage.setItem("tkfm_user", email);
+  localStorage.setItem("tkfm_temp_email", email);
 
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: window.location.origin
+      shouldCreateUser: true
     }
   });
 
   if(error){
-    document.getElementById("msg").innerText = "Error sending link";
+    document.getElementById("msg").innerText = "Error sending code";
   } else {
-    document.getElementById("msg").innerText =
-      "Check your email 🚀 (or tap Enter Platform)";
+    document.getElementById("msg").innerText = "Code sent 🚀";
+  }
+}
+
+// 🔥 STEP 2: VERIFY CODE
+async function verifyCode(){
+  const email = localStorage.getItem("tkfm_temp_email");
+  const token = document.getElementById("code").value;
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type: "email"
+  });
+
+  if(error){
+    document.getElementById("msg").innerText = "Invalid code";
+  } else {
+    localStorage.setItem("tkfm_user", email);
+
+    document.getElementById("msg").innerText = "Logged in 🚀";
+
+    setTimeout(()=>{
+      window.location.href = "/dashboard.html";
+    },1000);
   }
 }
 </script>
