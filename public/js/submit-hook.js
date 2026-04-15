@@ -1,5 +1,3 @@
-import { sendEmail } from './send-email.js';
-
 document.addEventListener('DOMContentLoaded', () => {
 
   const form = document.querySelector('#artistForm');
@@ -14,50 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const trackTitle = document.querySelector('#trackTitle').value;
 
     try {
-      // 🔥 MAIN BACKEND PIPELINE (stores + triggers logic)
-      await fetch('/.netlify/functions/submit-artist', {
+      // 🔥 CREATE STRIPE SESSION
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          artistName,
-          email,
-          trackTitle
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ artistName, email, trackTitle })
       });
 
-      // 🔥 EMAIL TO OWNER
-      await sendEmail({
-        to: ['tkfmrecords@gmail.com'],
-        subject: '🚨 New TKFM Submission',
-        html: `
-          <h2>New Artist Submission</h2>
-          <p><b>Artist:</b> ${artistName}</p>
-          <p><b>Email:</b> ${email}</p>
-          <p><b>Track:</b> ${trackTitle}</p>
-        `
-      });
+      const data = await res.json();
 
-      // 🔥 EMAIL TO ARTIST
-      await sendEmail({
-        to: [email],
-        subject: '🎧 TKFM Submission Received',
-        html: `
-          <h1>🔥 You’re Locked In</h1>
-          <p>Artist: ${artistName}</p>
-          <p>Track: ${trackTitle}</p>
-          <p>We’ll review and contact you soon.</p>
-        `
-      });
-
-      alert('Submission sent ✅');
-
-      form.reset();
+      // 🔥 REDIRECT TO STRIPE
+      window.location.href = data.url;
 
     } catch (err) {
       console.error(err);
-      alert('Submission failed ❌');
+      alert('Payment failed ❌');
     }
 
   });
