@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TKFM Artist Submission</title>
+
+  <style>
+    body {
+      background: #020617;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    form {
+      background: #111827;
+      padding: 20px;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 0 20px rgba(168,85,247,0.3);
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      background: #a855f7;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #9333ea;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form id="artistForm">
+    <h2>🎧 Submit Your Track</h2>
+
+    <input id="artistName" type="text" placeholder="Artist Name" required />
+    <input id="email" type="email" placeholder="Email" required />
+    <input id="trackTitle" type="text" placeholder="Track Title" required />
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- 🔥 EMAIL SYSTEM CONNECTED -->
+  <script type="module" src="/js/submit-hook.js"></script>
+
+</body>
+</html>
