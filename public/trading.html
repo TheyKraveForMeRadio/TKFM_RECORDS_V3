@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM Trading</title>
+</head>
+<body>
+
+<h1>📈 Music Market</h1>
+<div id="market"></div>
+
+<script>
+const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/market";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+
+const user = localStorage.getItem("tkfm_user");
+
+async function load() {
+  const res = await fetch(API, {
+    headers: {
+      "apikey": KEY,
+      "Authorization": `Bearer ${KEY}`
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("market").innerHTML =
+    data.map(d => `
+      <div style="border:1px solid #444;margin:10px;padding:10px">
+        <h3>${d.title}</h3>
+        <p>Price: $${d.price.toFixed(2)}</p>
+        <button onclick="trade('buy','${d.id}')">Buy</button>
+        <button onclick="trade('sell','${d.id}')">Sell</button>
+      </div>
+    `).join('');
+}
+
+async function trade(action, track_id) {
+  await fetch('/.netlify/functions/trade', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      action,
+      user,
+      track_id
+    })
+  });
+
+  alert(action + " executed 🚀");
+}
+
+load();
+</script>
+
+</body>
+</html>
