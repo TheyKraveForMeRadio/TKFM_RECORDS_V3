@@ -1,40 +1,33 @@
-const { client } = require("./_supabase");
+import fetch from "node-fetch";
 
-exports.handler = async (event) => {
-
-  try{
-
+export async function handler(event) {
+  try {
     const { user, amount } = JSON.parse(event.body);
 
-    const { data } = await client
-      .from("users")
-      .select("*")
-      .eq("username", user)
-      .single();
+    // deduct balance
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/balances?user_id=eq.${user}`, {
+      method: "PATCH",
+      headers: {
+        "apikey": process.env.SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        balance: `balance - ${amount}`
+      })
+    });
 
-    if(data.balance < amount){
-      return { statusCode:200, body: JSON.stringify({ error:"insufficient funds" }) };
-    }
-
-    // subtract balance
-    await client.from("users").update({
-      balance: data.balance - amount
-    }).eq("id", data.id);
-
-    // store withdrawal request
-    await client.from("withdrawals").insert([{
-      username: user,
-      amount,
-      status: "pending"
-    }]);
+    // (hook into Stripe payout or your payout system later)
 
     return {
-      statusCode:200,
-      body: JSON.stringify({ success:true })
+      statusCode: 200,
+      body: JSON.stringify({ success: true })
     };
 
-  }catch(err){
-    return { statusCode:200, body: JSON.stringify({ error: err.message }) };
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    };
   }
-
-};
+}
