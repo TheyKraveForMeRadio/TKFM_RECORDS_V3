@@ -6,10 +6,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export async function handler(event) {
   try {
     const { session_id } = event.queryStringParameters;
-
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    const { artistName, email, trackTitle } = session.metadata;
+    const { artistName, email, trackTitle, plan } = session.metadata;
+
+    // 🔥 SAVE TO SUPABASE
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/submissions`, {
+      method: "POST",
+      headers: {
+        "apikey": process.env.SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        artist_name: artistName,
+        email,
+        track_title: trackTitle,
+        plan
+      })
+    });
 
     // 🔥 EMAIL CONFIRMATION
     await fetch("https://api.resend.com/emails", {
@@ -24,9 +39,8 @@ export async function handler(event) {
         subject: "🔥 Submission Confirmed",
         html: `
           <h1>Payment Received</h1>
-          <p>Artist: ${artistName}</p>
-          <p>Track: ${trackTitle}</p>
-          <p>Your track is now in review.</p>
+          <p>${artistName} - ${trackTitle}</p>
+          <p>Status: Pending Review</p>
         `
       })
     });

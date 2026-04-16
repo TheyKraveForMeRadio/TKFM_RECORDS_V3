@@ -5,26 +5,51 @@
 </head>
 <body>
 
-<h1>Withdraw Requests</h1>
-<button onclick="load()">Load</button>
+<h1>🔥 Admin Panel</h1>
 <div id="list"></div>
 
 <script>
-const API = "https://tkfm-records-v3.onrender.com/engine"
+const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/submissions";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
 
-async function load(){
-  const res = await fetch(API + "/withdraw-request-engine")
-  const data = await res.json()
-  document.getElementById("list").innerText = JSON.stringify(data,null,2)
+async function load() {
+  const res = await fetch(API, {
+    headers: {
+      "apikey": KEY,
+      "Authorization": `Bearer ${KEY}`
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("list").innerHTML =
+    data.map(d => `
+      <div style="margin:20px;padding:10px;border:1px solid #444">
+        <h3>${d.track_title}</h3>
+        <p>${d.artist_name}</p>
+        <p>Status: ${d.status}</p>
+        <button onclick="update('${d.id}','approved')">Approve</button>
+        <button onclick="update('${d.id}','rejected')">Reject</button>
+      </div>
+    `).join('');
 }
 
-async function pay(id){
-  await fetch(API + "/stripe-payout-engine",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({request_id:id})
-  })
+async function update(id, status) {
+  await fetch(API + `?id=eq.${id}`, {
+    method: "PATCH",
+    headers: {
+      "apikey": KEY,
+      "Authorization": `Bearer ${KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ status })
+  });
+
+  alert("Updated");
+  load();
 }
+
+load();
 </script>
 
 </body>
