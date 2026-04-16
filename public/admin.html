@@ -28,13 +28,15 @@ async function load() {
         <h3>${d.track_title}</h3>
         <p>${d.artist_name}</p>
         <p>Status: ${d.status}</p>
-        <button onclick="update('${d.id}','approved')">Approve</button>
-        <button onclick="update('${d.id}','rejected')">Reject</button>
+        <button onclick="update('${d.id}','approved','${d.email}','${d.artist_name}','${d.track_title}')">Approve</button>
+        <button onclick="update('${d.id}','rejected','${d.email}','${d.artist_name}','${d.track_title}')">Reject</button>
       </div>
     `).join('');
 }
 
-async function update(id, status) {
+async function update(id, status, email, artistName, trackTitle) {
+
+  // 🔥 UPDATE DB
   await fetch(API + `?id=eq.${id}`, {
     method: "PATCH",
     headers: {
@@ -45,7 +47,14 @@ async function update(id, status) {
     body: JSON.stringify({ status })
   });
 
-  alert("Updated");
+  // 🔥 SEND EMAIL
+  await fetch('/.netlify/functions/send-status-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, artistName, trackTitle, status })
+  });
+
+  alert("Updated + Email Sent 🚀");
   load();
 }
 

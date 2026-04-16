@@ -1,38 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Leaderboard</title>
-  <link rel="stylesheet" href="css/tkfm-global.css">
-<link rel="stylesheet" href="css/mobile.css">
-<link rel="manifest" href="/manifest.json">
+  <title>TKFM Leaderboard</title>
 </head>
 <body>
 
-<h1>🏆 Top Traders</h1>
-
-<div id="board"></div>
+<h1>🏆 Top Referrers</h1>
+<div id="list"></div>
 
 <script>
-const API = "https://tkfm-records-v3.onrender.com/engine"
+const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/referral_stats?order=invites.desc";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
 
-async function load(){
-  const res = await authFetch( + "/leaderboard-engine")
-  const data = await res.json()
+async function load() {
+  const res = await fetch(API, {
+    headers: {
+      "apikey": KEY,
+      "Authorization": `Bearer ${KEY}`
+    }
+  });
 
-  let html = ""
+  const data = await res.json();
 
-  data.leaderboard.forEach((u,i)=>{
-    html += `<div class="card">
-      #${i+1} ${u.user} — $${u.balance.toFixed(2)}
-    </div>`
-  })
-
-  document.getElementById("board").innerHTML = html
+  document.getElementById("list").innerHTML =
+    data.map((d,i) => `
+      <div>
+        #${i+1} ${d.user_email} — ${d.invites} invites
+      </div>
+    `).join('');
 }
 
-load()
+load();
 </script>
 
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js")}</script>
 </body>
 </html>

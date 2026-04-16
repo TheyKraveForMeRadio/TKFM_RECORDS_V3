@@ -1,45 +1,56 @@
-const { createClient } = require("@supabase/supabase-js");
+import fetch from "node-fetch";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-exports.handler = async (event) => {
+export async function handler(event) {
   try {
-    // ✅ SAFE PARSE (fixes your error)
-    const body = event.body ? JSON.parse(event.body) : {};
-    const email = body.email;
-    const ref = body.ref || null;
+    const { email, ref } = JSON.parse(event.body);
 
-    if (!email) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ success: false, error: "Email required" }),
-      };
-    }
+    // SAVE USER
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/waitlist`, {
+      method: "POST",
+      headers: {
+        "apikey": process.env.SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
 
-    // ✅ SAVE WAITLIST
-    await supabase.from("waitlist").insert([{ email }]);
-
-    // ✅ SAVE REFERRAL (if exists)
+    // SAVE REFERRAL
     if (ref) {
-      await supabase.from("referrals").insert([
-        {
-          referrer: ref,
-          referred: email,
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/referral_logs`, {
+        method: "POST",
+        headers: {
+          "apikey": process.env.SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json"
         },
-      ]);
+        body: JSON.stringify({
+          referrer: ref,
+          referred: email
+        })
+      });
+
+      // UPDATE STATS
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/increment_invites`, {
+        method: "POST",
+        headers: {
+          "apikey": process.env.SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_email: ref })
+      });
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true }),
+      body: JSON.stringify({ success: true })
     };
+
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ success: false, error: err.message }),
+      body: JSON.stringify({ error: err.message })
     };
   }
-};
+}

@@ -5,17 +5,17 @@
 </head>
 <body>
 
-<h1>🎧 My Submissions</h1>
-<div id="list"></div>
+<h1>💰 My Stats</h1>
+<div id="stats"></div>
 
 <script>
-const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/submissions";
+const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/referral_stats";
 const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
 
-const email = localStorage.getItem("tkfm_user");
+const user = localStorage.getItem("tkfm_user");
 
 async function load() {
-  const res = await fetch(API + `?email=eq.${email}`, {
+  const res = await fetch(API + `?user_email=eq.${user}`, {
     headers: {
       "apikey": KEY,
       "Authorization": `Bearer ${KEY}`
@@ -24,14 +24,16 @@ async function load() {
 
   const data = await res.json();
 
-  document.getElementById("list").innerHTML =
-    data.map(d => `
-      <div style="margin:20px;padding:10px;border:1px solid #444">
-        <h3>${d.track_title}</h3>
-        <p>Status: ${d.status}</p>
-        <p>Plan: ${d.plan}</p>
-      </div>
-    `).join('');
+  const d = data[0] || { invites: 0, rewards: 0 };
+
+  const refLink = window.location.origin + "?ref=" + btoa(user);
+
+  document.getElementById("stats").innerHTML = `
+    <p>Invites: ${d.invites}</p>
+    <p>Rewards: ${d.rewards}</p>
+    <p>Your Link:</p>
+    <input value="${refLink}" style="width:100%" onclick="this.select()" />
+  `;
 }
 
 load();
