@@ -5,8 +5,11 @@
 </head>
 <body>
 
-<h1>💰 My Stats</h1>
+<h1>💰 Earnings Dashboard</h1>
 <div id="stats"></div>
+
+<button onclick="connect()">Connect Stripe</button>
+<button onclick="cashout()">Cash Out</button>
 
 <script>
 const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/referral_stats";
@@ -23,17 +26,31 @@ async function load() {
   });
 
   const data = await res.json();
-
   const d = data[0] || { invites: 0, rewards: 0 };
-
-  const refLink = window.location.origin + "?ref=" + btoa(user);
 
   document.getElementById("stats").innerHTML = `
     <p>Invites: ${d.invites}</p>
-    <p>Rewards: ${d.rewards}</p>
-    <p>Your Link:</p>
-    <input value="${refLink}" style="width:100%" onclick="this.select()" />
+    <p>Rewards: $${d.rewards}</p>
   `;
+}
+
+async function connect() {
+  const res = await fetch('/.netlify/functions/create-connect-account');
+  const data = await res.json();
+  window.location.href = data.url;
+}
+
+async function cashout() {
+  await fetch('/.netlify/functions/request-payout', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      email: user,
+      amount: 10
+    })
+  });
+
+  alert("Payout Requested 💸");
 }
 
 load();
