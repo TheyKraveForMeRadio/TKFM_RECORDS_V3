@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TKFM App</title>
+
+<style>
+body{
+  margin:0;
+  font-family:system-ui;
+  background:#020617;
+  color:#e5e7eb;
+}
+
+.header{
+  padding:15px;
+  background:#020617;
+  border-bottom:1px solid #1f2937;
+  text-align:center;
+  color:#facc15;
+  font-weight:bold;
+}
+
+.nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  background:#020617;
+  border-top:1px solid #1f2937;
+}
+
+.nav button{
+  flex:1;
+  padding:15px;
+  background:none;
+  color:#fff;
+  border:none;
+}
+
+.section{
+  padding:20px;
+  padding-bottom:80px;
+}
+
+.card{
+  background:#111827;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:10px;
+}
+
+button.primary{
+  background:#facc15;
+  color:#000;
+  border:none;
+  padding:10px;
+  border-radius:6px;
+  width:100%;
+  margin-top:5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🔥 TKFM MARKET</div>
+
+<div id="content" class="section"></div>
+
+<div class="nav">
+  <button onclick="loadMarket()">📈</button>
+  <button onclick="loadPortfolio()">💼</button>
+  <button onclick="loadWallet()">💰</button>
+</div>
+
+<script>
+const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+const user = localStorage.getItem("tkfm_user");
+
+async function loadMarket(){
+  const res = await fetch(API + "/market", {
+    headers:{
+      apikey:KEY,
+      Authorization:`Bearer ${KEY}`
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("content").innerHTML =
+    data.map(d=>`
+      <div class="card">
+        <h3>${d.title}</h3>
+        <p>$${Number(d.price).toFixed(2)}</p>
+        <button class="primary" onclick="trade('buy','${d.id}')">Buy</button>
+        <button class="primary" onclick="trade('sell','${d.id}')">Sell</button>
+      </div>
+    `).join('');
+}
+
+async function loadPortfolio(){
+  const res = await fetch(API + `/portfolio?user_id=eq.${user}`, {
+    headers:{
+      apikey:KEY,
+      Authorization:`Bearer ${KEY}`
+    }
+  });
+
+  const data = await res.json();
+
+  document.getElementById("content").innerHTML =
+    data.map(d=>`
+      <div class="card">
+        <h3>${d.track_id}</h3>
+        <p>Shares: ${d.shares}</p>
+      </div>
+    `).join('');
+}
+
+async function loadWallet(){
+  const res = await fetch(API + `/balances?user_id=eq.${user}`, {
+    headers:{
+      apikey:KEY,
+      Authorization:`Bearer ${KEY}`
+    }
+  });
+
+  const data = await res.json();
+  const bal = data[0]?.balance || 0;
+
+  document.getElementById("content").innerHTML = `
+    <div class="card">
+      <h2>Balance: $${bal}</h2>
+      <button class="primary" onclick="deposit()">Deposit</button>
+      <button class="primary" onclick="withdraw()">Withdraw</button>
+    </div>
+  `;
+}
+
+async function trade(action,id){
+  await fetch('/.netlify/functions/trade',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action,user,track_id:id})
+  });
+  alert("Done 🚀");
+}
+
+async function deposit(){
+  const res = await fetch('/.netlify/functions/deposit',{
+    method:'POST',
+    body:JSON.stringify({user})
+  });
+  const data = await res.json();
+  window.location = data.url;
+}
+
+async function withdraw(){
+  await fetch('/.netlify/functions/withdraw',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({user,amount:10})
+  });
+  alert("Withdraw requested");
+}
+
+loadMarket();
+</script>
+
+</body>
+</html>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
+
+<link rel="manifest" href="/manifest.json">
+

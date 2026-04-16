@@ -18,19 +18,27 @@ export async function handler(event) {
   try {
     const { action, user, track_id } = JSON.parse(event.body);
 
-    // GET PRICE
-    const priceRes = await db(`/market?id=eq.${track_id}`);
-    const track = (await priceRes.json())[0];
+    const trackRes = await db(`/market?id=eq.${track_id}`);
+    const track = (await trackRes.json())[0];
+
     const price = Number(track.price);
 
+    // GET USER BALANCE
+    const balRes = await db(`/balances?user_id=eq.${user}`);
+    const balance = (await balRes.json())[0].balance;
+
     if (action === "buy") {
-      // UPDATE BALANCE
+      if (balance < price) throw new Error("Insufficient funds");
+
+      // deduct balance
       await db(`/balances?user_id=eq.${user}`, {
         method: "PATCH",
-        body: JSON.stringify({ balance: `balance - ${price}` })
+        body: JSON.stringify({
+          balance: balance - price
+        })
       });
 
-      // ADD PORTFOLIO
+      // add portfolio
       await db(`/portfolio`, {
         method: "POST",
         body: JSON.stringify({
@@ -41,14 +49,18 @@ export async function handler(event) {
       });
 
     } else if (action === "sell") {
+
+      // add balance
       await db(`/balances?user_id=eq.${user}`, {
         method: "PATCH",
-        body: JSON.stringify({ balance: `balance + ${price}` })
+        body: JSON.stringify({
+          balance: balance + price
+        })
       });
 
+      // reduce shares
       await db(`/portfolio?user_id=eq.${user}&track_id=eq.${track_id}`, {
-        method: "PATCH",
-        body: JSON.stringify({ shares: 0 })
+        method: "DELETE"
       });
     }
 

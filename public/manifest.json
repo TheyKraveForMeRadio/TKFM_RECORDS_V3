@@ -1,19 +1,14 @@
 {
-  "name": "TKFM Exchange",
+  "name": "TKFM Market",
   "short_name": "TKFM",
-  "start_url": "/trading-pro.html",
+  "start_url": "/app.html",
   "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#facc15",
   "icons": [
     {
-      "src": "/tkfm-records-logo.png",
+      "src": "/tkfm-radio-logo.png",
       "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/tkfm-records-logo.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ]
