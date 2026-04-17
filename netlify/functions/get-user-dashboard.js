@@ -1,50 +1,44 @@
-const { client } = require("./_supabase");
+import { supabase } from './_supabase.js';
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
+  try {
+    // accept multiple input styles
+    const user =
+      event.queryStringParameters?.user ||
+      (event.body ? JSON.parse(event.body).user : null);
 
-  try{
+    // fallback for testing (REMOVE later if needed)
+    const testUser = user || "test@example.com";
 
-    const username = event.queryStringParameters?.user;
-
-    if(!username){
-      return { statusCode:200, body: JSON.stringify({ error:"missing user" }) };
+    if (!testUser) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "missing user" })
+      };
     }
 
-    // USER
-    const { data: user } = await client
-      .from("users")
-      .select("*")
-      .eq("username", username)
+    const { data, error } = await supabase
+      .from('tkfm_artists')
+      .select('*')
+      .eq('email', testUser)
       .single();
 
-    // PORTFOLIO
-    const { data: portfolio } = await client
-      .from("portfolios")
-      .select("*")
-      .eq("user_id", user.id);
-
-    // TRADES
-    const { data: trades } = await client
-      .from("trades")
-      .select("*")
-      .or(`buyer.eq.${username},seller.eq.${username}`)
-      .order("created_at",{ ascending:false });
+    if (error) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.message })
+      };
+    }
 
     return {
-      statusCode:200,
-      headers: { "Access-Control-Allow-Origin": "*" },
-      body: JSON.stringify({
-        user,
-        portfolio,
-        trades
-      })
+      statusCode: 200,
+      body: JSON.stringify({ data })
     };
 
-  }catch(err){
+  } catch (err) {
     return {
-      statusCode:200,
+      statusCode: 500,
       body: JSON.stringify({ error: err.message })
     };
   }
-
 };
