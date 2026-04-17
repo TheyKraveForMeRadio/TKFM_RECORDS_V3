@@ -19,7 +19,7 @@ exports.handler = async (event) => {
       .from('tkfm_artists')
       .select('*')
       .eq('email', testUser)
-      .single();
+      .maybeSingle();
 
     if (error) {
       return {
