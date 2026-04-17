@@ -1,30 +1,25 @@
-import { createClient } from "@supabase/supabase-js";
+exports.handler = async (event) => {
+  try {
+    const { email, code } = JSON.parse(event.body);
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+    global.codes = global.codes || {};
 
-export async function handler(event) {
-  const { email, code } = JSON.parse(event.body);
+    if (global.codes[email] === code) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true })
+      };
+    }
 
-  const { data } = await supabase
-    .from("login_codes")
-    .select("*")
-    .eq("email", email)
-    .eq("code", code)
-    .order("created_at", { ascending: false })
-    .limit(1);
-
-  if (!data || data.length === 0) {
     return {
-      statusCode: 400,
+      statusCode: 401,
       body: JSON.stringify({ error: "Invalid code" })
     };
-  }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ success: true })
-  };
-}
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
+};

@@ -1,32 +1,39 @@
-import { Resend } from "resend";
-import { createClient } from "@supabase/supabase-js";
+const fetch = require("node-fetch");
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+exports.handler = async (event) => {
+  try {
+    const { email } = JSON.parse(event.body);
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
 
-export async function handler(event) {
-  const { email } = JSON.parse(event.body);
+    // TEMP store (simple for now)
+    global.codes = global.codes || {};
+    global.codes[email] = code;
 
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
+    // SEND EMAIL VIA RESEND
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "TKFM <no-reply@send.mail.tkfmrecords.com>",
+        to: [email],
+        subject: "Your TKFM Login Code",
+        html: `<h2>Your code: ${code}</h2>`
+      })
+    });
 
-  await supabase.from("login_codes").insert({
-    email,
-    code
-  });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true })
+    };
 
-  await resend.emails.send({
-    from: "TKFM <onboarding@resend.dev>",
-    to: email,
-    subject: "Your TKFM Code",
-    html: `<h2>Your login code: ${code}</h2>`
-  });
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ success: true })
-  };
-}
+  } catch (err) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message })
+    };
+  }
+};
