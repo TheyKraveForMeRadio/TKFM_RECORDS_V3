@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>TKFM Waitlist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body{
       background:#020617;
@@ -13,11 +12,9 @@
       text-align:center;
       padding:40px;
     }
-
     h1{
       color:#facc15;
     }
-
     input{
       padding:15px;
       width:80%;
@@ -26,8 +23,6 @@
       border-radius:8px;
       border:1px solid #facc15;
     }
-
-    /* ✅ FIXED BUTTON TEXT */
     button{
       padding:15px 25px;
       background:#facc15;
@@ -38,7 +33,6 @@
       font-weight:bold;
       color:#000;
     }
-
     #refBox{
       display:none;
       margin-top:20px;
@@ -54,8 +48,8 @@
 <p>Join the first users of TKFM</p>
 
 <input id="email" placeholder="Enter your email" />
-
 <br>
+
 <button onclick="join()">Join Waitlist</button>
 
 <p id="msg"></p>
@@ -67,6 +61,7 @@
 </div>
 
 <br>
+
 <button onclick="window.location='/pro-trading-ui.html'">🚀 Enter Platform</button>
 <button onclick="window.location='/leaderboard.html'">🏆 View Leaderboard</button>
 <button onclick="window.location='/dashboard.html'">📊 My Dashboard</button>
@@ -77,35 +72,54 @@ const API = "/.netlify/functions";
 
 async function join(){
   const email = document.getElementById("email").value;
+  const msg = document.getElementById("msg");
 
-  const res = await fetch(API + "/waitlist", {
-    method:"POST",
-    body: JSON.stringify({ email }),
-  });
+  if(!email){
+    msg.innerText = "Enter email";
+    return;
+  }
 
-  const data = await res.json();
+  msg.innerText = "Sending...";
 
-  if(data.success){
-    document.getElementById("msg").innerText = "You're on the list 🚀";
+  try{
+    const res = await fetch(API + "/waitlist", {
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
 
-    const ref = btoa(email);
-    const link = window.location.origin + "?ref=" + ref;
+    const data = await res.json();
 
-    document.getElementById("refBox").style.display = "block";
-    document.getElementById("refLink").innerText = link;
+    if(data.success){
+      msg.innerText = "You're on the list 🚀";
 
-    window.copyRef = () => {
-      navigator.clipboard.writeText(link);
-      alert("Copied 🚀");
-    };
-  } else {
-    document.getElementById("msg").innerText = "Error submitting";
+      const ref = btoa(email);
+      const link = window.location.origin + "?ref=" + ref;
+
+      document.getElementById("refBox").style.display = "block";
+      document.getElementById("refLink").innerText = link;
+
+      window.copyRef = () => {
+        navigator.clipboard.writeText(link);
+        alert("Copied 🚀");
+      };
+
+    } else {
+      msg.innerText = data.error || "Error submitting";
+    }
+
+  } catch(err){
+    msg.innerText = "Network error";
   }
 }
 </script>
 
+<!-- KEEP THIS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/auth.js"></script>
+
+<!-- ❌ REMOVED auth.js (this was breaking everything) -->
 
 </body>
 </html>
