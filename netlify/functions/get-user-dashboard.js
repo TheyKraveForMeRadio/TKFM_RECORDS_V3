@@ -1,13 +1,11 @@
-import { supabase } from './_supabase.js';
+const { supabase } = require('./_supabase');
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   try {
-    // accept multiple input styles
     const user =
-      event.queryStringParameters?.user ||
+      (event.queryStringParameters && event.queryStringParameters.user) ||
       (event.body ? JSON.parse(event.body).user : null);
 
-    // fallback for testing (REMOVE later if needed)
     const testUser = user || "test@example.com";
 
     if (!testUser) {
