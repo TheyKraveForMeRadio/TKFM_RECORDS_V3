@@ -2,28 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Login TKFM</title>
+<title>Login to TKFM</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
   background:#020617;
-  color:white;
   font-family:sans-serif;
+  color:white;
   text-align:center;
   padding:40px;
 }
-h1{ color:#facc15; }
-
+h1{
+  color:#facc15;
+}
 input{
   padding:15px;
   width:80%;
   max-width:300px;
-  margin:10px 0;
+  margin:15px 0;
   border-radius:8px;
   border:1px solid #facc15;
 }
-
 button{
   padding:15px 25px;
   background:#facc15;
@@ -32,7 +32,6 @@ button{
   cursor:pointer;
   border-radius:8px;
   font-weight:bold;
-  color:#000;
 }
 </style>
 </head>
@@ -41,70 +40,85 @@ button{
 
 <h1>🔐 Login to TKFM</h1>
 
-<input id="email" placeholder="Enter your email" />
+<input id="email" placeholder="Enter your email">
 <br>
 <button onclick="sendCode()">Send Code</button>
 
 <br><br>
 
-<input id="code" placeholder="Enter 6-digit code" />
+<input id="code" placeholder="Enter 6-digit code">
 <br>
-<button onclick="verifyCode()">Verify & Login</button>
+<button onclick="verify()">Verify & Login</button>
 
 <p id="msg"></p>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL = "https://jgopbtuteqzooomxaulx.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+const API = "/.netlify/functions";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 🔥 STEP 1: SEND CODE
 async function sendCode(){
   const email = document.getElementById("email").value;
+  const msg = document.getElementById("msg");
 
-  localStorage.setItem("tkfm_temp_email", email);
+  if(!email){
+    msg.innerText = "Enter email";
+    return;
+  }
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: true
-    }
-  });
+  msg.innerText = "Sending code...";
 
-  if(error){
-    document.getElementById("msg").innerText = "Error sending code";
-  } else {
-    document.getElementById("msg").innerText = "Code sent 🚀";
+  try{
+    const res = await fetch(API + "/send-code", {
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    msg.innerText = data.success ? "Code sent 📩" : "Error sending";
+
+  }catch(e){
+    msg.innerText = "Network error";
   }
 }
 
-// 🔥 STEP 2: VERIFY CODE
-async function verifyCode(){
-  const email = localStorage.getItem("tkfm_temp_email");
-  const token = document.getElementById("code").value;
+async function verify(){
+  const email = document.getElementById("email").value;
+  const code = document.getElementById("code").value;
+  const msg = document.getElementById("msg");
 
-  const { data, error } = await supabase.auth.verifyOtp({
-    email,
-    token,
-    type: "email"
-  });
+  msg.innerText = "Verifying...";
 
-  if(error){
-    document.getElementById("msg").innerText = "Invalid code";
-  } else {
-    localStorage.setItem("tkfm_user", email);
+  try{
+    const res = await fetch(API + "/verify-code", {
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, code })
+    });
 
-    document.getElementById("msg").innerText = "Logged in 🚀";
+    const data = await res.json();
 
-    setTimeout(()=>{
-      window.location.href = "/dashboard.html";
-    },1000);
+    if(data.success){
+      localStorage.setItem("tkfm_user", JSON.stringify(data.user));
+      window.location = "/dashboard.html";
+    } else {
+      msg.innerText = "Invalid code";
+    }
+
+  }catch(e){
+    msg.innerText = "Network error";
   }
 }
 </script>
+
+<!-- ✅ ONLY THIS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ❌ DO NOT ADD auth.js -->
 
 </body>
 </html>
