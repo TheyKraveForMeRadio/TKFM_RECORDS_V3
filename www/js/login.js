@@ -5,15 +5,19 @@ async function sendCode() {
 
   const res = await fetch(`${API_BASE}/.netlify/functions/send-code`, {
     method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ email })
   });
 
   const data = await res.json();
+  console.log("SEND CODE RESPONSE:", data);
 
   if (data.success) {
-    alert("Code sent to email");
+    alert("✅ Code sent to email");
   } else {
-    alert("Error sending code");
+    alert("❌ Error sending code");
   }
 }
 
@@ -23,15 +27,19 @@ async function verifyLogin() {
 
   const res = await fetch(`${API_BASE}/.netlify/functions/verify-code`, {
     method: 'POST',
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ email, code })
   });
 
   const data = await res.json();
+  console.log("VERIFY RESPONSE:", data);
 
   if (data.success) {
     localStorage.setItem("tkfm_user", email);
     window.location.href = "/dashboard.html";
   } else {
-    alert("Invalid code");
+    alert("❌ Invalid code");
   }
 }
