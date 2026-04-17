@@ -1,20 +1,14 @@
 const { createClient } = require("@supabase/supabase-js");
 
-const url = process.env.SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_KEY;
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!url || !key) {
-  throw new Error("SUPABASE ENV MISSING");
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
+  throw new Error("Missing Supabase env vars");
 }
 
-// timeout wrapper
-function withTimeout(promise, ms = 5000){
-  return Promise.race([
-    promise,
-    new Promise((_, reject)=> setTimeout(()=> reject(new Error("timeout")), ms))
-  ]);
-}
+const client = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE, {
+  auth: { persistSession: false }
+});
 
-const client = createClient(url, key);
-
-module.exports = { client, withTimeout };
+module.exports = { client };
