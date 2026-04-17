@@ -1,37 +1,68 @@
 <!DOCTYPE html>
-<html>
-<body style="background:#020617;color:#facc15;font-family:Arial;padding:40px;">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TKFM Login</title>
 
-<h1>🔐 Login</h1>
+  <style>
+    body {
+      background: #020617;
+      color: #facc15;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
 
-<input id="user" placeholder="Username"/>
-<button onclick="login()">Login</button>
+    h1 {
+      margin-bottom: 30px;
+    }
 
-<script>
-async function login(){
+    input {
+      width: 90%;
+      max-width: 400px;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+      border: 2px solid #facc15;
+      background: #111;
+      color: white;
+      font-size: 16px;
+    }
 
-  const username = document.getElementById("user").value;
+    button {
+      display: block;
+      width: 220px;
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      background: #facc15;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-  const res = await fetch("/.netlify/functions/login",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({ username })
-  });
+    button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
 
-  const data = await res.json();
+  <h1>🔐 Login to TKFM</h1>
 
-  if(data.error){
-    alert("User not found");
-    return;
-  }
+  <input type="email" placeholder="Enter your email" />
 
-  localStorage.setItem("tkfm_user", data.user);
+  <button onclick="sendCode()">Send Code</button>
 
-  alert("Logged in as " + data.role);
+  <input type="text" placeholder="Enter 6-digit code" />
 
-  window.location = "/tkfm-hub.html";
-}
-</script>
+  <button onclick="verifyLogin()">Verify & Login</button>
+
+  <!-- ✅ ONLY THIS SCRIPT (auth.js REMOVED) -->
+  <script src="/js/login.js"></script>
 
 </body>
 </html>
