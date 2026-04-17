@@ -69,14 +69,11 @@ async function sendCode(){
   try{
     const res = await fetch(API + "/send-code", {
       method:"POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
 
     const data = await res.json();
-
     msg.innerText = data.success ? "Code sent 📩" : "Error sending";
 
   }catch(e){
@@ -94,9 +91,7 @@ async function verify(){
   try{
     const res = await fetch(API + "/verify-code", {
       method:"POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code })
     });
 
@@ -114,11 +109,6 @@ async function verify(){
   }
 }
 </script>
-
-<!-- ✅ ONLY THIS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- ❌ DO NOT ADD auth.js -->
 
 </body>
 </html>
