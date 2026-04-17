@@ -1,112 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>TKFM Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="css/tkfm-global.css">
+<link rel="stylesheet" href="css/mobile.css">
+<link rel="manifest" href="/manifest.json">
 
-<style>
-body{
-  margin:0;
-  font-family:system-ui;
-  background:#020617;
-  color:#fff;
-  text-align:center;
-}
-h1{
-  color:#facc15;
-  margin-top:40px;
-}
-.card{
-  max-width:500px;
-  margin:30px auto;
-  padding:20px;
-  border:1px solid #facc15;
-  border-radius:12px;
-}
-.stat{
-  font-size:22px;
-  margin:10px 0;
-}
-.reward{
-  color:#22c55e;
-  font-weight:bold;
-}
-button{
-  padding:12px 20px;
-  background:#facc15;
-  border:none;
-  margin-top:20px;
-  cursor:pointer;
-  border-radius:8px;
-}
-</style>
 </head>
 
 <body>
 
-<h1>📊 My Dashboard</h1>
+<header style="display:flex;align-items:center;gap:15px;padding:20px;">
+  <img src="tkfm-records-logo.png" class="logo" height="60">
+  <h1>MY DASHBOARD</h1>
+</header>
 
-<div class="card">
-  <div class="stat">Your Code:</div>
-  <div id="refcode"></div>
+<div class="card" style="margin:20px;">
+  <h2>💰 Wallet Balance</h2>
+  <h1 id="balance">$0</h1>
+</div>
 
-  <div class="stat">Invites:</div>
-  <div id="count">0</div>
-
-  <div class="stat">Reward:</div>
-  <div id="reward" class="reward"></div>
-
-  <button onclick="copyLink()">Copy Invite Link</button>
+<div class="card" style="margin:20px;">
+  <h2>📊 Portfolio</h2>
+  <div id="portfolio"></div>
 </div>
 
 <script>
-const supabase = window.supabase.createClient(
-  "https://jgopbtuteqzooomxaulx.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k"
-);
 
-// 🔐 REQUIRE LOGIN
-const user = localStorage.getItem("tkfm_user");
-if(!user){
-  window.location.href = "/login.html";
+const API = "https://tkfm-records-v3.onrender.com/engine";
+const TOKEN = localStorage.getItem("token");
+
+// SIMPLE FETCH (NO authFetch)
+async function load(){
+
+  if(!TOKEN){
+    window.location = "/login.html";
+    return;
+  }
+
+  try{
+
+    const res = await fetch(API + "/user-stats-engine?user=user1", {
+      headers: {
+        "Authorization": "Bearer " + TOKEN
+      }
+    });
+
+    const data = await res.json();
+
+    document.getElementById("balance").innerText = "$" + (data.balance || 0);
+
+    let html = "";
+
+    if(data.assets){
+      for (let asset in data.assets){
+        html += `<p>${asset}: ${data.assets[asset]}</p>`;
+      }
+    }
+
+    document.getElementById("portfolio").innerHTML = html;
+
+  }catch(e){
+    console.error(e);
+    document.getElementById("portfolio").innerHTML = "Error loading data";
+  }
+
 }
 
-const myRef = localStorage.getItem("tkfm_my_ref");
-document.getElementById("refcode").innerText = myRef || "N/A";
+load();
 
-function getReward(count){
-  if(count >= 50) return "💎 VIP Access + 1000 Credits";
-  if(count >= 25) return "🚀 Early Access + 500 Credits";
-  if(count >= 10) return "🔥 Beta Access + 100 Credits";
-  if(count >= 5) return "🎧 Priority Access";
-  return "No rewards yet";
-}
-
-async function loadStats(){
-  if(!myRef) return;
-
-  const { data } = await supabase
-    .from("waitlist")
-    .select("ref_by")
-    .eq("ref_by", myRef);
-
-  const count = data.length;
-
-  document.getElementById("count").innerText = count;
-  document.getElementById("reward").innerText = getReward(count);
-}
-
-function copyLink(){
-  const link = window.location.origin + "?ref=" + myRef;
-  navigator.clipboard.writeText(link);
-  alert("Copied 🚀");
-}
-
-loadStats();
 </script>
+
+<!-- ⚠️ TEMP DISABLE SERVICE WORKER (causing cache bugs) -->
+<!-- <script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("/sw.js")
+}
+</script> -->
 
 </body>
 </html>
