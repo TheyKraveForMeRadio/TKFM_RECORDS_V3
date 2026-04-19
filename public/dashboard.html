@@ -2,59 +2,73 @@
 <html>
 <head>
   <title>TKFM Dashboard</title>
+  <style>
+    body {
+      background: #020617;
+      color: white;
+      font-family: Arial;
+      padding: 40px;
+    }
+
+    .card {
+      background: #111827;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #22d3ee;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      background: #a855f7;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    input {
+      padding: 10px;
+      width: 300px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>💰 Earnings Dashboard</h1>
-<div id="stats"></div>
+<h1>🎧 TKFM DASHBOARD</h1>
 
-<button onclick="connect()">Connect Stripe</button>
-<button onclick="cashout()">Cash Out</button>
+<div class="card">
+  <input id="emailInput" placeholder="Enter your email" />
+  <button onclick="loadUser()">Load Dashboard</button>
+</div>
 
-<script>
-const API = "https://jgopbtuteqzooomxaulx.supabase.co/rest/v1/referral_stats";
-const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impnb3BidHV0ZXF6b29vbXhhdWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ4ODA1MzUsImV4cCI6MjA4MDQ1NjUzNX0.0ZiEaOd7ZXOgK1YXk-KcnyLFjTi4WngbX30j2gp5E0k";
+<div class="card">
+  <h2>User Info</h2>
+  <p>Email: <span id="email">-</span></p>
+  <p>Name: <span id="name">-</span></p>
+  <p>Plan: <span id="plan">-</span></p>
+  <p>Subscription: <span id="subscription">-</span></p>
+</div>
 
-const user = localStorage.getItem("tkfm_user");
+<div class="card">
+  <h2>Credits</h2>
+  <p>Credits: <span id="credits">0</span></p>
+</div>
 
-async function load() {
-  const res = await fetch(API + `?user_email=eq.${user}`, {
-    headers: {
-      "apikey": KEY,
-      "Authorization": `Bearer ${KEY}`
-    }
-  });
+<div class="card">
+  <h2>Actions</h2>
+  <button onclick="buyCredits()">Buy Credits</button>
+  <button onclick="upgradePlan()">Upgrade Plan</button>
+  <button onclick="submitTrack()">Submit Track</button>
+</div>
 
-  const data = await res.json();
-  const d = data[0] || { invites: 0, rewards: 0 };
-
-  document.getElementById("stats").innerHTML = `
-    <p>Invites: ${d.invites}</p>
-    <p>Rewards: $${d.rewards}</p>
-  `;
-}
-
-async function connect() {
-  const res = await fetch('/.netlify/functions/create-connect-account');
-  const data = await res.json();
-  window.location.href = data.url;
-}
-
-async function cashout() {
-  await fetch('/.netlify/functions/request-payout', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      email: user,
-      amount: 10
-    })
-  });
-
-  alert("Payout Requested 💸");
-}
-
-load();
-</script>
+<script src="/js/dashboard.js"></script>
 
 </body>
 </html>
