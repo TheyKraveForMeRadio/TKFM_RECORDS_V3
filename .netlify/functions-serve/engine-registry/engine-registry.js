@@ -1,1 +1,0 @@
-module.exports = require('./netlify/functions/engine-registry.js')
