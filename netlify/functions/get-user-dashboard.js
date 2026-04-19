@@ -6,19 +6,18 @@ exports.handler = async (event) => {
       (event.queryStringParameters && event.queryStringParameters.user) ||
       (event.body ? JSON.parse(event.body).user : null);
 
-    const testUser = user || "test@example.com";
-
-    if (!testUser) {
+    if (!user) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "missing user" })
       };
     }
 
-    const { data, error } = await supabase
+    // 🔍 Try to find existing user
+    let { data, error } = await supabase
       .from('tkfm_artists')
       .select('*')
-      .eq('email', testUser)
+      .eq('email', user)
       .maybeSingle();
 
     if (error) {
@@ -26,6 +25,31 @@ exports.handler = async (event) => {
         statusCode: 500,
         body: JSON.stringify({ error: error.message })
       };
+    }
+
+    // 🚀 AUTO-CREATE USER IF NOT FOUND
+    if (!data) {
+      const { data: newUser, error: insertError } = await supabase
+        .from('tkfm_artists')
+        .insert([
+          {
+            email: user,
+            name: "New User",
+            subscription_active: false,
+            credits: {}
+          }
+        ])
+        .select()
+        .single();
+
+      if (insertError) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: insertError.message })
+        };
+      }
+
+      data = newUser;
     }
 
     return {
