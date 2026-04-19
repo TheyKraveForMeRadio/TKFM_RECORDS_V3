@@ -1,49 +1,55 @@
 async function loadUser() {
   const email = document.getElementById("emailInput").value;
 
-  if (!email) {
-    alert("Enter email");
+  if (!email) return alert("Enter email");
+
+  const res = await fetch(`/.netlify/functions/get-user-dashboard?user=${encodeURIComponent(email)}`);
+  const json = await res.json();
+
+  if (!json.data) return alert("User not found");
+
+  const user = json.data;
+
+  document.getElementById("email").innerText = user.email;
+  document.getElementById("name").innerText = user.name || "New User";
+  document.getElementById("plan").innerText = user.label_plan || "Free";
+  document.getElementById("subscription").innerText = user.subscription_active ? "Active" : "Inactive";
+
+  let credits = 0;
+  if (user.credits) {
+    credits = Object.values(user.credits).reduce((a, b) => a + (b || 0), 0);
+  }
+
+  document.getElementById("credits").innerText = credits;
+
+  window.currentUserEmail = user.email;
+}
+
+async function buyCredits() {
+  if (!window.currentUserEmail) {
+    alert("Load user first");
     return;
   }
 
-  try {
-    const res = await fetch(`/.netlify/functions/get-user-dashboard?user=${encodeURIComponent(email)}`);
-    const json = await res.json();
+  const res = await fetch('/.netlify/functions/create-checkout-session', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: window.currentUserEmail,
+      lookup_key: "drop_pack_10"
+    })
+  });
 
-    console.log("USER:", json);
+  const data = await res.json();
 
-    if (!json.data) {
-      alert("User not found");
-      return;
-    }
-
-    const user = json.data;
-
-    document.getElementById("email").innerText = user.email || "-";
-    document.getElementById("name").innerText = user.name || "New User";
-    document.getElementById("plan").innerText = user.label_plan || "Free";
-    document.getElementById("subscription").innerText = user.subscription_active ? "Active" : "Inactive";
-
-    // credits object safe read
-    let credits = 0;
-    if (user.credits && typeof user.credits === "object") {
-      credits = Object.values(user.credits).reduce((a, b) => a + (b || 0), 0);
-    }
-
-    document.getElementById("credits").innerText = credits;
-
-  } catch (err) {
-    console.error(err);
-    alert("Error loading dashboard");
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    alert("Checkout failed");
   }
 }
 
-function buyCredits() {
-  alert("Hook Stripe here");
-}
-
 function upgradePlan() {
-  alert("Hook Stripe plan upgrade");
+  alert("Hook subscription plan here next");
 }
 
 function submitTrack() {
@@ -51,3 +57,4 @@ function submitTrack() {
 }
 
 window.loadUser = loadUser;
+window.buyCredits = buyCredits;

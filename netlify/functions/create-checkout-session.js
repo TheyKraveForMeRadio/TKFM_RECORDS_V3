@@ -1,65 +1,39 @@
-import Stripe from "stripe";
+const Stripe = require('stripe');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-export async function handler(event) {
+exports.handler = async (event) => {
   try {
-    const { artistName, email, trackTitle, plan } = JSON.parse(event.body);
+    const { email, lookup_key } = JSON.parse(event.body);
 
-    let priceData;
-
-    // 💰 PLAN SWITCH
-    if (plan === "priority") {
-      priceData = {
-        currency: 'usd',
-        product_data: {
-          name: '🔥 Priority Submission',
-          description: `${artistName} - ${trackTitle}`
-        },
-        unit_amount: 5000
-      };
-    } else if (plan === "subscription") {
-      const session = await stripe.checkout.sessions.create({
-        mode: 'subscription',
-        line_items: [{
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'TKFM Unlimited Submissions'
-            },
-            recurring: { interval: 'month' },
-            unit_amount: 2900
-          },
-          quantity: 1
-        }],
-        success_url: `${process.env.URL}/success.html`,
-        cancel_url: `${process.env.URL}/submit.html`,
-        metadata: { artistName, email }
-      });
-
+    if (!email || !lookup_key) {
       return {
-        statusCode: 200,
-        body: JSON.stringify({ url: session.url })
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing email or lookup_key" })
       };
-    } else {
-      // standard
-      priceData = {
-        currency: 'usd',
-        product_data: {
-          name: 'TKFM Standard Submission',
-          description: `${artistName} - ${trackTitle}`
-        },
-        unit_amount: 1500
+    }
+
+    const prices = await stripe.prices.list({
+      lookup_keys: [lookup_key],
+      expand: ['data.product']
+    });
+
+    if (!prices.data.length) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Invalid lookup_key" })
       };
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
       mode: 'payment',
-      line_items: [{ price_data: priceData, quantity: 1 }],
-      success_url: `${process.env.URL}/success.html`,
-      cancel_url: `${process.env.URL}/submit.html`,
-      metadata: { artistName, email, trackTitle, plan }
+      customer_email: email,
+      line_items: [{
+        price: prices.data[0].id,
+        quantity: 1
+      }],
+      success_url: 'https://tkfmrecords.netlify.app/success.html',
+      cancel_url: 'https://tkfmrecords.netlify.app/cancel.html'
     });
 
     return {
@@ -68,9 +42,10 @@ export async function handler(event) {
     };
 
   } catch (err) {
+    console.error(err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
     };
   }
-}
+};
