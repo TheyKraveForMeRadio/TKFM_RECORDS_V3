@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TKFM User Test</title>
+</head>
+<body style="background:#020617;color:white;font-family:sans-serif;padding:20px">
+
+  <h1>TKFM USER TEST</h1>
+
+  <input id="emailInput" placeholder="Enter email" style="padding:10px;width:300px"/>
+  <button onclick="loadUser()">Load User</button>
+
+  <h2>Email: <span id="user-email">-</span></h2>
+  <h2>Plan: <span id="user-plan">-</span></h2>
+  <h2>Subscription: <span id="user-sub">-</span></h2>
+
+  <script src="/js/get-user.js"></script>
+
+  <script>
+    function loadUser() {
+      const email = document.getElementById("emailInput").value;
+      getUserDashboard(email);
+    }
+  </script>
+
+</body>
+</html>
