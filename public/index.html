@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TKFM RECORDS V3 LIVE</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #020617;
+      color: #facc15;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .wrap {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 16px 28px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>🔥 TKFM RECORDS V3 LIVE</h1>
+  <p>If you see this, your server is working.</p>
+
+  <button onclick="startCheckout()">
+    Test Checkout
+  </button>
+</div>
+
+<script>
+async function startCheckout() {
+  try {
+    console.log("Starting checkout...");
+
+    const res = await fetch('/.netlify/functions/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        planId: 'distribution_single_release'
+      })
+    });
+
+    const data = await res.json();
+
+    console.log("Checkout response:", data);
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(JSON.stringify(data));
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+</script>
+
+</body>
+</html>

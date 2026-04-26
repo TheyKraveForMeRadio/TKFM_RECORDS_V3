@@ -1,38 +1,27 @@
-require("dotenv").config()
+const express = require('express');
+const path = require('path');
 
-const express = require("express")
-const app = express()
+const app = express();
 
-app.use(express.json())
+// Serve static frontend
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.all("/engine/:name", async (req, res) => {
-  try {
-    const name = req.params.name
+// API test route
+app.get('/api/test', (req, res) => {
+  res.json({ status: 'OK' });
+});
 
-    const engine = require(`./netlify/engines/${name}.cjs`)
+// Root route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
-    const result = await engine({
-      body: JSON.stringify(req.body),
-      queryStringParameters: req.query,
-      headers: req.headers
-    })
+// ✅ FIXED CATCH-ALL (NO "*")
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
-    res.status(result.statusCode || 200)
-
-    try {
-      res.send(result.body)
-    } catch {
-      res.send(JSON.stringify(result))
-    }
-
-  } catch (err) {
-    res.status(500).send(err.message)
-  }
-})
-
-app.listen(3000, () => {
-  console.log("Server running on 3000")
-})
-
-app.use(express.static("public"))
-
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log('🔥 Server running on ' + PORT);
+});
