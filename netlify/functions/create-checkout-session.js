@@ -9,7 +9,6 @@ exports.handler = async (event) => {
     console.log("🔥 CREATE CHECKOUT SESSION HIT");
 
     const body = JSON.parse(event.body || "{}");
-
     const planId = body.planId || body.lookup_key;
 
     console.log("PLAN ID RECEIVED:", planId);
@@ -23,8 +22,6 @@ exports.handler = async (event) => {
     const stripePriceId = PRICE_MAP[planId];
 
     if (!stripePriceId) {
-      console.log("❌ INVALID PLAN:", planId);
-
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -32,8 +29,6 @@ exports.handler = async (event) => {
         }),
       };
     }
-
-    console.log("✅ USING STRIPE PRICE:", stripePriceId);
 
     const isSubscription =
       planId === "distribution_artist_monthly" ||
@@ -49,16 +44,14 @@ exports.handler = async (event) => {
         },
       ],
       success_url:
-        "http://localhost:8888/distribution-success.html?session_id={CHECKOUT_SESSION_ID}",
+        "https://www.tkfmrecords.com/distribution-success.html?session_id={CHECKOUT_SESSION_ID}",
       cancel_url:
-        "http://localhost:8888/tkfm-distribution.html?canceled=true",
+        "https://www.tkfmrecords.com/tkfm-distribution.html?canceled=true",
       metadata: {
         planId,
         source: "tkfm_distribution",
       },
     });
-
-    console.log("✅ CHECKOUT SESSION CREATED:", session.id);
 
     return {
       statusCode: 200,
@@ -68,7 +61,7 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error("❌ CHECKOUT ERROR:", error.message);
+    console.error("CHECKOUT ERROR:", error.message);
 
     return {
       statusCode: 500,

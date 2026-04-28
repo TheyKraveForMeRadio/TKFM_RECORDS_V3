@@ -20,7 +20,7 @@
         "npm:@ethereumjs/wallet@10",
         "npm:@nomicfoundation/hardhat-toolbox@5",
         "npm:@openzeppelin/contracts@^4.9.6",
-        "npm:@supabase/supabase-js@^2.103.0",
+        "npm:@supabase/supabase-js@^2.104.0",
         "npm:bcryptjs@^2.4.3",
         "npm:busboy@^1.6.0",
         "npm:cloudinary@^2.9.0",
