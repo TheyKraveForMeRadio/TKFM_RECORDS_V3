@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owner Distribution Ops | TKFM Records</title>
+  <style>
+    body {
+      margin: 0;
+      background: #020617;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      padding: 32px;
+    }
+
+    h1 {
+      color: #facc15;
+      margin-bottom: 10px;
+    }
+
+    .sub {
+      color: #cbd5e1;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(250,204,21,0.18);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .status {
+      color: #facc15;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      line-height: 1.8;
+      color: #e5e7eb;
+    }
+
+    button {
+      margin-top: 18px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #facc15;
+      color: #020617;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Distribution Owner Ops</h1>
+
+  <div class="sub">
+    Intake → Review → DSP Delivery → Release Scheduling → Live
+  </div>
+
+  <div class="card">
+    <div class="status">NEW PAID ORDER</div>
+
+    <div class="meta">
+      Client: pending webhook intake<br />
+      Plan: Distribution - Single Release<br />
+      Status: Awaiting metadata intake<br />
+      Priority: Standard
+    </div>
+
+    <button>
+      Move To Review Queue
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="status">MONTHLY ARTIST ACCESS</div>
+
+    <div class="meta">
+      Client: subscription active<br />
+      Plan: Artist Monthly<br />
+      Status: Release management active<br />
+      Priority: Priority
+    </div>
+
+    <button>
+      Open Artist Queue
+    </button>
+  </div>
+
+</body>
+</html>
