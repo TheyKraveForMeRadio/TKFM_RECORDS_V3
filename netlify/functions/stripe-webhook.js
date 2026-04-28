@@ -39,14 +39,34 @@ exports.handler = async (event) => {
       console.log("EMAIL:", customerEmail);
       console.log("SESSION:", session.id);
 
-      /*
-        NEXT:
-        intake → submissions
-        review queue
-        owner delivery lane
-        onboarding email
-        client dashboard unlock
-      */
+      if (customerEmail !== "unknown") {
+        try {
+          const baseUrl =
+            process.env.URL ||
+            "http://localhost:8888";
+
+          await fetch(
+            `${baseUrl}/.netlify/functions/distribution-onboarding-email`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: customerEmail,
+                planId,
+              }),
+            }
+          );
+
+          console.log("📩 ONBOARDING EMAIL SENT");
+        } catch (emailError) {
+          console.error(
+            "EMAIL TRIGGER ERROR:",
+            emailError.message
+          );
+        }
+      }
     }
 
     return {
